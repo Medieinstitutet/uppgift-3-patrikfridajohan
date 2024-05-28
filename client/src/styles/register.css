@@ -1,0 +1,77 @@
+.main {
+    width: 100vw;
+    height: 90vh;
+
+    background: rgb(108, 192, 221);
+    background: linear-gradient(90deg, rgba(108, 192, 221, 1) 0%, rgba(9, 9, 121, 1) 100%);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.register-hero-container {
+    color: white;
+    margin: 0;
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.info {
+    width: 50%;
+}
+
+.info h3 {
+    font-size: 3rem;
+}
+
+.info p {
+    font-size: 1.5rem;
+}
+
+.reg-form {
+    width: 40%;
+}
+
+.tier-section {
+    color: rgb(0, 22, 130);
+    height: 80vh;
+    margin-top: 32px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 32px;
+}
+
+.tier-section h2 {
+    font-size: 3rem;
+}
+
+.tiers {
+    width: 90%;
+    height: 100%;
+
+    display: flex;
+    justify-content: space-between;
+    column-gap: 32px;
+}
+
+.tier-unit {
+    margin: 0;
+    padding: 48px 0px;
+    height: 90%;
+    width: 100%;
+    background-color: rgb(223, 223, 223);
+    color: rgb(0, 22, 130);
+    box-shadow: 10px 10px rgb(255, 96, 75);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
