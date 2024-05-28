@@ -1,0 +1,90 @@
+.main-section {
+    width: 100vw;
+    height: 90vh;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-container {
+    color: white;
+    background-color: rgb(223, 223, 223);
+    box-shadow: 10px 10px rgb(255, 96, 75);
+    width: 70%;
+    height: 45vh;
+
+    display: flex;
+    justify-content: space-between;
+}
+
+.gradient {
+    background: rgb(108, 192, 221);
+    background: linear-gradient(90deg, rgba(108, 192, 221, 1) 0%, rgba(9, 9, 121, 1) 91%);
+
+    width: 45%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.gradient p, .gradient h3 {
+    width: 70%;
+}
+
+.gradient h3 {
+    font-size: 2rem;
+}
+
+.form-container {
+    color: rgb(0, 22, 130);
+    padding: 32px;
+    width: 55%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    row-gap: 16px;
+}
+
+input {
+    color: rgb(0, 22, 130);
+    padding: 0px 16px;
+    background-color: white;
+    border: none;
+    height: 48px;
+    border-radius: 24px;
+}
+
+#login-btn {
+    margin-top: 16px;
+    align-self: center;
+}
+
+#login-btn:hover {
+    color: white;
+    background-color: rgb(0, 22, 130);
+}
+
+.register-container {
+    color: rgb(0, 22, 130);
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.register-container a {
+    color: rgb(0, 22, 130);
+}
+
+.register-container p {
+    margin: 0;
+}
