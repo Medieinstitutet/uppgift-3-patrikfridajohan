@@ -1,8 +1,11 @@
 nav {
     width: 100vw;
     height: 8vh;
+
+    /* Slightly different from the gradient variable */
     background: rgb(108, 192, 221);
     background: linear-gradient(90deg, rgba(108, 192, 221, 1) 0%, rgba(9, 9, 121, 1) 91%);
+
     display: flex;
     align-items: center;
 }
@@ -18,6 +21,12 @@ nav {
     margin-left: 24px;
     font-size: 2rem;
     font-weight: 600;
+    height: 8vh;
+    width: 25%;
+}
+
+img {
+    height: 100%;
 }
 
 .nav-items {
@@ -30,8 +39,16 @@ nav {
 .btn {
     width: 128px;
     border-radius: 19px;
-    font-weight: 600;
-    background-color: rgb(255, 96, 75);
-    border-color: rgb(255, 96, 75);
+    background-color: var(--coral);
+    border-color: var(--coral);
     color: white;
+}
+
+#nav-login:hover {
+    color: white;
+    background-color: var(--text-blue);
+}
+
+.btn a {
+    font-weight: 600;
 }
