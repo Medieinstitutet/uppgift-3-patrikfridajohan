@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AccountDash } from "../components/accountDash";
+import { AccountDash } from "../components/AccountDash";
 import "../styles/account.css";
 import { SubscriptionInfo } from "../components/SubscriptionInfo";
 
