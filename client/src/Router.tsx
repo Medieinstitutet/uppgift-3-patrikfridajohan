@@ -4,10 +4,11 @@ import { NotFound } from "./pages/NotFound";
 import { Account } from "./pages/Account";
 import { AdminDashboard } from "./pages/AdminDashboard";
 import { HomePage } from "./pages/HomePage";
-import { LoggedDashboard } from "./pages/LoggedDashboard";
+import { Dashboard} from "./pages/Dashboard";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
 import { Subscriptions } from "./pages/Subscriptions";
+import { Newsletter } from "./pages/Newsletter";
 
 
 
@@ -38,8 +39,8 @@ export const router = createBrowserRouter([
     errorElement: <NotFound />,
     children: [
       {
-        path: "loggeddashboard",
-        element: <LoggedDashboard />,
+        path: "dashboard",
+        element: <Dashboard/>,
       },
       {
         path: "account",
@@ -49,6 +50,10 @@ export const router = createBrowserRouter([
         path: "subscriptions",
         element: <Subscriptions />,
       },
+      {
+        path:"newsletter/:id",
+        element: <Newsletter/>
+      }
     ],
   },
   {
