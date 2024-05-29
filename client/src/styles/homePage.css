@@ -21,15 +21,84 @@
 .hero-text {
     width: 40%;
     text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    row-gap: 16px;
 }
 
 .hero-text h2 {
     font-size: 3rem;
 }
 
+.cta {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    column-gap: 16px;
+}
+
+.cta-btn {
+    width: fit-content;
+}
+
 .introduction {
     color: var(--text-blue);
     background-color: white;
-    height: 50vh;
-    width: 90%;
+    width: 100%;
+    padding: 64px 0px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#intro-header {
+    width: 75%;
+    text-align: center;
+}
+
+.steps {
+    margin: 64px 0px;
+    padding: 48px 0px;
+    width: 75%;
+    background-color: white;
+    box-shadow: 10px 10px var(--coral);
+    color: var(--text-blue);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 32px;
+}
+
+.steps h3 {
+    font-size: 2.5rem;
+}
+
+.step-unit {
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.step-text {
+    width: 70%;
+    
+    display: flex;
+    justify-content: flex-start;
+}
+
+.step-unit p {
+    /* width: 80%; */
+}
+
+.step-num {
+    width: 25%;
+    aspect-ratio: 1 / 1;
+    margin: 0;
+
+    font-size: 10rem;
+    text-align: center;
 }
