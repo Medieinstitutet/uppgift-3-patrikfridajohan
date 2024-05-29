@@ -19,6 +19,9 @@ export const Login = () => {
       });
       console.log(response.data);
 
+      // REDIRECT
+      // COOKIE ?
+
       console.log("Login successfull");
     } catch (error) {
       console.error("Login failed:", error);
