@@ -65,24 +65,72 @@ export const HomePage = () => {
           Subscribe now
         </button>
       </div>
+      <div className="keys">
+        <h3>Key features</h3>
+        <div className="features">
+          <div className="feature">
+            <h4>Daily Curated Articles</h4>
+            <p>
+              Our expert team handpicks the best articles each day to keep you
+              informed and inspired.
+            </p>
+          </div>
+          <div className="feature">
+            <h4>Personalized Recommendations</h4>
+            <p>
+              Enjoy a tailored reading experience with articles that match your
+              interests and preferences.
+            </p>
+          </div>
+          <div className="feature">
+            <h4>Accessible Anywhere</h4>
+            <p>
+              Whether you're at home or on the go, access SCOPE on your desktop,
+              tablet, or mobile device.
+            </p>
+          </div>
+          <div className="feature">
+            <h4>Community Engagement</h4>
+            <p>
+              Join a vibrant community of curious minds. Share articles, discuss
+              topics, and connect with like-minded readers.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="testimonials">
+        <div className="quote">
+          <h6>
+            "SCOPE has transformed my reading habits. I love waking up to a
+            fresh selection of articles every day."
+          </h6>
+          <p>- Frida A.</p>
+        </div>
+        <div className="quote">
+          <h6>
+            "The personalized recommendations are spot on. It's like having a
+            personal curator just for me!"
+          </h6>
+          <p>- Patrik B.</p>
+        </div>
+        <div className="quote">
+          <h6>
+            "The quality of content on SCOPE is unparalleled. I've discovered so
+            many new topics and ideas."
+          </h6>
+          <p>- Johan N.</p>
+        </div>
+      </div>
+      <div className="why">
+        <h3>Why SCOPE?</h3>
+        <p>
+          In a world overflowing with information, SCOPE cuts through the
+          clutter to bring you only the best content. Our dedicated team of
+          curators and sophisticated algorithms work together to ensure you
+          receive articles that are relevant, insightful, and of the highest
+          quality.
+        </p>
+      </div>
     </div>
   );
 };
-
-{
-  /* <ul>
-          <li>
-            Daily Curated Articles: Discover fresh perspectives and expert
-            insights every day.
-          </li>
-          <li>
-            Personalized Recommendations: Receive articles tailored to your
-            interests and preferences.
-          </li>
-          <li>
-            Accessible Anywhere: Enjoy SCOPE on your desktop, tablet, or mobile
-            device.
-          </li>
-          <li>Join our vibrant community of readers and thinkers!</li>
-        </ul> */
-}
