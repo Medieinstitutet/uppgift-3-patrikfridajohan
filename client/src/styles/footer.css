@@ -1,0 +1,23 @@
+.footer-container {
+    height: 152px;
+    background: var(--background-gradient-1);
+    background: var(--background-gradient-2);
+    padding: 0px 64px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.quick-links, .socials {
+    display: flex;
+    flex-direction: column;
+}
+
+.quick-links a, .socials a {
+    font-weight: 300;
+}
+
+.socials {
+    text-align: right;
+}

@@ -6,8 +6,10 @@ export const Login = () => {
   const [emailInput, setEmailInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
 
-  const login = async () => {
-    if (!emailInput || !passwordInput) {
+  const login = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (emailInput === "" || passwordInput === "") {
       alert("Please fill in both fields.");
       return;
     }
@@ -18,6 +20,10 @@ export const Login = () => {
         password: passwordInput,
       });
       console.log(response.data);
+
+      // SET COOKIE IN MIDDLEWARE
+
+      window.location.href = "/user/loggeddashboard";
 
       console.log("Login successfull");
     } catch (error) {
@@ -37,7 +43,7 @@ export const Login = () => {
         </div>
         <div className="form-container">
           <h3>Login</h3>
-          <form>
+          <form onSubmit={login}>
             <label>Email</label>
             <input
               type="email"
@@ -54,7 +60,6 @@ export const Login = () => {
               type="submit"
               className="btn"
               id="login-btn"
-              onClick={login}
             >
               Login
             </button>
