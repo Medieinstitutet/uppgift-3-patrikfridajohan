@@ -22,11 +22,11 @@
                 
                 <div className="admin-dashboard">
                 <main className="admin-main">
-                    <section className="dashboard-section">
+                    <section className="dashboard-section-welcome">
                         <h2>Welcome, Admin!</h2>
                         <p>Here you can manage content, user access, and view site analytics.</p>
                     </section>
-                    <section className="dashboard-section">
+                    <section className="dashboard-section-quickstats">
                         <h3>Quick Stats</h3>
                         <div >
                             <div className="stat-item">
