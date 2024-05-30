@@ -1,18 +1,18 @@
 import "../styles/account.css";
 
 interface ISubscriptionInfo {
-    dummyData: {email: string,
-        plan: {
-            name: string,
-            cost: string,
-        },
-        renewal: string,
-        billing: string
-    }
+  dummyData: {
+    email: string;
+    plan: {
+      name: string;
+      cost: string;
+    };
+    renewal: string;
+    billing: string;
+  };
 }
 
 export const SubscriptionInfo = (props: ISubscriptionInfo) => {
-
   return (
     <div className="sub-container">
       <div className="sub-info">
@@ -31,7 +31,9 @@ export const SubscriptionInfo = (props: ISubscriptionInfo) => {
         <p>Renewal: Every 7tn day</p>
         <p>Cost: ${props.dummyData.plan.cost}/month</p>
         <p>Payment method: {props.dummyData.billing}</p>
-        <button type="button" className="btn">Change</button>
+        <button type="button" className="btn">
+          Change
+        </button>
       </div>
     </div>
   );

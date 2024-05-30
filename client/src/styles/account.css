@@ -61,6 +61,11 @@
     cursor: pointer;
 }
 
+.list-group-item.issue.active {
+    background-color: var(--coral);
+    border-radius: 8px;
+}
+
 .content {
     width: 75vw;
     height: 70vh;
@@ -82,6 +87,10 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
+}
+
+.genvag:hover {
+    cursor: pointer;
 }
 
 .genvag p {
@@ -144,4 +153,19 @@
     display: flex;
     flex-direction: column;
     row-gap: 16px;
+}
+
+
+
+.account-settings-container {
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.settings-personal-info {
+    width: 80%;
 }
