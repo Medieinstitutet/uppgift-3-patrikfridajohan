@@ -4,7 +4,7 @@
   "description": "[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/HEdUZuwA)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",
@@ -15,6 +15,7 @@
     "ejs-mate": "^4.0.0",
     "express": "^4.19.2",
     "express-ejs-layouts": "^2.5.1",
-    "express-session": "^1.18.0"
+    "express-session": "^1.18.0",
+    "nodemon": "^3.1.2"
   }
 }

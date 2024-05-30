@@ -11,6 +11,8 @@
                     <nav className="admin-nav">
                         <ul className="navlinks">
                             <li><Link to="create-newsletter">Create Newsletter</Link></li>
+                            <li><Link to="list-newsletters">List Newsletters</Link></li>
+                           
                 
                         </ul>
                     </nav>

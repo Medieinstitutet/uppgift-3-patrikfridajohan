@@ -10,6 +10,7 @@ import { Register } from "./pages/Register";
 import { Subscriptions } from "./pages/Subscriptions";
 import { Newsletter } from "./pages/Newsletter";
 import { CreateNewsletter } from "./pages/CreateNewsletter";
+import { ListNewsletters } from "./pages/ListNewsletters";
 
 
 
@@ -69,6 +70,10 @@ export const router = createBrowserRouter([
       {
         path:"admindashboard/create-newsletter",
         element: <CreateNewsletter/>
+      },
+      {
+        path:"admindashboard/list-newsletters",
+        element: <ListNewsletters />
       }
     ],
   },
