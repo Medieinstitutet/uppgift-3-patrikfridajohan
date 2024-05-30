@@ -34,7 +34,7 @@ export const Account = () => {
   }
 
   return (
-    <div className="dashboard-section">
+    <div className="account-dashboard-section">
       <h2>My profile</h2>
       <div className="issue-list">
         <h3 className="name">NAME</h3>

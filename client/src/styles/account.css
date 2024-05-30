@@ -1,4 +1,4 @@
-.dashboard-section {
+.account-dashboard-section {
     color: white;
     background: var(--background-gradient-1);
     background: var(--background-gradient-2);
@@ -12,7 +12,7 @@
     row-gap: 32px;
 }
 
-.dashboard-section h2 {
+.account-dashboard-section h2 {
     width: 100%;
     text-align: center;
     font-size: 2.5rem;
