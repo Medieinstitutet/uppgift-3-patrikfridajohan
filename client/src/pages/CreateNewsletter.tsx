@@ -27,7 +27,7 @@ export const CreateNewsletter = () => {
                     <label htmlFor="longinfo">Long Info</label>
                     <textarea id="longinfo" placeholder="Enter detailed information"></textarea>
                 </div>
-                <button type="submit">Create Newsletter</button>
+                <button className="btnsubmitcn" type="submit">Create Newsletter</button>
             </form>
         </div>
     );

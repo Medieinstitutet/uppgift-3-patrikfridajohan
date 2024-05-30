@@ -96,14 +96,14 @@ export const Dashboard = () => {
         <p>Subscription Level: {subscriptionlevel}</p>
       </div>
       <div className="dashboard-content">
-        <section className="notifications">
+        <section className="section-dashboard">
           <h2>Notifications</h2>
           <ul>
             <li>You have 3 new messages</li>
             <li>Your subscription expires in 10 days</li>
           </ul>
         </section>
-        <section className="recent-content">
+        <section className="section-dashboard">
           <h2>Recently Viewed</h2>
           <ul>
             <li>Article 1</li>
@@ -128,13 +128,13 @@ export const Dashboard = () => {
             ))
           )}
         </section>
-        <section className="account-management">
+        <section className="section-dashboard">
           <h2>Account Management</h2>
           <button>Profile Settings</button>
           <button>Billing Information</button>
           <button>Upgrade Subscription</button>
         </section>
-        <section className="support">
+        <section className="section-dashboard">
           <h2>Need Help?</h2>
           <button>Help Center</button>
           <button>Contact Support</button>

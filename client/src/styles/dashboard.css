@@ -35,7 +35,7 @@
   justify-content: space-around;
 }
 
-section {
+.section-dashboard{
   background: white;
   padding: 16px;
   border-radius: 8px;
@@ -44,26 +44,26 @@ section {
   min-width: 300px;
 }
 
-section h2 {
+.section-dashboard h2 {
   font-size: 1.5rem;
   margin-bottom: 12px;
 }
 
-section ul {
+.section-dashboard ul {
   list-style: none;
   padding: 0;
 }
 
-section ul li {
+.section-dashboard ul li {
   padding: 8px 0;
   border-bottom: 1px solid #eee;
 }
 
-section ul li:last-child {
+.section-dashboard ul li:last-child {
   border-bottom: none;
 }
 
-section button {
+.section-dashboard button {
   background: #4a90e2;
   color: white;
   border: none;
@@ -73,7 +73,7 @@ section button {
   cursor: pointer;
 }
 
-section button:hover {
+.section-dashboard button:hover {
   background: #357ab7;
 }
 

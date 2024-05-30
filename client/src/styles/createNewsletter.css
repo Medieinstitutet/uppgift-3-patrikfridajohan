@@ -47,7 +47,7 @@
     min-height: 100px;
 }
 
-button[type="submit"] {
+.btnsubmitcn[type="submit"] {
     padding: 10px 20px;
     border: none;
     border-radius: 4px;
@@ -58,6 +58,6 @@ button[type="submit"] {
     transition: background-color 0.3s;
 }
 
-button[type="submit"]:hover {
-    background-color: #218838;
+.btnsubmitcn[type="submit"]:hover {
+    background-color: #218838;  
 }
