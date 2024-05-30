@@ -18,10 +18,20 @@
     font-size: 2.5rem;
 }
 
+.account-info-section{
+    width: 100%;
+    background-color: var(--light-gray);
+    padding: 32px 0px;
+
+    display: flex;
+    justify-content: space-evenly;
+}
+
 .issue-list,
 .content {
     color: var(--text-blue);
     background-color: white;
+    border-radius: 8px;
 }
 
 .issue-list {

@@ -7,13 +7,14 @@ export const Account = () => {
   const [selection, setSelection] = useState("dashboard");
 
   const dummyData = {
+    name: "Dummy",
     email: "dummy@data.com",
     plan: {
-        name: "plus",
-        cost: "4"
+      name: "plus",
+      cost: "4",
     },
     renewal: "2024-06-31",
-    billing: "Stripe"
+    billing: "Stripe",
   };
 
   let selectedComponent;
@@ -22,7 +23,7 @@ export const Account = () => {
       selectedComponent = <AccountDash />;
       break;
     case "subscription":
-      selectedComponent = <SubscriptionInfo dummyData={dummyData}/>;
+      selectedComponent = <SubscriptionInfo dummyData={dummyData} />;
       break;
     case "settings":
       break;
@@ -36,36 +37,38 @@ export const Account = () => {
   return (
     <div className="account-dashboard-section">
       <h2>My profile</h2>
-      <div className="issue-list">
-        <h3 className="name">NAME</h3>
-        <ul className="list-group issue-items list-group-flush">
-          <li
-            className="list-group-item issue"
-            onClick={() => setSelection("dashboard")}
-          >
-            Dasboard
-          </li>
-          <li
-            className="list-group-item issue"
-            onClick={() => setSelection("subscription")}
-          >
-            Subscription
-          </li>
-          <li
-            className="list-group-item issue"
-            onClick={() => setSelection("settings")}
-          >
-            Settings
-          </li>
-          <li
-            className="list-group-item issue"
-            onClick={() => setSelection("support")}
-          >
-            Support
-          </li>
-        </ul>
+      <div className="account-info-section">
+        <div className="issue-list">
+          <h3 className="name">{dummyData.name}</h3>
+          <ul className="list-group issue-items list-group-flush">
+            <li
+              className="list-group-item issue"
+              onClick={() => setSelection("dashboard")}
+            >
+              Dasboard
+            </li>
+            <li
+              className="list-group-item issue"
+              onClick={() => setSelection("subscription")}
+            >
+              Subscription
+            </li>
+            <li
+              className="list-group-item issue"
+              onClick={() => setSelection("settings")}
+            >
+              Settings
+            </li>
+            <li
+              className="list-group-item issue"
+              onClick={() => setSelection("support")}
+            >
+              Support
+            </li>
+          </ul>
+        </div>
+        <div className="content">{selectedComponent}</div>
       </div>
-      <div className="content">{selectedComponent}</div>
     </div>
   );
 };
