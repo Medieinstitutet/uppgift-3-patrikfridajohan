@@ -48,7 +48,7 @@
                         <ul className="activity-list">
                             <li>User JohnDoe updated the article "How to Learn JavaScript".</li>
                             <li>New user JaneDoe registered.</li>
-                            <li>Admin approved a new comment on "React vs Angular".</li>
+                            <li>Team started coding.</li>
                         </ul>
                     </section>
                     
