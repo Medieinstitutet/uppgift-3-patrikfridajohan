@@ -1,6 +1,6 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
-import apiRouter from './routes/api';
+// import apiRouter from './routes/api';
 
 dotenv.config();
 
@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json()); // Middleware to parse JSON bodies
 
 // Define your API routes
-app.use('/api', apiRouter);
+// app.use('/api', apiRouter);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => { // Error handling middleware
     console.error(err.stack);

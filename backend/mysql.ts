@@ -1,6 +1,5 @@
-
-const dotenv = require('dotenv');
-const mysql = require('mysql2/promise'); 
+import dotenv from 'dotenv';
+import mysql from 'mysql2/promise'; 
 
 dotenv.config();
 
@@ -28,7 +27,7 @@ SQLlink.on('error', (err) => {
     console.error('MySQL error occurred:', err.message);
 });
 
-module.exports = SQLlink;
+export default SQLlink;
 
 
 // Alternativt men får felmeddelande när jag försöker installera mysql2/promise

@@ -1,11 +1,10 @@
-// routes/api.ts
 import express, { Request, Response, NextFunction } from 'express';
-import { authenticateToken } from './authMiddleware';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import SQLlink from '../mysql';
+import SQLlink from './mysql';
+import { createSession, passportMiddleware, passportSessionMiddleware } from './authUtils';
 
 const router = express.Router();
+
 
 // Made example to get started - Johan
 
@@ -26,11 +25,14 @@ router.post('/auth/login', async (req: Request, res: Response, next: NextFunctio
             return res.status(401).json({ error: 'Invalid credentials' });
         }
         
-        // Generate JWT token
-        const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        // Create session
+        const session = await createSession(user.id); 
 
-        // Return token to the client
-        res.json({ token });
+        // Set session cookie
+        res.cookie('sessionID', session.id, { httpOnly: true }); // Set the session cookie with the session ID
+
+        // Redirect user to dashboard
+        res.redirect('/user/dashboard');
     } catch (error) {
         console.error('Error logging in:', error);
         res.status(500).json({ error: 'Internal server error' });
@@ -40,7 +42,7 @@ router.post('/auth/login', async (req: Request, res: Response, next: NextFunctio
 
 // POST /api/auth/register - User registration
 router.post('/auth/register', async (req: Request, res: Response, next: NextFunction) => {
-    const { username, email, password } = req.body;
+    const { email, password } = req.body;
 
     try {
         // Check if email already exists
@@ -53,13 +55,10 @@ router.post('/auth/register', async (req: Request, res: Response, next: NextFunc
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Insert user into database
-        await SQLlink.query('INSERT INTO data_users (email, password) VALUES (?, ?, ?)', [email, hashedPassword]);
+        await SQLlink.query('INSERT INTO data_users (email, password) VALUES (?, ?)', [email, hashedPassword]);
 
-        // Generate JWT token
-        const token = jwt.sign({ username, email }, process.env.JWT_SECRET, { expiresIn: '1h' });
-
-        // Return token to the client
-        res.status(201).json({ token });
+        // Return success message
+        res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
         console.error('Error registering user:', error);
         res.status(500).json({ error: 'Internal server error' });
@@ -67,8 +66,9 @@ router.post('/auth/register', async (req: Request, res: Response, next: NextFunc
 });
 
 
+
 // GET /api/example - Protected endpoint
-router.get('/example', authenticateToken, async (req: Request, res: Response, next: NextFunction) => {
+router.get('/example', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const [rows, fields] = await SQLlink.query('SELECT * FROM example_table');
         res.json({ data: rows });
@@ -79,7 +79,7 @@ router.get('/example', authenticateToken, async (req: Request, res: Response, ne
 });
 
 // POST (Add to DB) /api/data - Protected endpoint
-router.post('/data', authenticateToken, async (req: Request, res: Response, next: NextFunction) => {
+router.post('/data', async (req: Request, res: Response, next: NextFunction) => {
     const { body } = req;
     try {
         // Process request body and save data to database
@@ -92,7 +92,7 @@ router.post('/data', authenticateToken, async (req: Request, res: Response, next
 });
 
 // PUT (Update DB) /api/data/:id - Protected endpoint
-router.put('/data/:id', authenticateToken, async (req: Request, res: Response, next: NextFunction) => {
+router.put('/data/:id', async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
     const { body } = req;
     try {
@@ -106,7 +106,7 @@ router.put('/data/:id', authenticateToken, async (req: Request, res: Response, n
 });
 
 // DELETE (Remove from DB) /api/data/:id - Protected endpoint
-router.delete('/data/:id', authenticateToken, async (req: Request, res: Response, next: NextFunction) => {
+router.delete('/data/:id', async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
     try {
         // Delete data with specified id from the database
