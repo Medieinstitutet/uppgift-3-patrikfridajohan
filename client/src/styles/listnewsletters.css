@@ -11,7 +11,7 @@
     text-align: center;
     margin-bottom: 20px;
     font-size: 1.8rem;
-    color: #333;
+    color: var(--text-blue);
 }
 
 .newsletter-list {
@@ -32,6 +32,7 @@
 
 .newsletter-item h3 {
     margin: 0 0 10px;
+    
 }
 
 .newsletter-item p {
