@@ -10,11 +10,11 @@ const router = express.Router();
 // Made example to get started - Johan
 
 // POST /api/auth/login - User login
-router.post('/login', async (req: Request, res: Response, next: NextFunction) => {
-    const { username, password } = req.body;
+router.post('/auth/login', async (req: Request, res: Response, next: NextFunction) => {
+    const { email, password } = req.body;
     try {
-        // Check if user with provided username exists
-        const [rows, fields] = await SQLlink.query('SELECT * FROM users WHERE username = ?', [username]);
+        // Check if user with provided email exists
+        const [rows, fields] = await SQLlink.query('SELECT * FROM data_users WHERE email = ?', [email]);
         if (rows.length === 0) {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
@@ -39,16 +39,12 @@ router.post('/login', async (req: Request, res: Response, next: NextFunction) =>
 
 
 // POST /api/auth/register - User registration
-router.post('/register', async (req: Request, res: Response, next: NextFunction) => {
+router.post('/auth/register', async (req: Request, res: Response, next: NextFunction) => {
     const { username, email, password } = req.body;
 
     try {
-        // Check if username or email already exists
-        const [usernameRows] = await SQLlink.query('SELECT * FROM users WHERE username = ?', [username]);
-        const [emailRows] = await SQLlink.query('SELECT * FROM users WHERE email = ?', [email]);
-        if (usernameRows.length > 0) {
-            return res.status(400).json({ error: 'Username already exists' });
-        }
+        // Check if email already exists
+        const [emailRows] = await SQLlink.query('SELECT * FROM data_users WHERE email = ?', [email]);
         if (emailRows.length > 0) {
             return res.status(400).json({ error: 'Email already exists' });
         }
@@ -57,7 +53,7 @@ router.post('/register', async (req: Request, res: Response, next: NextFunction)
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Insert user into database
-        await SQLlink.query('INSERT INTO users (username, email, password) VALUES (?, ?, ?)', [username, email, hashedPassword]);
+        await SQLlink.query('INSERT INTO data_users (email, password) VALUES (?, ?, ?)', [email, hashedPassword]);
 
         // Generate JWT token
         const token = jwt.sign({ username, email }, process.env.JWT_SECRET, { expiresIn: '1h' });
