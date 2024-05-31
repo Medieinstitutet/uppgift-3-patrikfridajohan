@@ -75,7 +75,7 @@ export const Dashboard = () => {
   /* useEffect(() => {
     const fetchNewsletters = async () => {
       try {
-        const response = await axios.get("api");
+        const response = await getNewsletters();
         setNewsletters(response.data);
         
       } catch (err) {
