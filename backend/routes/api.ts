@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcrypt';
-import SQLlink from './mysql';
+import pool from '../mysql';
 import { createSession, passportMiddleware, passportSessionMiddleware } from './authUtils';
 
 const router = express.Router();
@@ -13,7 +13,7 @@ router.post('/auth/login', async (req: Request, res: Response, next: NextFunctio
     const { email, password } = req.body;
     try {
         // Check if user with provided email exists
-        const [rows, fields] = await SQLlink.query('SELECT * FROM data_users WHERE email = ?', [email]);
+        const [rows, fields] = await pool.query('SELECT * FROM data_users WHERE email = ?', [email]);
         if (rows.length === 0) {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
@@ -46,7 +46,7 @@ router.post('/auth/register', async (req: Request, res: Response, next: NextFunc
 
     try {
         // Check if email already exists
-        const [emailRows] = await SQLlink.query('SELECT * FROM data_users WHERE email = ?', [email]);
+        const [emailRows] = await pool.query('SELECT * FROM data_users WHERE email = ?', [email]);
         if (emailRows.length > 0) {
             return res.status(400).json({ error: 'Email already exists' });
         }
@@ -55,7 +55,7 @@ router.post('/auth/register', async (req: Request, res: Response, next: NextFunc
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Insert user into database
-        await SQLlink.query('INSERT INTO data_users (email, password) VALUES (?, ?)', [email, hashedPassword]);
+        await pool.query('INSERT INTO data_users (email, password) VALUES (?, ?)', [email, hashedPassword]);
 
         // Return success message
         res.status(201).json({ message: 'User registered successfully' });
@@ -70,7 +70,7 @@ router.post('/auth/register', async (req: Request, res: Response, next: NextFunc
 // GET /api/example - Protected endpoint
 router.get('/example', async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const [rows, fields] = await SQLlink.query('SELECT * FROM example_table');
+        const [rows, fields] = await pool.query('SELECT * FROM example_table');
         res.json({ data: rows });
     } catch (error) {
         console.error('Error fetching data:', error);
@@ -83,7 +83,7 @@ router.post('/data', async (req: Request, res: Response, next: NextFunction) => 
     const { body } = req;
     try {
         // Process request body and save data to database
-        // Example: await SQLlink.query('INSERT INTO example_table (column1, column2) VALUES (?, ?)', [body.column1, body.column2]);
+        // Example: await pool.query('INSERT INTO example_table (column1, column2) VALUES (?, ?)', [body.column1, body.column2]);
         res.json({ message: 'Data saved successfully' });
     } catch (error) {
         console.error('Error saving data:', error);
@@ -97,7 +97,7 @@ router.put('/data/:id', async (req: Request, res: Response, next: NextFunction) 
     const { body } = req;
     try {
         // Update data with specified id in the database
-        // Example: await SQLlink.query('UPDATE example_table SET column1 = ?, column2 = ? WHERE id = ?', [body.column1, body.column2, id]);
+        // Example: await pool.query('UPDATE example_table SET column1 = ?, column2 = ? WHERE id = ?', [body.column1, body.column2, id]);
         res.json({ message: `Data with id ${id} updated successfully` });
     } catch (error) {
         console.error('Error updating data:', error);
@@ -110,7 +110,7 @@ router.delete('/data/:id', async (req: Request, res: Response, next: NextFunctio
     const { id } = req.params;
     try {
         // Delete data with specified id from the database
-        // Example: await SQLlink.query('DELETE FROM example_table WHERE id = ?', [id]);
+        // Example: await pool.query('DELETE FROM example_table WHERE id = ?', [id]);
         res.json({ message: `Data with id ${id} deleted successfully` });
     } catch (error) {
         console.error('Error deleting data:', error);

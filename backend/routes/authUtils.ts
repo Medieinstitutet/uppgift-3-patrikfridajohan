@@ -1,7 +1,7 @@
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import bcrypt from 'bcrypt';
-import SQLlink from './mysql'; // Import SQLlink
+import pool from '../mysql'; // Import pool
 
 // Passport.js configuration
 passport.use(new LocalStrategy({
@@ -10,7 +10,7 @@ passport.use(new LocalStrategy({
 }, async (email, password, done) => {
     try {
         // Check if user with provided email exists
-        const [rows, fields] = await SQLlink.query('SELECT * FROM data_users WHERE email = ?', [email]);
+        const [rows, fields] = await pool.query('SELECT * FROM data_users WHERE email = ?', [email]);
         if (rows.length === 0) {
             return done(null, false, { message: 'Invalid credentials' });
         }
@@ -38,7 +38,7 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser(async (id: number, done) => {
     try {
         // Deserialize user from user ID stored in session
-        const [rows, fields] = await SQLlink.query('SELECT * FROM data_users WHERE id = ?', [id]);
+        const [rows, fields] = await pool.query('SELECT * FROM data_users WHERE id = ?', [id]);
         if (rows.length === 0) {
             return done(null, false);
         }
