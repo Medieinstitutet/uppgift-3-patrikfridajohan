@@ -1,6 +1,21 @@
+import { isLoggedIn, isAdmin } from './authService';
 import "../styles/subscriptions.css";
 
 export const Subscriptions = () => {
+  // Check if the user is logged in and their role
+  const { loggedIn } = isLoggedIn();
+  const admin = isAdmin();
+
+  // If the user is not logged in, show a message
+  if (!loggedIn) {
+    return <div>You need to login in to show this page.</div>;
+  }
+
+  // If the user is an admin, show a message
+  if (admin) {
+    return <div>Sorry, this page is not accessible for admin users.</div>;
+  }
+
   // Test - ska sen hämta från DB.
   const plan1 = {
     name: "Plan 1",
