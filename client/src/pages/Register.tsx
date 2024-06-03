@@ -3,12 +3,32 @@ import "../styles/register.css";
 import axios from "axios";
 
 export const Register = () => {
+  const [firstnameInput, setFirstnameInput] = useState("");
+  const [lastnameInput, setLastnameInput] = useState("");
   const [emailInput, setEmailInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const register = async () => {
-    if (!emailInput || !passwordInput || !confirmPassword) {
+  const userData = {
+    firstname: firstnameInput,
+    lastname: lastnameInput,
+    email: emailInput,
+    password: passwordInput,
+  };
+
+  console.log("userData:", userData);
+
+  const register = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    console.log("userData:", userData);
+
+    if (
+      !firstnameInput ||
+      !lastnameInput ||
+      !emailInput ||
+      !passwordInput ||
+      !confirmPassword
+    ) {
       alert("Please fill in all fields.");
       return;
     }
@@ -19,13 +39,25 @@ export const Register = () => {
     }
 
     try {
-      const response = await axios.post("REGISTER ENDPOINT", {
-        email: emailInput,
-        password: passwordInput,
-      });
+
+      const response = await axios.post(
+        "http://localhost:3000/user/register",
+        userData
+      );
       console.log(response.data);
 
-      console.log("Registration successfull");
+      if (response) {
+        
+        try {
+          await axios.post("http://localhost:3000/user/login", {
+            emailInput,
+            passwordInput,
+          });
+          window.location.href = "/user/dashboard";
+        } catch (error) {
+          console.error("Registration succeeded, login failed", error);
+        }
+      }
     } catch (error) {
       console.error("Registration failed:", error);
     }
@@ -40,7 +72,19 @@ export const Register = () => {
             <p>Get the best handpicked articles for every occation</p>
           </div>
           <div className="reg-form">
-            <form>
+            <form onSubmit={register}>
+              <label>Fristname</label>
+              <input
+                type="text"
+                value={firstnameInput}
+                onChange={(e) => setFirstnameInput(e.target.value)}
+              />
+              <label>Lastname</label>
+              <input
+                type="text"
+                value={lastnameInput}
+                onChange={(e) => setLastnameInput(e.target.value)}
+              />
               <label>Email</label>
               <input
                 type="email"
@@ -59,12 +103,7 @@ export const Register = () => {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
-              <button
-                type="submit"
-                className="btn"
-                id="login-btn"
-                onClick={register}
-              >
+              <button type="submit" className="btn" id="login-btn">
                 Sign up
               </button>
             </form>
