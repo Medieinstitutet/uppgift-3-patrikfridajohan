@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json()); // Middleware to parse JSON bodies
 
 // Define your API routes
-app.use('/api', apiRouter);
+app.use('/', apiRouter);
 
 async function testMySQLConnection() {
     try {
