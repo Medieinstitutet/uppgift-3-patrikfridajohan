@@ -78,6 +78,28 @@ router.post(
   }
 );
 
+// Get logged in users fullname
+router.get("/user/:userId", async (req: Request, res: Response) => {
+    try {
+        const { userId } = req.params;
+        const [userRows]: [any[], any] = await pool.query(
+            "SELECT firstname, lastname FROM data_users WHERE id = ?",
+            [userId]
+        );
+        if (userRows.length > 0) {
+            const { firstname, lastname } = userRows[0];
+            const fullName = `${firstname} ${lastname}`;
+            return res.json({ fullName });
+        } else {
+            return res.status(404).json({ error: "User not found" });
+        }
+    } catch (error) {
+        console.error("Error fetching user:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+
 // // GET /api/example - Protected endpoint
 // router.get('/example', async (req: Request, res: Response, next: NextFunction) => {
 //     try {
