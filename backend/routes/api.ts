@@ -1,44 +1,48 @@
-import express, { Request, Response, NextFunction } from 'express';
-import bcrypt from 'bcrypt';
-import pool from '../mysql';
-import { createSession, passportMiddleware, passportSessionMiddleware } from './authUtils';
+import express, { Request, Response, NextFunction } from "express";
+import bcrypt from "bcrypt";
+import pool from "../mysql";
+import { createSession } from "./authUtils";
 
 const router = express.Router();
-
 
 // Made example to get started - Johan
 
 // // POST /api/auth/login - User login
-// router.post('/auth/login', async (req: Request, res: Response, next: NextFunction) => {
-//     const { email, password } = req.body;
-//     try {
-//         // Check if user with provided email exists
-//         const [rows, fields] = await pool.query('SELECT * FROM data_users WHERE email = ?', [email]);
-//         if (rows.length === 0) {
-//             return res.status(401).json({ error: 'Invalid credentials' });
-//         }
-        
-//         // Check if password is correct
-//         const user = rows[0];
-//         const passwordMatch = await bcrypt.compare(password, user.password);
-//         if (!passwordMatch) {
-//             return res.status(401).json({ error: 'Invalid credentials' });
-//         }
-        
-//         // Create session
-//         const session = await createSession(user.id); 
+router.post(
+  "/auth/login",
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { email, password } = req.body;
+    try {
+      // Check if user with provided email exists
+      const [rows]: [any[], any] = await pool.query(
+        "SELECT * FROM data_users WHERE email = ?",
+        [email]
+      );
+      if (rows.length === 0) {
+        return res.status(401).json({ error: "Invalid credentials" });
+      }
 
-//         // Set session cookie
-//         res.cookie('sessionID', session.id, { httpOnly: true }); // Set the session cookie with the session ID
+      //         // Check if password is correct
+      const user = rows[0];
+      const passwordMatch = await bcrypt.compare(password, user.password);
+      if (!passwordMatch) {
+        return res.status(401).json({ error: "Invalid credentials" });
+      }
 
-//         // Redirect user to dashboard
-//         res.redirect('/user/dashboard');
-//     } catch (error) {
-//         console.error('Error logging in:', error);
-//         res.status(500).json({ error: 'Internal server error' });
-//     }
-// });
+      //         // Create session
+      const session = await createSession(user.id);
 
+      //         // Set session cookie
+      res.cookie("sessionID", session.id, { httpOnly: true }); // Set the session cookie with the session ID
+
+      //         // Redirect user to dashboard
+      res.redirect("/user/dashboard");
+    } catch (error) {
+      console.error("Error logging in:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+);
 
 // // POST /api/auth/register - User registration
 // router.post('/auth/register', async (req: Request, res: Response, next: NextFunction) => {
@@ -64,8 +68,6 @@ const router = express.Router();
 //         res.status(500).json({ error: 'Internal server error' });
 //     }
 // });
-
-
 
 // // GET /api/example - Protected endpoint
 // router.get('/example', async (req: Request, res: Response, next: NextFunction) => {

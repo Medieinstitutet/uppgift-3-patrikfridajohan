@@ -1,4 +1,4 @@
-import passport from 'passport';
+/*import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import bcrypt from 'bcrypt';
 import pool from '../mysql';
@@ -53,6 +53,7 @@ passport.deserializeUser(async (id: number, done) => {
 // Export Passport.js middleware
 export const passportMiddleware = passport.initialize();
 export const passportSessionMiddleware = passport.session();
+*/
 
 
 export async function createSession(userId: string): Promise<{ id: string }> {
