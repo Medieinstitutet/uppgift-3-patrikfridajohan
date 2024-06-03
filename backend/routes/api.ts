@@ -45,29 +45,38 @@ router.post(
 );
 
 // // POST /api/auth/register - User registration
-// router.post('/auth/register', async (req: Request, res: Response, next: NextFunction) => {
-//     const { email, password } = req.body;
+router.post(
+  "/auth/register",
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { email, password } = req.body;
 
-//     try {
-//         // Check if email already exists
-//         const [emailRows] = await pool.query('SELECT * FROM data_users WHERE email = ?', [email]);
-//         if (emailRows.length > 0) {
-//             return res.status(400).json({ error: 'Email already exists' });
-//         }
+    try {
+      // Check if email already exists
+      const [emailRows]: [any[], any] = await pool.query(
+        "SELECT * FROM data_users WHERE email = ?",
+        [email]
+      );
+      if (emailRows.length > 0) {
+        return res.status(400).json({ error: "Email already exists" });
+      }
 
-//         // Hash the password
-//         const hashedPassword = await bcrypt.hash(password, 10);
+      // Hash the password
+      const hashedPassword = await bcrypt.hash(password, 10);
 
-//         // Insert user into database
-//         await pool.query('INSERT INTO data_users (email, password) VALUES (?, ?)', [email, hashedPassword]);
+      // Insert user into database
+      await pool.query(
+        "INSERT INTO data_users (email, password) VALUES (?, ?)",
+        [email, hashedPassword]
+      );
 
-//         // Return success message
-//         res.status(201).json({ message: 'User registered successfully' });
-//     } catch (error) {
-//         console.error('Error registering user:', error);
-//         res.status(500).json({ error: 'Internal server error' });
-//     }
-// });
+      // Return success message
+      res.status(201).json({ message: "User registered successfully" });
+    } catch (error) {
+      console.error("Error registering user:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+);
 
 // // GET /api/example - Protected endpoint
 // router.get('/example', async (req: Request, res: Response, next: NextFunction) => {
