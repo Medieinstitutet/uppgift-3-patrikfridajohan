@@ -9,40 +9,46 @@ const router = express.Router();
 
 // // POST /api/auth/login - User login
 router.post(
-  "/auth/login",
-  async (req: Request, res: Response, next: NextFunction) => {
-    const { email, password } = req.body;
-    try {
-      // Check if user with provided email exists
-      const [rows]: [any[], any] = await pool.query(
-        "SELECT * FROM data_users WHERE email = ?",
-        [email]
-      );
-      if (rows.length === 0) {
-        return res.status(401).json({ error: "Invalid credentials" });
+    "/auth/login",
+    async (req: Request, res: Response, next: NextFunction) => {
+      const { email, password } = req.body;
+      try {
+        // Check if user with provided email exists
+        const [rows]: [any[], any] = await pool.query(
+          "SELECT * FROM data_users WHERE email = ?",
+          [email]
+        );
+        if (rows.length === 0) {
+          return res.status(401).json({ error: "Invalid credentials" });
+        }
+  
+        // Check if password is correct
+        const user = rows[0];
+        const passwordMatch = await bcrypt.compare(password, user.password);
+        if (!passwordMatch) {
+          return res.status(401).json({ error: "Invalid credentials" });
+        }
+  
+        // Set session cookie
+        const session = await createSession(user.id);
+        res.cookie("sessionID", session.id, { httpOnly: true });
+        res.cookie("userID", user.id, { httpOnly: true });
+        res.cookie("accessID", user.accessid, { httpOnly: true });
+  
+        // Redirect user based on access ID
+        if (user.accessid === 1) {
+          res.redirect("/user/dashboard");
+        } else if (user.accessid === 2) {
+          res.redirect("/admin/admindashboard");
+        } else {
+          res.status(401).json({ error: "Invalid access ID" });
+        }
+      } catch (error) {
+        console.error("Error logging in:", error);
+        res.status(500).json({ error: "Internal server error" });
       }
-
-      //         // Check if password is correct
-      const user = rows[0];
-      const passwordMatch = await bcrypt.compare(password, user.password);
-      if (!passwordMatch) {
-        return res.status(401).json({ error: "Invalid credentials" });
-      }
-
-      //         // Create session
-      const session = await createSession(user.id);
-
-      //         // Set session cookie
-      res.cookie("sessionID", session.id, { httpOnly: true }); // Set the session cookie with the session ID
-
-      //         // Redirect user to dashboard
-      res.redirect("/user/dashboard");
-    } catch (error) {
-      console.error("Error logging in:", error);
-      res.status(500).json({ error: "Internal server error" });
     }
-  }
-);
+  );
 
 // // POST /api/auth/register - User registration
 router.post(
