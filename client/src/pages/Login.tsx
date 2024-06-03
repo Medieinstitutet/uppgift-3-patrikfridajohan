@@ -15,7 +15,7 @@ export const Login = () => {
     }
 
     try {
-      const response = await axios.post("LOGIN ENDPOINT", {
+      const response = await axios.post("http://localhost:3000/user/login", {
         email: emailInput,
         password: passwordInput,
       });
@@ -23,7 +23,7 @@ export const Login = () => {
 
       // SET COOKIE IN MIDDLEWARE
 
-      window.location.href = "/user/loggeddashboard";
+      window.location.href = "/user/dashboard";
 
       console.log("Login successfull");
     } catch (error) {
@@ -68,7 +68,7 @@ export const Login = () => {
       </div>
       <div className="register-container">
         <p>Not a member yet?</p>
-        <a href="">Sign up!</a>
+        <a href="/register">Sign up!</a>
       </div>
     </div>
   );
