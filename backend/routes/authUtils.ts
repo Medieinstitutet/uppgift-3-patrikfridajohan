@@ -1,7 +1,7 @@
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import bcrypt from 'bcrypt';
-import pool from '../mysql'; // Import pool
+import pool from '../mysql';
 
 // Passport.js configuration
 passport.use(new LocalStrategy({
