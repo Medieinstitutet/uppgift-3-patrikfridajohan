@@ -1,9 +1,12 @@
 import express, { Request, Response, NextFunction } from "express";
 import bcrypt from "bcrypt";
 import pool from "../mysql";
+const cookieParser = require('cookie-parser');
 import { createSession } from "./authUtils";
 
 const router = express.Router();
+
+router.use(cookieParser());
 
 // Made example to get started - Johan
 
@@ -47,6 +50,27 @@ router.post(
         console.error("Error logging in:", error);
         res.status(500).json({ error: "Internal server error" });
       }
+
+      //         // Create session
+      const session = await createSession(user.id);
+
+      //         // Set session cookie
+        res.cookie("sessionID", session.id);
+        res.cookie("userID", user.id);
+        res.cookie("accessID", user.accessid);
+
+      //         // Redirect user to dashboard
+      if (user.accessid === 1) {
+        res.redirect("/user/dashboard");
+      } else if (user.accessid === 2) {
+        res.redirect("/admin/admindashboard");
+      } else {
+        res.status(401).json({ error: "Invalid access ID" });
+      }
+    } catch (error) {
+      console.error("Error logging in:", error);
+      res.status(500).json({ error: "Internal server error" });
+
     }
   );
 
@@ -79,6 +103,25 @@ router.post(
       res.status(201).json({ message: "User registered successfully" });
     } catch (error) {
       console.error("Error registering user:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+);
+
+// POST /api/auth/logout - User logout
+router.post(
+  "/auth/logout",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      // Clear session information
+
+      res.clearCookie("sessionID");
+      res.clearCookie("userID");
+      res.clearCookie("accessID");
+
+      res.status(200).json({ message: "Logout successful" });
+    } catch (error) {
+      console.error("Error logging out:", error);
       res.status(500).json({ error: "Internal server error" });
     }
   }

@@ -15,13 +15,14 @@ export const Login = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:5173/api/auth/login", {
-        email: emailInput,
-        password: passwordInput,
-      });
+      const response = await axios.post(
+        "http://localhost:5173/api/auth/login",
+        {
+          email: emailInput,
+          password: passwordInput,
+        }
+      );
       console.log(response.data);
-
-      // SET COOKIE IN MIDDLEWARE
 
       window.location.href = "/user/dashboard";
 
@@ -56,11 +57,7 @@ export const Login = () => {
               value={passwordInput}
               onChange={(e) => setPasswordInput(e.target.value)}
             />
-            <button
-              type="submit"
-              className="btn"
-              id="login-btn"
-            >
+            <button type="submit" className="btn" id="login-btn">
               Login
             </button>
           </form>
