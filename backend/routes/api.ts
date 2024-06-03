@@ -1,7 +1,7 @@
 import express, { Request, Response, NextFunction } from "express";
 import bcrypt from "bcrypt";
 import pool from "../mysql";
-const cookieParser = require('cookie-parser');
+const cookieParser = require("cookie-parser");
 import { createSession } from "./authUtils";
 
 const router = express.Router();
@@ -12,52 +12,48 @@ router.use(cookieParser());
 
 // // POST /api/auth/login - User login
 router.post(
-    "/auth/login",
-    async (req: Request, res: Response, next: NextFunction) => {
-      const { email, password } = req.body;
-      try {
-        // Check if user with provided email exists
-        const [rows]: [any[], any] = await pool.query(
-          "SELECT * FROM data_users WHERE email = ?",
-          [email]
-        );
-        if (rows.length === 0) {
-          return res.status(401).json({ error: "Invalid credentials" });
-        }
-  
-        // Check if password is correct
-        const user = rows[0];
-        const passwordMatch = await bcrypt.compare(password, user.password);
-        if (!passwordMatch) {
-          return res.status(401).json({ error: "Invalid credentials" });
-        }
-  
-        // Set session cookie
-        const session = await createSession(user.id);
-        res.cookie("sessionID", session.id, { httpOnly: true });
-        res.cookie("userID", user.id, { httpOnly: true });
-        res.cookie("accessID", user.accessid, { httpOnly: true });
-  
-        // Redirect user based on access ID
-        if (user.accessid === 1) {
-          res.redirect("/user/dashboard");
-        } else if (user.accessid === 2) {
-          res.redirect("/admin/admindashboard");
-        } else {
-          res.status(401).json({ error: "Invalid access ID" });
-        }
-      } catch (error) {
-        console.error("Error logging in:", error);
-        res.status(500).json({ error: "Internal server error" });
+  "/auth/login",
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { email, password } = req.body;
+    try {
+      // Check if user with provided email exists
+      const [rows]: [any[], any] = await pool.query(
+        "SELECT * FROM data_users WHERE email = ?",
+        [email]
+      );
+      if (rows.length === 0) {
+        return res.status(401).json({ error: "Invalid credentials" });
+      }
+
+      // Check if password is correct
+      const user = rows[0];
+      const passwordMatch = await bcrypt.compare(password, user.password);
+      if (!passwordMatch) {
+        return res.status(401).json({ error: "Invalid credentials" });
+      }
+
+      // Set session cookie
+      const session = await createSession(user.id);
+      res.cookie("sessionID", session.id, { httpOnly: true });
+      res.cookie("userID", user.id, { httpOnly: true });
+      res.cookie("accessID", user.accessid, { httpOnly: true });
+
+      // Redirect user based on access ID
+      if (user.accessid === 1) {
+        res.redirect("/user/dashboard");
+      } else if (user.accessid === 2) {
+        res.redirect("/admin/admindashboard");
+      } else {
+        res.status(401).json({ error: "Invalid access ID" });
       }
 
       //         // Create session
-      const session = await createSession(user.id);
+      // const session = await createSession(user.id);
 
       //         // Set session cookie
-        res.cookie("sessionID", session.id);
-        res.cookie("userID", user.id);
-        res.cookie("accessID", user.accessid);
+      res.cookie("sessionID", session.id);
+      res.cookie("userID", user.id);
+      res.cookie("accessID", user.accessid);
 
       //         // Redirect user to dashboard
       if (user.accessid === 1) {
@@ -70,9 +66,9 @@ router.post(
     } catch (error) {
       console.error("Error logging in:", error);
       res.status(500).json({ error: "Internal server error" });
-
     }
-  );
+  }
+);
 
 // // POST /api/auth/register - User registration
 router.post(
@@ -129,25 +125,24 @@ router.post(
 
 // Get logged in users fullname
 router.get("/user/:userId", async (req: Request, res: Response) => {
-    try {
-        const { userId } = req.params;
-        const [userRows]: [any[], any] = await pool.query(
-            "SELECT firstname, lastname FROM data_users WHERE id = ?",
-            [userId]
-        );
-        if (userRows.length > 0) {
-            const { firstname, lastname } = userRows[0];
-            const fullName = `${firstname} ${lastname}`;
-            return res.json({ fullName });
-        } else {
-            return res.status(404).json({ error: "User not found" });
-        }
-    } catch (error) {
-        console.error("Error fetching user:", error);
-        res.status(500).json({ error: "Internal server error" });
+  try {
+    const { userId } = req.params;
+    const [userRows]: [any[], any] = await pool.query(
+      "SELECT firstname, lastname FROM data_users WHERE id = ?",
+      [userId]
+    );
+    if (userRows.length > 0) {
+      const { firstname, lastname } = userRows[0];
+      const fullName = `${firstname} ${lastname}`;
+      return res.json({ fullName });
+    } else {
+      return res.status(404).json({ error: "User not found" });
     }
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
-
 
 // // GET /api/example - Protected endpoint
 // router.get('/example', async (req: Request, res: Response, next: NextFunction) => {
