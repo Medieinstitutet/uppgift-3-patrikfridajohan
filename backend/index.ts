@@ -11,12 +11,18 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json()); // Middleware to parse JSON bodies
 
+app.use((req: Request, res: Response, next: NextFunction) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    next();
+});
+
 // Define your API routes
 app.use('/', apiRouter);
 
 async function testMySQLConnection() {
     try {
-        const [rows, fields]: [any[], any] = await pool.query('SELECT * FROM data_users LIMIT 1');
+        const [rows, fields]: [any[], any] = await pool.query('SELECT * FROM data_users where id = 2 LIMIT 1');
 
         console.log('MySQL connection works!');
         console.log('Retrieved data:', rows);
