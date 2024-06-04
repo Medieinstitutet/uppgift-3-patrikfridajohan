@@ -39,17 +39,12 @@ export const Register = () => {
     }
 
     try {
-
-      const response = await axios.post(
-        "http://localhost:3000/user/register",
-        userData
-      );
+      const response = await axios.post("/api/auth/register", userData);
       console.log(response.data);
 
       if (response) {
-        
         try {
-          await axios.post("http://localhost:3000/user/login", {
+          await axios.post("http://localhost:5173/api/auth/login", {
             emailInput,
             passwordInput,
           });
