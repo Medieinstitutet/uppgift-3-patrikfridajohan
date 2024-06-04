@@ -12,7 +12,7 @@ export const CreateNewsletter = () => {
                 <div className="form-group">
                     <label htmlFor="category">Category</label>
                     <select id="category">
-                        <option value="" disabled selected>Select a category</option>
+                        <option value="" disabled defaultValue={""}>Select a category</option>
                         <option value="Standard">Standard</option>
                         <option value="Plus">Plus</option>
                         <option value="Exclusive">Exclusive</option>

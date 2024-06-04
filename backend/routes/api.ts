@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import pool from "../mysql";
 const cookieParser = require("cookie-parser");
 import { createSession } from "./authUtils";
+import Cookies from "js-cookie";
 
 const router = express.Router();
 
@@ -37,6 +38,7 @@ router.post(
       res.cookie("sessionID", session.id);
       res.cookie("userID", user.id);
       res.cookie("accessID", user.accessid);
+      res.cookie("activesubscriptionid", user.activesubscriptionid);
 
       // Redirect user based on access ID
       if (user.accessid === 1) {
@@ -46,8 +48,7 @@ router.post(
       } else {
         res.status(401).json({ error: "Invalid access ID" });
       }
-
-    }catch (error) {
+    } catch (error) {
       console.error("Error logging in:", error);
       res.status(500).json({ error: "Internal server error" });
     }
@@ -98,6 +99,7 @@ router.post(
       res.clearCookie("sessionID");
       res.clearCookie("userID");
       res.clearCookie("accessID");
+      res.clearCookie("activesubscriptionid");
 
       res.status(200).json({ message: "Logout successful" });
     } catch (error) {
@@ -109,76 +111,99 @@ router.post(
 
 // Get all data of the current logged in user
 router.get("/user/:userId", async (req: Request, res: Response) => {
-    try {
-        const { userId } = req.params;
-        const [userRows]: [any[], any] = await pool.query(
-            "SELECT * FROM data_users WHERE id = ?",
-            [userId]
-        );
-        if (userRows.length > 0) {
-            const userData = userRows[0];
-            return res.json(userData);
-        } else {
-            return res.status(404).json({ error: "User not found" });
-        }
-    } catch (error) {
-        console.error("Error fetching user:", error);
-        res.status(500).json({ error: "Internal server error" });
+  try {
+    const { userId } = req.params;
+    const [userRows]: [any[], any] = await pool.query(
+      "SELECT * FROM data_users WHERE id = ?",
+      [userId]
+    );
+    if (userRows.length > 0) {
+      const userData = userRows[0];
+      return res.json(userData);
+    } else {
+      return res.status(404).json({ error: "User not found" });
     }
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 // GET /api/subscription/:subscriptionId - Get subscription data by subscription ID
 router.get("/subscription/:subscriptionId", async (req, res) => {
-    try {
-        const { subscriptionId } = req.params;
-        const [subscriptionRows]: [any[], any] = await pool.query(
-            "SELECT * FROM data_subscriptions WHERE id = ?",
-            [subscriptionId]
-        );
-        if (subscriptionRows.length > 0) {
-            const subscriptionData = subscriptionRows[0];
-            return res.json(subscriptionData);
-        } else {
-            return res.status(404).json({ error: "Subscription not found" });
-        }
-    } catch (error) {
-        console.error("Error fetching subscription data:", error);
-        res.status(500).json({ error: "Internal server error" });
+  try {
+    const { subscriptionId } = req.params;
+    const [subscriptionRows]: [any[], any] = await pool.query(
+      "SELECT * FROM data_subscriptions WHERE id = ?",
+      [subscriptionId]
+    );
+    if (subscriptionRows.length > 0) {
+      const subscriptionData = subscriptionRows[0];
+      return res.json(subscriptionData);
+    } else {
+      return res.status(404).json({ error: "Subscription not found" });
     }
+  } catch (error) {
+    console.error("Error fetching subscription data:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 // GET /api/subscription/plans - Get all subscription plans
 router.get("/subscriptions", async (req, res) => {
-    try {
-        const [planRows]: [any[], any] = await pool.query(
-            "SELECT * FROM data_subscriptions"
-        );
-        return res.json(planRows);
-    } catch (error) {
-        console.error("Error fetching subscription plans:", error);
-        res.status(500).json({ error: "Internal server error" });
-    }
+  try {
+    const [planRows]: [any[], any] = await pool.query(
+      "SELECT * FROM data_subscriptions"
+    );
+    return res.json(planRows);
+  } catch (error) {
+    console.error("Error fetching subscription plans:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 // // GET /api/example - Protected endpoint
- router.get('/articles', async (req: Request, res: Response, next: NextFunction) => {
+router.get(
+  "/articles",
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const [rows]: [any[], any] = await pool.query('SELECT * FROM data_articles');
-         res.json(rows);
-     } catch (error) {
-         console.error('Error fetching data:', error);
-         res.status(500).json({ error: 'Internal server error' });
-     }
- });
- router.get('/user', async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const [rows]: [any[], any] = await pool.query('SELECT * FROM data_users WHERE activesubscriptionid =     1');
-         res.json({ data: rows });
-     } catch (error) {
-         console.error('Error fetching data:', error);
-         res.status(500).json({ error: 'Internal server error' });
-     }
- });
+      const activesubscriptionid = req.cookies.activesubscriptionid;
+      const [rows]: [any[], any] = await pool.query(
+        "SELECT * FROM data_articles WHERE subscriptionid = ?", [activesubscriptionid]
+      );
+      res.json(rows);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+);
+router.get(
+    "/admin/articles",
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        
+        const [rows]: [any[], any] = await pool.query(
+          "SELECT * FROM data_articles"
+        );
+        res.json(rows);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        res.status(500).json({ error: "Internal server error" });
+      }
+    }
+  );
+router.get("/user", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const [rows]: [any[], any] = await pool.query(
+      "SELECT * FROM data_users WHERE activesubscriptionid =     1"
+    );
+    res.json({ data: rows });
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 // // POST (Add to DB) /api/data - Protected endpoint
 // router.post('/data', async (req: Request, res: Response, next: NextFunction) => {
