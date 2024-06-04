@@ -23,7 +23,7 @@ export const Login = () => {
         }
       );
       if (response) {
-        window.location.href = "/user/dashboard";
+        window.location.href = response.data;
       } else {
         console.log('Error logging in')
       }
