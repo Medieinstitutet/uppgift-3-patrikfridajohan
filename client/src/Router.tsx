@@ -11,6 +11,7 @@ import { Subscriptions } from "./pages/Subscriptions";
 import { Newsletter } from "./pages/Newsletter";
 import { CreateNewsletter } from "./pages/CreateNewsletter";
 import { ListNewsletters } from "./pages/ListNewsletters";
+import { DisabledDash } from "./pages/DisabledDash";
 
 
 
@@ -33,6 +34,10 @@ export const router = createBrowserRouter([
         path: "register",
         element: <Register />,
       },
+      {
+        path: "dashboard",
+        element: <DisabledDash />
+      }
     ],
   },
   {
