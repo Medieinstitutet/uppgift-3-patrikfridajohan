@@ -40,9 +40,9 @@ router.post(
 
       // Redirect user based on access ID
       if (user.accessid === 1) {
-        res.redirect("/user/dashboard");
+        res.send("/user/dashboard");
       } else if (user.accessid === 2) {
-        res.redirect("/admin/admindashboard");
+        res.send("/admin/admindashboard");
       } else {
         res.status(401).json({ error: "Invalid access ID" });
       }
