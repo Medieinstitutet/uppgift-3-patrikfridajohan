@@ -44,6 +44,14 @@
 }
 
 
+.subscribed {
+    text-decoration: underline;
+    text-transform: uppercase;
+    font-size: 18px;
+    padding: 10px;
+    width: fit-content;
+}
+
 .introduction {
     color: var(--text-blue);
     background-color: white;
@@ -101,7 +109,7 @@
     align-items: center;
 }
 
-.pricing  {
-    font-size: 55px;
-    font-weight: bold;
+.pricing {
+    font-size: 45px!important;
+    font-weight: bold!important;
 }

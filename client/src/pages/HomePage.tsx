@@ -67,29 +67,29 @@ export const HomePage = () => {
       </div>
       <div className="keys">
         <h3>Key features</h3>
-        <div className="features">
-          <div className="feature">
+        <div className="hp-features">
+          <div className="hp-feature">
             <h4>Daily Curated Articles</h4>
             <p>
               Our expert team handpicks the best articles each day to keep you
               informed and inspired.
             </p>
           </div>
-          <div className="feature">
+          <div className="hp-feature">
             <h4>Personalized Recommendations</h4>
             <p>
               Enjoy a tailored reading experience with articles that match your
               interests and preferences.
             </p>
           </div>
-          <div className="feature">
+          <div className="hp-feature">
             <h4>Accessible Anywhere</h4>
             <p>
               Whether you're at home or on the go, access SCOPE on your desktop,
               tablet, or mobile device.
             </p>
           </div>
-          <div className="feature">
+          <div className="hp-feature">
             <h4>Community Engagement</h4>
             <p>
               Join a vibrant community of curious minds. Share articles, discuss
@@ -104,21 +104,21 @@ export const HomePage = () => {
             "SCOPE has transformed my reading habits. I love waking up to a
             fresh selection of articles every day."
           </h6>
-          <p>- Frida A.</p>
+          <p>- Frida A. President of the United states</p>
         </div>
         <div className="quote">
           <h6>
             "The personalized recommendations are spot on. It's like having a
             personal curator just for me!"
           </h6>
-          <p>- Patrik B.</p>
+          <p>- Patrik B. CEO of Google</p>
         </div>
         <div className="quote">
           <h6>
             "The quality of content on SCOPE is unparalleled. I've discovered so
             many new topics and ideas."
           </h6>
-          <p>- Johan N.</p>
+          <p>- Johan N. Coach of Manchester United</p>
         </div>
       </div>
       <div className="why">

@@ -1,9 +1,12 @@
 import express, { Request, Response, NextFunction } from "express";
 import bcrypt from "bcrypt";
 import pool from "../mysql";
+const cookieParser = require("cookie-parser");
 import { createSession } from "./authUtils";
 
 const router = express.Router();
+
+router.use(cookieParser());
 
 // Made example to get started - Johan
 
@@ -22,21 +25,44 @@ router.post(
         return res.status(401).json({ error: "Invalid credentials" });
       }
 
-      //         // Check if password is correct
+      // Check if password is correct
       const user = rows[0];
       const passwordMatch = await bcrypt.compare(password, user.password);
       if (!passwordMatch) {
         return res.status(401).json({ error: "Invalid credentials" });
       }
 
-      //         // Create session
+      // Set session cookie
       const session = await createSession(user.id);
+      res.cookie("sessionID", session.id);
+      res.cookie("userID", user.id);
+      res.cookie("accessID", user.accessid);
+
+      // Redirect user based on access ID
+      if (user.accessid === 1) {
+        res.redirect("/user/dashboard");
+      } else if (user.accessid === 2) {
+        res.redirect("/admin/admindashboard");
+      } else {
+        res.status(401).json({ error: "Invalid access ID" });
+      }
+
+      //         // Create session
+      // const session = await createSession(user.id);
 
       //         // Set session cookie
-      res.cookie("sessionID", session.id, { httpOnly: true }); // Set the session cookie with the session ID
+      res.cookie("sessionID", session.id);
+      res.cookie("userID", user.id);
+      res.cookie("accessID", user.accessid);
 
       //         // Redirect user to dashboard
-      res.redirect("/user/dashboard");
+      if (user.accessid === 1) {
+        res.redirect("/user/dashboard");
+      } else if (user.accessid === 2) {
+        res.redirect("/admin/admindashboard");
+      } else {
+        res.status(401).json({ error: "Invalid access ID" });
+      }
     } catch (error) {
       console.error("Error logging in:", error);
       res.status(500).json({ error: "Internal server error" });
@@ -77,6 +103,78 @@ router.post(
     }
   }
 );
+
+// POST /api/auth/logout - User logout
+router.post(
+  "/auth/logout",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      // Clear session information
+
+      res.clearCookie("sessionID");
+      res.clearCookie("userID");
+      res.clearCookie("accessID");
+
+      res.status(200).json({ message: "Logout successful" });
+    } catch (error) {
+      console.error("Error logging out:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+);
+
+// Get all data of the current logged in user
+router.get("/user/:userId", async (req: Request, res: Response) => {
+    try {
+        const { userId } = req.params;
+        const [userRows]: [any[], any] = await pool.query(
+            "SELECT * FROM data_users WHERE id = ?",
+            [userId]
+        );
+        if (userRows.length > 0) {
+            const userData = userRows[0];
+            return res.json(userData);
+        } else {
+            return res.status(404).json({ error: "User not found" });
+        }
+    } catch (error) {
+        console.error("Error fetching user:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+// GET /api/subscription/:subscriptionId - Get subscription data by subscription ID
+router.get("/subscription/:subscriptionId", async (req, res) => {
+    try {
+        const { subscriptionId } = req.params;
+        const [subscriptionRows]: [any[], any] = await pool.query(
+            "SELECT * FROM data_subscriptions WHERE id = ?",
+            [subscriptionId]
+        );
+        if (subscriptionRows.length > 0) {
+            const subscriptionData = subscriptionRows[0];
+            return res.json(subscriptionData);
+        } else {
+            return res.status(404).json({ error: "Subscription not found" });
+        }
+    } catch (error) {
+        console.error("Error fetching subscription data:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+// GET /api/subscription/plans - Get all subscription plans
+router.get("/subscriptions", async (req, res) => {
+    try {
+        const [planRows]: [any[], any] = await pool.query(
+            "SELECT * FROM data_subscriptions"
+        );
+        return res.json(planRows);
+    } catch (error) {
+        console.error("Error fetching subscription plans:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
 
 // // GET /api/example - Protected endpoint
  router.get('/articles', async (req: Request, res: Response, next: NextFunction) => {
