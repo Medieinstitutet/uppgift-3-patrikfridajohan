@@ -34,9 +34,9 @@ router.post(
 
       // Set session cookie
       const session = await createSession(user.id);
-      res.cookie("sessionID", session.id, { httpOnly: true });
-      res.cookie("userID", user.id, { httpOnly: true });
-      res.cookie("accessID", user.accessid, { httpOnly: true });
+      res.cookie("sessionID", session.id);
+      res.cookie("userID", user.id);
+      res.cookie("accessID", user.accessid);
 
       // Redirect user based on access ID
       if (user.accessid === 1) {

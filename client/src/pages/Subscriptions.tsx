@@ -70,7 +70,7 @@ export const Subscriptions = () => {
               <p className="pricing">${plan.price}</p>
               <p>{plan.info}</p>
               {activeSubscriptionId === plan.id ? (
-                <p className="subscribed">Already Subscribed</p>
+                <button type="button" class="btn btn-outline-success subscribed" disabled>Already Subscribed</button>
               ) : (
                 <button
                   className="btn"

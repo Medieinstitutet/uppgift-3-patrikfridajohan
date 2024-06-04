@@ -37,8 +37,8 @@ export const Navbar = () => {
           <img src={logo} alt="" />
         </a>
         <div className="nav-items">
-          <a href="">Pricing</a>
-          <a href="">Articles</a>
+          <a href="/user/subscriptions">Plans</a>
+          <a href="">Feed</a>
           <a href="">About</a>
           {isLoggedIn ? (
             <>
