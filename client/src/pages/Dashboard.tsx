@@ -3,7 +3,7 @@ import "../styles/dashboard.css";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const exampleData = {
+/*const exampleData = {
   user: {
     subscriptionlevel: "Plus",
   },
@@ -64,36 +64,54 @@ const exampleData = {
     },
   ],
 };
+ */
 
 export const Dashboard = () => {
   const navigate = useNavigate();
-  const { subscriptionlevel } = exampleData.user;
+  const [newsletters, setNewsletters] = useState<INewsletter[]>([]);
+  const [subscriptionlevel, setSubscriptionlevel] = useState<number>();
+  /* const { subscriptionlevel } = exampleData.user;
   const availableNewsletters = exampleData.newsletters.filter(
     (item) => item.level === subscriptionlevel
-  );
+  ); */
 
-  /* useEffect(() => {
-    const fetchNewsletters = async () => {
+  useEffect(() => {
+    /*   const fetchUserData = async () => {
       try {
-        const response = await getNewsletters();
-        setNewsletters(response.data);
-        
+        const response = await axios.get("http://localhost:5173/api/user");
+        setSubscriptionlevel(response.data.subscriptionid);
       } catch (err) {
-        console.log(err);
-        
+        console.log("Error fetching user data:", err);
       }
     };
-  }, []); */
+ */
+
+    const fetchNewsletters = async () => {
+      try {
+        const response = await axios.get("http://localhost:5173/api/articles");
+        console.log(response.data);
+        setNewsletters(response.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchNewsletters();
+    /* fetchUserData(); */
+  }, []);
 
   const handleClick = (id: number) => {
     navigate(`/user/newsletter/${id}`);
   };
 
+  /* const filteredNewsletters = newsletters.filter(
+    (newsletter) => newsletter.level === subscriptionlevel
+  ); */
+
   return (
     <div className="dashboard-container">
       <div className="dashboard-header">
         <h1>Welcome, Friend!</h1>
-        <p>Subscription Level: {subscriptionlevel}</p>
+        <p>Subscription Level: </p>
       </div>
       <div className="dashboard-content">
         <section className="section-dashboard">
@@ -113,17 +131,17 @@ export const Dashboard = () => {
         </section>
         <section className="newsletter-list">
           <h2>Available Newsletters</h2>
-          {availableNewsletters.length === 0 ? (
+          {newsletters.length === 0 ? (
             <p>No Newsletters available for your subscription.</p>
           ) : (
-            availableNewsletters.map((newsletter) => (
+            newsletters?.map((newsletter) => (
               <div
                 className="newsletter-item"
                 key={newsletter.id}
                 onClick={() => handleClick(newsletter.id)}
               >
                 <h2>{newsletter.title}</h2>
-                <p>{newsletter.description}</p>
+                <p>{newsletter.shortinfo}</p>
               </div>
             ))
           )}
