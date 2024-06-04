@@ -79,15 +79,24 @@ router.post(
 );
 
 // // GET /api/example - Protected endpoint
-// router.get('/example', async (req: Request, res: Response, next: NextFunction) => {
-//     try {
-//         const [rows, fields] = await pool.query('SELECT * FROM example_table');
-//         res.json({ data: rows });
-//     } catch (error) {
-//         console.error('Error fetching data:', error);
-//         res.status(500).json({ error: 'Internal server error' });
-//     }
-// });
+ router.get('/articles', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const [rows]: [any[], any] = await pool.query('SELECT * FROM data_articles');
+         res.json(rows);
+     } catch (error) {
+         console.error('Error fetching data:', error);
+         res.status(500).json({ error: 'Internal server error' });
+     }
+ });
+ router.get('/user', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const [rows]: [any[], any] = await pool.query('SELECT * FROM data_users WHERE activesubscriptionid =     1');
+         res.json({ data: rows });
+     } catch (error) {
+         console.error('Error fetching data:', error);
+         res.status(500).json({ error: 'Internal server error' });
+     }
+ });
 
 // // POST (Add to DB) /api/data - Protected endpoint
 // router.post('/data', async (req: Request, res: Response, next: NextFunction) => {
