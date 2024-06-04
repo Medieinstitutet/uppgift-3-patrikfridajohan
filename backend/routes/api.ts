@@ -47,23 +47,7 @@ router.post(
         res.status(401).json({ error: "Invalid access ID" });
       }
 
-      //         // Create session
-      // const session = await createSession(user.id);
-
-      //         // Set session cookie
-      res.cookie("sessionID", session.id);
-      res.cookie("userID", user.id);
-      res.cookie("accessID", user.accessid);
-
-      //         // Redirect user to dashboard
-      if (user.accessid === 1) {
-        res.redirect("/user/dashboard");
-      } else if (user.accessid === 2) {
-        res.redirect("/admin/admindashboard");
-      } else {
-        res.status(401).json({ error: "Invalid access ID" });
-      }
-    } catch (error) {
+    }catch (error) {
       console.error("Error logging in:", error);
       res.status(500).json({ error: "Internal server error" });
     }
