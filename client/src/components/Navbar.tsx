@@ -38,7 +38,7 @@ export const Navbar = () => {
         </a>
         <div className="nav-items">
           <a href="/user/subscriptions">Plans</a>
-          <a href="">Feed</a>
+          <a href="/user/dashboard">Dashboard</a>
           <a href="">About</a>
           {isLoggedIn ? (
             <>
