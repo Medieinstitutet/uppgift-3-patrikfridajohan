@@ -50,7 +50,7 @@ export const DisabledDash = () => {
             <p>No Newsletters available for your subscription.</p>
           ) : (
             newsletters?.map((newsletter) => (
-              <div className="newsletter-item" key={newsletter.id}>
+              <div className="newsletter-item" key={newsletter.id} onClick={handleRedirect}>
                 <h2>{newsletter.title}</h2>
                 <p className="blur">{newsletter.shortinfo}</p>
               </div>
