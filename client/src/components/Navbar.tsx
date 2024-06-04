@@ -19,7 +19,6 @@ export const Navbar = () => {
       const response = await axios.post("/api/auth/logout")
 
       if (response) {
-        // Logout successful
         setIsLoggedIn(false);
         window.location.href = '/'
       } else {
@@ -38,7 +37,11 @@ export const Navbar = () => {
         </a>
         <div className="nav-items">
           <a href="/user/subscriptions">Plans</a>
-          <a href="/user/dashboard">Dashboard</a>
+          {isLoggedIn ? (
+            <a href="/user/dashboard">Dashboard</a>
+          ):(
+            <a href="/dashboard">Dashboard</a>
+          )}
           <a href="">About</a>
           {isLoggedIn ? (
             <>
