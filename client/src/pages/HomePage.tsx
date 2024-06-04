@@ -104,21 +104,21 @@ export const HomePage = () => {
             "SCOPE has transformed my reading habits. I love waking up to a
             fresh selection of articles every day."
           </h6>
-          <p>- Frida A.</p>
+          <p>- Frida A. President of the United states</p>
         </div>
         <div className="quote">
           <h6>
             "The personalized recommendations are spot on. It's like having a
             personal curator just for me!"
           </h6>
-          <p>- Patrik B.</p>
+          <p>- Patrik B. CEO of Google</p>
         </div>
         <div className="quote">
           <h6>
             "The quality of content on SCOPE is unparalleled. I've discovered so
             many new topics and ideas."
           </h6>
-          <p>- Johan N.</p>
+          <p>- Johan N. Coach of Manchester United</p>
         </div>
       </div>
       <div className="why">

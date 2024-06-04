@@ -22,9 +22,11 @@ export const Login = () => {
           password: passwordInput,
         }
       );
-      console.log(response.data);
-
-      window.location.href = "/user/dashboard";
+      if (response) {
+        window.location.href = "/user/dashboard";
+      } else {
+        console.log('Error logging in')
+      }
 
       console.log("Login successfull");
     } catch (error) {
