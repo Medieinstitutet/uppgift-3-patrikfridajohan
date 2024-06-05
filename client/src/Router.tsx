@@ -12,6 +12,7 @@ import { Newsletter } from "./pages/Newsletter";
 import { CreateNewsletter } from "./pages/CreateNewsletter";
 import { ListNewsletters } from "./pages/ListNewsletters";
 import { DisabledDash } from "./pages/DisabledDash";
+import { Success } from "./pages/Success";
 
 
 
@@ -60,6 +61,10 @@ export const router = createBrowserRouter([
       {
         path:"newsletter/:id",
         element: <Newsletter/>
+      },
+      {
+        path:"success",
+        element:<Success/>
       }
     ],
   },

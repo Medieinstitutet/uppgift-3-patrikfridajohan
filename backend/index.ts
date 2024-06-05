@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import pool from './mysql';
 
 import apiRouter from './routes/api';
+import stripeRouter from './stripe/stripeRouter';
 
 dotenv.config();
 
@@ -11,14 +12,19 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json()); // Middleware to parse JSON bodies
 
-app.use((req: Request, res: Response, next: NextFunction) => {
+/* app.use((req: Request, res: Response, next: NextFunction) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     next();
-});
+}); */
+
+
+
+
 
 // Define your API routes
 app.use('/', apiRouter);
+app.use('/stripe', stripeRouter);
 
 async function testMySQLConnection() {
     try {
