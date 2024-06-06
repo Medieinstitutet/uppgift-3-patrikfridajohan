@@ -149,7 +149,7 @@ router.get("/subscription/:subscriptionId", async (req, res) => {
   }
 });
 
-// GET /api/subscription/plans - Get all subscription plans
+// GET /api/subscriptions - Get all subscription plans
 router.get("/subscriptions", async (req, res) => {
   try {
     const [planRows]: [any[], any] = await pool.query(
@@ -162,10 +162,22 @@ router.get("/subscriptions", async (req, res) => {
   }
 });
 
+
+// GET /api/articletitles - Get all article titles
+router.get("/articletitles", async (req, res) => {
+  try {
+    const [articleRows]: [any[], any] = await pool.query(
+      "SELECT id, title, added FROM data_articles WHERE active = 1"
+    );
+    return res.json(articleRows);
+  } catch (error) {
+    console.error("Error fetching article titles:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 // // GET /api/example - Protected endpoint
-router.get(
-  "/articles",
-  async (req: Request, res: Response, next: NextFunction) => {
+router.get("/articles", async (req: Request, res: Response, next: NextFunction) => {
     try {
       const activesubscriptionid = req.cookies.activesubscriptionid;
       const [rows]: [any[], any] = await pool.query(
@@ -178,9 +190,8 @@ router.get(
     }
   }
 );
-router.get(
-    "/admin/articles",
-    async (req: Request, res: Response, next: NextFunction) => {
+
+router.get("/admin/articles", async (req: Request, res: Response, next: NextFunction) => {
       try {
         
         const [rows]: [any[], any] = await pool.query(
@@ -193,6 +204,7 @@ router.get(
       }
     }
   );
+
 router.get("/user", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const [rows]: [any[], any] = await pool.query(

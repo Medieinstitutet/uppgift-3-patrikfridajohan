@@ -5,16 +5,16 @@ import { Account } from "./pages/Account";
 import { AdminDashboard } from "./pages/AdminDashboard";
 import { HomePage } from "./pages/HomePage";
 import { Dashboard} from "./pages/Dashboard";
+import { Articles } from "./pages/Articles";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
 import { Subscriptions } from "./pages/Subscriptions";
 import { Newsletter } from "./pages/Newsletter";
+import { About } from "./pages/About";
 import { CreateNewsletter } from "./pages/CreateNewsletter";
 import { ListNewsletters } from "./pages/ListNewsletters";
-import { DisabledDash } from "./pages/DisabledDash";
 import { Success } from "./pages/Success";
-
-
+import { Plans } from "./pages/Plans";
 
 
 export const router = createBrowserRouter([
@@ -36,8 +36,16 @@ export const router = createBrowserRouter([
         element: <Register />,
       },
       {
-        path: "dashboard",
-        element: <DisabledDash />
+        path: "about",
+        element: <About />,
+      },
+      {
+        path: "plans",
+        element: <Plans />,
+      },
+      {
+        path: "articles",
+        element: <Articles />
       }
     ],
   },

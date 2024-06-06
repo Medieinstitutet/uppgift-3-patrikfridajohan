@@ -1,5 +1,6 @@
 import "../styles/homePage.css";
 import pic from "../assets/3d-casual-life-man-reading-newspaper-with-cup-of-coffee.png";
+import { Link } from "react-router-dom";
 
 export const HomePage = () => {
   return (
@@ -12,9 +13,11 @@ export const HomePage = () => {
             expand your mind.
           </p>
           <div className="cta">
-            <button type="button" className="btn cta-btn">
+          <button type="button" className="btn cta-btn">
+            <Link to="/articles" style={{ textDecoration: "none", color: "inherit" }}>
               Start exploring
-            </button>
+            </Link>
+          </button>
           </div>
         </div>
         <div className="hero-pic">
@@ -62,8 +65,10 @@ export const HomePage = () => {
           </div>
         </div>
         <button type="button" className="btn cta-btn">
-          Subscribe now
-        </button>
+            <Link to="/plans" style={{ textDecoration: "none", color: "inherit" }}>
+              Subscribe now
+            </Link>
+          </button>
       </div>
       <div className="keys">
         <h3>Key features</h3>

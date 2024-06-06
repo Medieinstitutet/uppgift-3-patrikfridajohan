@@ -8,14 +8,13 @@ export const Subscriptions = () => {
   const { loggedIn } = isLoggedIn();
 
   useEffect(() => {
-    //const userId = getUseridfromcookie(); //not working yet
-    const userId = 2; // to test 
+    const userId = getUseridfromcookie();
+    console.log("UserID from cookie2:",userId);
 
-    // activate this when cookie is working
-    // if (!loggedIn) {
-    //   window.location.href = '/login'; 
-    //   return;
-    // }
+     if (!loggedIn) {
+       window.location.href = '/login'; 
+       return;
+    }
 
     console.log('User ID:', userId);
     if (!userId) {

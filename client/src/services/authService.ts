@@ -6,7 +6,7 @@ import axios from 'axios';
 export const getUseridfromcookie = (): string | null => {
     console.log('getUseridfromcookie function called'); 
     console.log('Document cookie:', document.cookie); 
-    const userIdCookie = document.cookie.split('; ').find(cookie => cookie.startsWith('userId='));
+    const userIdCookie = document.cookie.split('; ').find(cookie => cookie.startsWith('userID='));
     if (userIdCookie) {
         const userId = userIdCookie.split('=')[1];
         console.log('User ID from cookie:', userId);
@@ -17,13 +17,11 @@ export const getUseridfromcookie = (): string | null => {
     }
 };
 
-console.log('Document cookie:', document.cookie); // ingen info om kakan kommer än tyvärr. har bråkat med det ett tag men inte kommit igång.
-
 
 // Get accessid from cookie
 // import { getAccessidfromcookie } from './authService'; to use it on a page
 export const getAccessidfromcookie = (): string | null => {
-    const accessIdCookie = document.cookie.split('; ').find(cookie => cookie.startsWith('accessId='));
+    const accessIdCookie = document.cookie.split('; ').find(cookie => cookie.startsWith('accessID='));
     if (accessIdCookie) {
         return accessIdCookie.split('=')[1];
     } else {
@@ -120,6 +118,18 @@ export const getActiveSubscription = async (userId: string): Promise<string | nu
     } catch (error) {
         console.error("Error fetching active subscription:", error);
         return null;
+    }
+};
+
+// Get all Articletitles
+// import { getAllarticletitles } from '../services/authService'; to use it on a page
+export const getAllarticletitles = async () => {
+    try {
+        const response = await axios.get(`${API_URL}/articletitles`);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching all plans data:", error);
+        throw error;
     }
 };
 

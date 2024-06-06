@@ -3,11 +3,11 @@ import "../styles/createNewsletter.css";
 export const CreateNewsletter = () => {
     return (
         <div className="create-newsletter-container">
-            <h2>Create Newsletter</h2>
+            <h2>Create Newsarticle</h2>
             <form className="create-newsletter-form">
                 <div className="form-group">
                     <label htmlFor="title">Title</label>
-                    <input type="text" id="title" placeholder="Enter newsletter title" />
+                    <input type="text" id="title" placeholder="Enter newsarticle title" />
                 </div>
                 <div className="form-group">
                     <label htmlFor="category">Category</label>
@@ -27,7 +27,7 @@ export const CreateNewsletter = () => {
                     <label htmlFor="longinfo">Long Info</label>
                     <textarea id="longinfo" placeholder="Enter detailed information"></textarea>
                 </div>
-                <button className="btnsubmitcn" type="submit">Create Newsletter</button>
+                <button className="btnsubmitcn" type="submit">Create Newsarticle</button>
             </form>
         </div>
     );

@@ -20,7 +20,7 @@ export const ListNewsletters = () => {
  
   return (
     <div className="newsletter-list-container">
-            <h2>Newsletter List</h2>
+            <h2>Newsarticles List</h2>
             <div className="newsletter-list">
                 {allNewsletters.map(newsletter => (
                     <div key={newsletter.id} className={`newsletter-item`}>

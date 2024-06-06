@@ -5,22 +5,7 @@
         return (
             <>
             <div className="admin-dashboard">
-            
-                <header className="admin-header">
-                    <h1>Admin Panel</h1>
-                    <nav className="admin-nav">
-                        <ul className="navlinks">
-                            <li><Link to="create-newsletter">Create Newsletter</Link></li>
-                            <li><Link to="list-newsletters">List Newsletters</Link></li>
-                           
-                
-                        </ul>
-                    </nav>
-            
-                </header>
-                </div>
-                
-                <div className="admin-dashboard">
+
                 <main className="admin-main">
                     <section className="dashboard-section-welcome">
                         <h2>Welcome, Admin!</h2>
