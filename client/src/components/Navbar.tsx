@@ -38,6 +38,7 @@ export const Navbar = () => {
       return (
         <>
           <a href="/user/dashboard">Dashboard</a>
+          <a href="/user/articlesforme">Articles for me</a>
           <a href="/user/subscriptions">Plans</a>
           <a href="/user/account">Profile</a>
         </>

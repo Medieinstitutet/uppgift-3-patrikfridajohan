@@ -114,7 +114,7 @@ export const getActiveSubscription = async (userId: string): Promise<string | nu
     try {
         const userData = await getAllUserData(userId);
         console.log("ActiveSubscription: ", userData.activesubscriptionid);
-        return userData.activesubscriptionid || null; // Return only the activesubscriptionid
+        return userData.activesubscriptionid || null; 
     } catch (error) {
         console.error("Error fetching active subscription:", error);
         return null;
@@ -132,6 +132,48 @@ export const getAllarticletitles = async () => {
         throw error;
     }
 };
+
+// Get all Articles for me
+// import { getAllarticlesforme } from '../services/authService'; to use it on a page
+export const getAllarticlesforme = async (): Promise<any> => {
+    try {
+        const userId = getUseridfromcookie();
+        if (!userId) {
+            throw new Error("User ID not found in cookie");
+        }
+        console.log("forme: ",userId);
+        // Get active subscription ID for the user
+        const activeSubscriptionId = await getActiveSubscription(userId);
+        
+        // Fetch articles based on the active subscription level
+        const response = await axios.get(`${API_URL}/articlesforme/${activeSubscriptionId}`);
+        
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching subscription data:", error);
+        throw error;
+    }
+};
+
+// Get all data of the article
+// import { getArticleData } from '../services/authService'; to use it on a page
+export const getArticleData = async (articleId: string): Promise<{ articleData: any, allowed: boolean }> => {
+    try {
+        const response = await axios.get(`${API_URL}/article/${articleId}`);
+        const articleData = response.data;
+
+        // Check if the user's active subscription matches the article's subscription ID
+        const activeSubscriptionId = await getActiveSubscription(getUseridfromcookie());
+        const allowed = activeSubscriptionId >= articleData.subscriptionid;
+
+        console.log('Article data:', articleData);
+        return { articleData, allowed };
+    } catch (error) {
+        console.error("Error fetching article data:", error);
+        throw error;
+    }
+};
+
 
 // export const loginUser = async (userData) => {
 //     try {

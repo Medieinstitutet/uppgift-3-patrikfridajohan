@@ -1,22 +1,17 @@
 import "../styles/dashboard.css";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getAllarticletitles } from "../services/authService";
+import { getAllarticlesforme } from "../services/authService";
 
-export const Articles = () => {
+export const Articlesforme = () => {
   const navigate = useNavigate();
   const [articles, setArticles] = useState<Article[]>([]);
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString();
-  };
 
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const articleTitles = await getAllarticletitles();
-        setArticles(articleTitles);
+        const articles = await getAllarticlesforme();
+        setArticles(articles);
       } catch (error) {
         console.error("Error fetching articles:", error);
       }
@@ -25,6 +20,10 @@ export const Articles = () => {
     fetchArticles();
   }, []);
 
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString();
+  };
 
   const handleClick = (id: number) => {
     navigate(`/user/article/${id}`);
@@ -34,7 +33,7 @@ export const Articles = () => {
     <div className="dashboard-container">
       <div className="dashboard-content">
       <section className="newsletter-list">
-        <h2 style={{ marginBottom: "40px" }}>Available Articles</h2>
+        <h2 style={{ marginBottom: "40px" }}>Available Articles for me</h2>
           {articles.length === 0 ? (
             <p>No articles available.</p>
           ) : (
@@ -46,6 +45,7 @@ export const Articles = () => {
               >
                 
                 <h4>{article.title} ({formatDate(article.added)})</h4>
+                <p>{article.shortinfo}</p>
               </div>
             ))
           )}

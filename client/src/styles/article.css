@@ -1,0 +1,41 @@
+.article-container {
+    max-width: 1024px; /* Adjust as needed */
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 50px;
+    margin-bottom: 50px;
+  }
+  
+  .article-container h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .article-container p {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+  
+  .not-allowed-message {
+    background-color: #ffe6e6; /* Light red background */
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+  }
+  
+  .not-allowed-message h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .not-allowed-message p {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+  

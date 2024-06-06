@@ -15,7 +15,8 @@ import { CreateNewsletter } from "./pages/CreateNewsletter";
 import { ListNewsletters } from "./pages/ListNewsletters";
 import { Success } from "./pages/Success";
 import { Plans } from "./pages/Plans";
-
+import { Articlesforme } from "./pages/Articlesforme";
+import { Article } from "./pages/ArticlePage";
 
 export const router = createBrowserRouter([
   {
@@ -67,8 +68,12 @@ export const router = createBrowserRouter([
         element: <Subscriptions />,
       },
       {
-        path:"newsletter/:id",
-        element: <Newsletter/>
+        path:"article/:id",
+        element: <Article/>
+      },
+      {
+        path:"articlesforme",
+        element: <Articlesforme/>
       },
       {
         path:"success",

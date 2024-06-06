@@ -176,7 +176,7 @@ router.get("/articletitles", async (req, res) => {
   }
 });
 
-// // GET /api/example - Protected endpoint
+// GET /api/articles - Get all articles for the logged in user
 router.get("/articles", async (req: Request, res: Response, next: NextFunction) => {
     try {
       const activesubscriptionid = req.cookies.activesubscriptionid;
@@ -190,6 +190,47 @@ router.get("/articles", async (req: Request, res: Response, next: NextFunction) 
     }
   }
 );
+
+// GET /api/articles - Get all articles for the logged in user - NEW
+router.get("/articlesforme/:activesubscriptionid", async (req, res) => {
+  try {
+    const { activesubscriptionid } = req.params;
+
+    const [articleRows]: [any[], any] = await pool.query(
+      "SELECT * FROM data_articles WHERE subscriptionid <= ?", [activesubscriptionid]
+    );
+
+    if (articleRows.length > 0) {
+      // Return all articles that match the subscription ID and below
+      return res.json(articleRows);
+    } else {
+      return res.status(404).json({ error: "Articles not found" });
+    }
+  } catch (error) {
+    console.error("Error fetching articles:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// GET /api/article/:id - Get a single article by ID
+router.get("/article/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const [articleRows]: [any[], any] = await pool.query(
+      "SELECT * FROM data_articles WHERE id = ?", [id]
+    );
+
+    if (articleRows.length > 0) {
+      return res.json(articleRows[0]);
+    } else {
+      return res.status(404).json({ error: "Article not found" });
+    }
+  } catch (error) {
+    console.error("Error fetching article:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 router.get("/admin/articles", async (req: Request, res: Response, next: NextFunction) => {
       try {

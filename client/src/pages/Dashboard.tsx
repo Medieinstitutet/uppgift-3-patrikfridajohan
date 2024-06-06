@@ -37,7 +37,7 @@ export const Dashboard = () => {
   }, []);
 
   const handleClick = (id: number) => {
-    navigate(`/user/newsletter/${id}`);
+    navigate(`/user/article/${id}`);
   };
 
   /* const filteredNewsletters = newsletters.filter(
@@ -67,7 +67,7 @@ export const Dashboard = () => {
           </ul>
         </section>
         <section className="newsletter-list">
-          <h2>Available Newsletters</h2>
+          <h2>Latest Newsarticles</h2>
           {newsletters.length === 0 ? (
             <p>No Newsletters available for your subscription.</p>
           ) : (
