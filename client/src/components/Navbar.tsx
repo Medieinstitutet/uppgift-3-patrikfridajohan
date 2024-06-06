@@ -29,9 +29,9 @@ export const Navbar = () => {
     if (loggedInState.isAdmin) {
       return (
         <>
-          <a href="/admin/admindashboard">Admin Dashboard</a>
-          <a href="/admin/admindashboard/create-newsletter">Create Newsarticle</a>
-          <a href="/admin/admindashboard/list-newsletters">List Newsarticles</a>
+          <a href="/admin/dashboard">Admin Dashboard</a>
+          <a href="/admin/list-newsarticles">List Newsarticles</a>
+          <a href="/admin/create-newsarticle">Create Newsarticle</a>
         </>
       );
     } else {

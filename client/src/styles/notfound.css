@@ -1,0 +1,26 @@
+.not-found-container {
+    text-align: center;
+}
+
+.not-found-container img {
+    width: 50%;
+    max-width: 300px;
+    margin-bottom: 20px;
+}
+
+.not-found-container h1 {
+    font-size: 2em;
+}
+
+.not-found-container p {
+    font-size: 1.2em;
+}
+
+.not-found-container a {
+    color: blue;
+    text-decoration: none;
+}
+
+.not-found-container a:hover {
+    text-decoration: underline;
+}

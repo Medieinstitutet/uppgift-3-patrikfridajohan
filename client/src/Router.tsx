@@ -9,10 +9,10 @@ import { Articles } from "./pages/Articles";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
 import { Subscriptions } from "./pages/Subscriptions";
-import { Newsletter } from "./pages/Newsletter";
+// import { Newsletter } from "./pages/Newsletter";
 import { About } from "./pages/About";
-import { CreateNewsletter } from "./pages/CreateNewsletter";
-import { ListNewsletters } from "./pages/ListNewsletters";
+import { CreateNewsarticle } from "./pages/CreateNewsarticle";
+import { ListNewsarticles } from "./pages/ListNewsarticles";
 import { Success } from "./pages/Success";
 import { Plans } from "./pages/Plans";
 import { Articlesforme } from "./pages/Articlesforme";
@@ -87,16 +87,16 @@ export const router = createBrowserRouter([
     errorElement: <NotFound />,
     children: [
       {
-        path: "admindashboard",
+        path: "dashboard",
         element: <AdminDashboard />,
       },
       {
-        path:"admindashboard/create-newsletter",
-        element: <CreateNewsletter/>
+        path:"create-newsarticle",
+        element: <CreateNewsarticle/>
       },
       {
-        path:"admindashboard/list-newsletters",
-        element: <ListNewsletters />
+        path:"list-newsarticles",
+        element: <ListNewsarticles />
       }
     ],
   },

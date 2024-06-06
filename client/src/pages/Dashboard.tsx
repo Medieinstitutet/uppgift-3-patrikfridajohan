@@ -1,53 +1,50 @@
-import axios from "axios";
 import "../styles/dashboard.css";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getUserFirstName, getLatestarticlesforme } from "../services/authService";
 
 export const Dashboard = () => {
   const navigate = useNavigate();
-  const [newsletters, setNewsletters] = useState<INewsletter[]>([]);
-  const [subscriptionlevel, setSubscriptionlevel] = useState<number>();
-  /* const { subscriptionlevel } = exampleData.user;
-  const availableNewsletters = exampleData.newsletters.filter(
-    (item) => item.level === subscriptionlevel
-  ); */
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [firstName, setFirstName] = useState<string>('');
 
   useEffect(() => {
-    /*   const fetchUserData = async () => {
+    const fetchUserData = async () => {
       try {
-        const response = await axios.get("http://localhost:5173/api/user");
-        setSubscriptionlevel(response.data.subscriptionid);
-      } catch (err) {
-        console.log("Error fetching user data:", err);
+        const firstName = await getUserFirstName();
+        setFirstName(firstName);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
       }
     };
- */
+    const fetchArticles = async () => {
+      try {
+        const articles = await getLatestarticlesforme();
+        setArticles(articles);
+      } catch (error) {
+        console.error("Error fetching articles:", error);
+      }
+    };
 
-    const fetchNewsletters = async () => {
-      try {
-        const response = await axios.get("http://localhost:5173/api/articles");
-        console.log(response.data);
-        setNewsletters(response.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchNewsletters();
-    /* fetchUserData(); */
+    fetchUserData();
+    fetchArticles();
   }, []);
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString();
+  };
 
   const handleClick = (id: number) => {
     navigate(`/user/article/${id}`);
   };
 
-  /* const filteredNewsletters = newsletters.filter(
-    (newsletter) => newsletter.level === subscriptionlevel
-  ); */
+
 
   return (
     <div className="dashboard-container">
       <div className="dashboard-header">
-        <h1>Welcome, Friend!</h1>
+        <h1>Welcome, {firstName}!</h1>
         <p>Subscription Level: </p>
       </div>
       <div className="dashboard-content">
@@ -68,17 +65,18 @@ export const Dashboard = () => {
         </section>
         <section className="newsletter-list">
           <h2>Latest Newsarticles</h2>
-          {newsletters.length === 0 ? (
-            <p>No Newsletters available for your subscription.</p>
+          {articles.length === 0 ? (
+            <p>No articles available.</p>
           ) : (
-            newsletters?.map((newsletter) => (
+            articles.map((article) => (
               <div
                 className="newsletter-item"
-                key={newsletter.id}
-                onClick={() => handleClick(newsletter.id)}
+                key={article.id}
+                onClick={() => handleClick(article.id)}
               >
-                <h2>{newsletter.title}</h2>
-                <p>{newsletter.shortinfo}</p>
+                
+                <h4>{article.title} ({formatDate(article.added)})</h4>
+                <p>{article.shortinfo}</p>
               </div>
             ))
           )}

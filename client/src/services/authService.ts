@@ -57,8 +57,9 @@ export const getAllUserData = async (userId: string): Promise<any> => {
 
 // Get fullname from logged in user
 // import { getUserFullname } from '../services/authService'; to use it on a page
-export const getUserFullName = async (userId: string): Promise<string> => {
+export const getUserFullName = async (): Promise<string> => {
     try {
+        const userId = getUseridfromcookie();
         const userData = await getAllUserData(userId);
         const fullName = `${userData.firstname} ${userData.lastname}`;
         console.log(fullName);
@@ -69,10 +70,12 @@ export const getUserFullName = async (userId: string): Promise<string> => {
     }
 };
 
+
 // Get firstname from logged in user
 // import { getUserFirstName } from '../services/authService'; to use it on a page
-export const getUserFirstName = async (userId: string): Promise<string> => {
+export const getUserFirstName = async (): Promise<string> => {
     try {
+        const userId = getUseridfromcookie();
         const userData = await getAllUserData(userId);
         const firstName = `${userData.firstname}`;
         console.log(firstName);
@@ -133,7 +136,7 @@ export const getAllarticletitles = async () => {
     }
 };
 
-// Get all Articles for me
+// Get all Newsarticles for me
 // import { getAllarticlesforme } from '../services/authService'; to use it on a page
 export const getAllarticlesforme = async (): Promise<any> => {
     try {
@@ -155,7 +158,44 @@ export const getAllarticlesforme = async (): Promise<any> => {
     }
 };
 
-// Get all data of the article
+// Get all Newsarticles for admin
+// import { getAllarticlesforadmin } from '../services/authService'; to use it on a page
+export const getAllarticlesforadmin = async (): Promise<any> => {
+    try {      
+        // Fetch articles for admin
+        const response = await axios.get(`${API_URL}/articlesforadmin`);
+        
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching articles for admin:", error);
+        throw error;
+    }
+};
+
+// Get latest Newsarticles for me
+// import { getLatestarticlesforme } from '../services/authService'; to use it on a page
+export const getLatestarticlesforme = async (): Promise<any> => {
+    try {
+        const userId = getUseridfromcookie();
+        if (!userId) {
+            throw new Error("User ID not found in cookie");
+        }
+        console.log("forme: ",userId);
+        // Get active subscription ID for the user
+        const activeSubscriptionId = await getActiveSubscription(userId);
+        
+        // Fetch articles based on the active subscription level
+        const response = await axios.get(`${API_URL}/latestarticlesforme/${activeSubscriptionId}`);
+        
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching subscription data:", error);
+        throw error;
+    }
+};
+
+
+// Get all data of the newsarticle
 // import { getArticleData } from '../services/authService'; to use it on a page
 export const getArticleData = async (articleId: string): Promise<{ articleData: any, allowed: boolean }> => {
     try {
@@ -170,6 +210,22 @@ export const getArticleData = async (articleId: string): Promise<{ articleData: 
         return { articleData, allowed };
     } catch (error) {
         console.error("Error fetching article data:", error);
+        throw error;
+    }
+};
+
+// Create newsarticle
+export const createNewsArticle = async (articleData: {
+    title: string;
+    subscriptionid: integer;
+    shortInfo: string;
+    longInfo: string;
+}): Promise<void> => {
+    try {
+        const response = await axios.post(`${API_URL}/admin/create-news-article`, articleData);
+        console.log('Response from create news article:', response.data);
+    } catch (error) {
+        console.error('Error creating news article:', error);
         throw error;
     }
 };

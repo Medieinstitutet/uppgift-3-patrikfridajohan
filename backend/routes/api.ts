@@ -11,7 +11,7 @@ router.use(cookieParser());
 
 // Made example to get started - Johan
 
-// // POST /api/auth/login - User login
+// // POST /auth/login - User login
 router.post(
   "/auth/login",
   async (req: Request, res: Response, next: NextFunction) => {
@@ -44,7 +44,7 @@ router.post(
       if (user.accessid === 1) {
         res.send("/user/dashboard");
       } else if (user.accessid === 2) {
-        res.send("/admin/admindashboard");
+        res.send("/admin/dashboard");
       } else {
         res.status(401).json({ error: "Invalid access ID" });
       }
@@ -89,7 +89,7 @@ router.post(
   }
 );
 
-// POST /api/auth/logout - User logout
+// POST /auth/logout - User logout
 router.post(
   "/auth/logout",
   async (req: Request, res: Response, next: NextFunction) => {
@@ -129,7 +129,7 @@ router.get("/user/:userId", async (req: Request, res: Response) => {
   }
 });
 
-// GET /api/subscription/:subscriptionId - Get subscription data by subscription ID
+// GET /subscription/:subscriptionId - Get subscription data by subscription ID
 router.get("/subscription/:subscriptionId", async (req, res) => {
   try {
     const { subscriptionId } = req.params;
@@ -149,7 +149,7 @@ router.get("/subscription/:subscriptionId", async (req, res) => {
   }
 });
 
-// GET /api/subscriptions - Get all subscription plans
+// GET /subscriptions - Get all subscription plans
 router.get("/subscriptions", async (req, res) => {
   try {
     const [planRows]: [any[], any] = await pool.query(
@@ -163,11 +163,11 @@ router.get("/subscriptions", async (req, res) => {
 });
 
 
-// GET /api/articletitles - Get all article titles
+// GET /articletitles - Get all article titles
 router.get("/articletitles", async (req, res) => {
   try {
     const [articleRows]: [any[], any] = await pool.query(
-      "SELECT id, title, added FROM data_articles WHERE active = 1"
+      "SELECT id, title, added FROM data_articles WHERE active = 1 ORDER BY added DESC"
     );
     return res.json(articleRows);
   } catch (error) {
@@ -176,7 +176,7 @@ router.get("/articletitles", async (req, res) => {
   }
 });
 
-// GET /api/articles - Get all articles for the logged in user
+// GET /articles - Get all articles for the logged in user
 router.get("/articles", async (req: Request, res: Response, next: NextFunction) => {
     try {
       const activesubscriptionid = req.cookies.activesubscriptionid;
@@ -191,17 +191,17 @@ router.get("/articles", async (req: Request, res: Response, next: NextFunction) 
   }
 );
 
-// GET /api/articles - Get all articles for the logged in user - NEW
-router.get("/articlesforme/:activesubscriptionid", async (req, res) => {
+// GET /articles - Get latest articles for the logged in user - NEW
+router.get("/latestarticlesforme/:activesubscriptionid", async (req, res) => {
   try {
     const { activesubscriptionid } = req.params;
 
     const [articleRows]: [any[], any] = await pool.query(
-      "SELECT * FROM data_articles WHERE subscriptionid <= ?", [activesubscriptionid]
+      "SELECT * FROM data_articles WHERE subscriptionid <= ? ORDER BY added DESC LIMIT 3", [activesubscriptionid]
     );
 
     if (articleRows.length > 0) {
-      // Return all articles that match the subscription ID and below
+      // Return latest articles that match the subscription ID and below
       return res.json(articleRows);
     } else {
       return res.status(404).json({ error: "Articles not found" });
@@ -212,7 +212,27 @@ router.get("/articlesforme/:activesubscriptionid", async (req, res) => {
   }
 });
 
-// GET /api/article/:id - Get a single article by ID
+// GET /articles - Get all articles for admin
+router.get("/articlesforadmin", async (req, res) => {
+  try {
+    // Updated query to fetch all articles
+    const [articleRows]: [any[], any] = await pool.query(
+      "SELECT * FROM data_articles ORDER BY added DESC"
+    );
+
+    if (articleRows.length > 0) {
+      // Return all articles
+      return res.json(articleRows);
+    } else {
+      return res.status(404).json({ error: "Articles not found" });
+    }
+  } catch (error) {
+    console.error("Error fetching articles:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// GET /article/:id - Get a single article by ID
 router.get("/article/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -232,19 +252,31 @@ router.get("/article/:id", async (req, res) => {
   }
 });
 
-router.get("/admin/articles", async (req: Request, res: Response, next: NextFunction) => {
-      try {
-        
-        const [rows]: [any[], any] = await pool.query(
-          "SELECT * FROM data_articles"
-        );
-        res.json(rows);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        res.status(500).json({ error: "Internal server error" });
-      }
-    }
-  );
+
+// POST /admin/create-news-article - Create a new news article
+router.post('/admin/create-news-article', async (req, res) => {
+  try {
+    // Extract article data from request body
+    const { title, subscriptionid, shortInfo, longInfo } = req.body;
+
+    // Capitalize the first letter of title, shortInfo, and longInfo
+    const capitalizedTitle = title.charAt(0).toUpperCase() + title.slice(1);
+    const capitalizedShortInfo = shortInfo.charAt(0).toUpperCase() + shortInfo.slice(1);
+    const capitalizedLongInfo = longInfo.charAt(0).toUpperCase() + longInfo.slice(1);
+
+    // Save the article to the database
+    const query = 'INSERT INTO data_articles (title, subscriptionid, shortinfo, longinfo) VALUES (?, ?, ?, ?)';
+    await pool.query(query, [capitalizedTitle, subscriptionid, capitalizedShortInfo, capitalizedLongInfo]);
+
+    // Respond with success message
+    return res.status(201).json({ message: 'Article created successfully' });
+  } catch (error) {
+    console.error('Error creating news article:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
 
 router.get("/user", async (req: Request, res: Response, next: NextFunction) => {
   try {

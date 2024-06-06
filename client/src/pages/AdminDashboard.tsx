@@ -1,14 +1,31 @@
-    import { Link } from "react-router-dom";
+    import { useState, useEffect } from 'react';
+
     import "../styles/adminDashboard.css";
+    import { getUserFirstName } from "../services/authService";
 
     export const AdminDashboard = () => {
+        const [firstName, setFirstName] = useState<string>('');
+
+        useEffect(() => {
+            const fetchUserData = async () => {
+                try {
+                    const firstName = await getUserFirstName();
+                    setFirstName(firstName);
+                } catch (error) {
+                    console.error("Error fetching user data:", error);
+                }
+            };
+    
+            fetchUserData();
+        }, []);
+
         return (
             <>
             <div className="admin-dashboard">
 
                 <main className="admin-main">
                     <section className="dashboard-section-welcome">
-                        <h2>Welcome, Admin!</h2>
+                        <h2>Welcome, {firstName}!</h2>
                         <p>Here you can manage content, user access, and view site analytics.</p>
                     </section>
                     <section className="dashboard-section-quickstats">
