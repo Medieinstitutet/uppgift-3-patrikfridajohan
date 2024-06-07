@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import "../styles/register.css";
 import { registerUser, checkUserEmail } from "../services/authService";
+import eye from "../assets/visibility_40dp_FILL0_wght400_GRAD0_opsz40.svg"
 
 const capitalizeFirstLetter = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -140,10 +141,14 @@ return (
               />
               <button
                 type="button"
-                className="password-toggle"
+                className="btn password-toggle"
                 onClick={togglePasswordVisibility}
               >
-                {showPassword ? "Hide" : "Show"}
+                {showPassword ? "Hide" : (
+                  <div className="eye">
+                    <img src={eye} alt="eye" />
+                  </div>
+                )}
               </button>
             </div>
             <label>Confirm password</label>
@@ -157,10 +162,14 @@ return (
               />
               <button
                 type="button"
-                className="password-toggle"
+                className="btn password-toggle"
                 onClick={toggleConfirmPasswordVisibility}
               >
-                {showConfirmPassword ? "Hide" : "Show"}
+                {showConfirmPassword ? "Hide" : (
+                  <div className="eye">
+                    <img src={eye} alt="eye" />
+                  </div>
+                )}
               </button>
             </div>
             <p>{passwordError}</p>
