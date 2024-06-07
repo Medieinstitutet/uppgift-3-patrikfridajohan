@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { getArticleData } from "../services/authService";
 import { isLoggedIn } from "../services/authService";
 import "../styles/article.css";
 
 export const Article = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
   const [articleData, setArticleData] = useState<any>();
   const [allowed, setAllowed] = useState<boolean>(false);
   const { loggedIn } = isLoggedIn();

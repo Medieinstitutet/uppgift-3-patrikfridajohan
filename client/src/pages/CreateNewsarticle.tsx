@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 export const CreateNewsarticle = () => {
     const navigate = useNavigate();
     const [title, setTitle] = useState<string>('');
-    const [subscriptionid, setCategory] = useState<string>('1');
+    const [subscriptionid, setCategory] = useState<number>('1');
     const [shortInfo, setShortInfo] = useState<string>('');
     const [longInfo, setLongInfo] = useState<string>('');
 

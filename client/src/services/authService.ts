@@ -227,7 +227,7 @@ export const getArticleData = async (articleId: string): Promise<{ articleData: 
 // Create newsarticle
 export const createNewsArticle = async (articleData: {
     title: string;
-    subscriptionid: integer;
+    subscriptionid: number;
     shortInfo: string;
     longInfo: string;
 }): Promise<void> => {
