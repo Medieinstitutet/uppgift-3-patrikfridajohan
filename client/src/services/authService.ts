@@ -101,8 +101,18 @@ export const checkUserEmail = async (emailToCheck: string): Promise<boolean> => 
 // import { getSubscriptionData } from '../services/authService'; to use it on a page
 export const getSubscriptionData = async (subscriptionId: string): Promise<any> => {
     try {
-        const response = await axios.get(`${API_URL}/subscription/${subscriptionId}`);
-        return response.data;
+        if (subscriptionId === "0") {
+            // Return standard values when subscriptionId is 0
+            return {
+                name: "No active plan",
+                info: "No active plan",
+                price: 0,
+                active: 1
+            };
+        } else {
+            const response = await axios.get(`${API_URL}/subscription/${subscriptionId}`);
+            return response.data;
+        }
     } catch (error) {
         console.error("Error fetching subscription data:", error);
         throw error;
@@ -123,11 +133,19 @@ export const getAllsubscriptions = async () => {
 
 // Get active subscription data of the current logged in user
 // import { getActiveSubscription } from '../services/authService'; to use it on a page
-export const getActiveSubscription = async (userId: string): Promise<string | null> => {
+export const getActiveSubscription = async (userId: string | undefined): Promise<string | null> => {
     try {
-        const userData = await getAllUserData(userId);
+        let userToFetch: string;
+        // If userId is provided, use it; otherwise, get userId from cookie
+        if (userId) {
+            userToFetch = userId;
+        } else {
+            userToFetch = getUseridfromcookie();
+        }
+
+        const userData = await getAllUserData(userToFetch);
         console.log("ActiveSubscription: ", userData.activesubscriptionid);
-        return userData.activesubscriptionid || null; 
+        return userData.activesubscriptionid || "0"; 
     } catch (error) {
         console.error("Error fetching active subscription:", error);
         return null;
@@ -160,7 +178,6 @@ export const getAllarticlesforme = async (): Promise<any> => {
         
         // Fetch articles based on the active subscription level
         const response = await axios.get(`${API_URL}/articlesforme/${activeSubscriptionId}`);
-        
         return response.data;
     } catch (error) {
         console.error("Error fetching subscription data:", error);

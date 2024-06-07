@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AccountDash } from "../components/AccountDash";
 import "../styles/account.css";
 import { SubscriptionInfo } from "../components/SubscriptionInfo";
 import { AccountSettings } from "../components/AccountSettings";
+import { getActiveSubscription, getSubscriptionData } from "../services/authService";
 
 export const Account = () => {
   const [selection, setSelection] = useState("dashboard");
+  const [subscriptionData, setSubscriptionData] = useState<any>(null);
 
   const dummyData = {
     name: "Dummy",
@@ -18,13 +20,27 @@ export const Account = () => {
     billing: "Stripe",
   };
 
+  useEffect(() => {
+    const fetchSubscriptionData = async () => {
+      try {
+        const activeSubscriptionId = await getActiveSubscription();
+        const data = await getSubscriptionData(activeSubscriptionId);
+        setSubscriptionData(data);
+      } catch (error) {
+        console.error("Error fetching subscription data:", error);
+      }
+    };
+
+    fetchSubscriptionData();
+  }, []);
+
   let selectedComponent;
   switch (selection) {
     case "dashboard":
       selectedComponent = <AccountDash dummyData={dummyData} setSelection={setSelection}/>;
       break;
     case "subscription":
-      selectedComponent = <SubscriptionInfo dummyData={dummyData} />;
+      selectedComponent = <SubscriptionInfo subscriptionData={subscriptionData} />;
       break;
     case "settings":
         selectedComponent = <AccountSettings dummyData={dummyData}/>;

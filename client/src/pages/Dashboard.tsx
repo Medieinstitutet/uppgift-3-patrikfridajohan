@@ -1,22 +1,37 @@
 import "../styles/dashboard.css";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUserFirstName, getLatestarticlesforme } from "../services/authService";
+import { getUserFirstName, getLatestarticlesforme, getActiveSubscription, getSubscriptionData, isLoggedIn } from "../services/authService";
 
 export const Dashboard = () => {
   const navigate = useNavigate();
   const [articles, setArticles] = useState<Article[]>([]);
   const [firstName, setFirstName] = useState<string>('');
+  const [subscriptionLevel, setSubscriptionLevel] = useState<string>('');
 
   useEffect(() => {
-    const fetchUserData = async () => {
+    const fetchData = async () => {
       try {
+        const { loggedIn } = isLoggedIn();
+        if (!loggedIn) {
+          navigate("/login");
+          return;
+        }
+
         const firstName = await getUserFirstName();
         setFirstName(firstName);
+        
+        const activeSubscriptionId = await getActiveSubscription();
+        console.log("activesubid: ",activeSubscriptionId);
+        if (activeSubscriptionId) {
+          const subscriptionData = await getSubscriptionData(activeSubscriptionId);
+          setSubscriptionLevel(subscriptionData.name);
+        }
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        console.error("Error fetching data:", error);
       }
     };
+
     const fetchArticles = async () => {
       try {
         const articles = await getLatestarticlesforme();
@@ -26,7 +41,7 @@ export const Dashboard = () => {
       }
     };
 
-    fetchUserData();
+    fetchData();
     fetchArticles();
   }, []);
 
@@ -39,13 +54,23 @@ export const Dashboard = () => {
     navigate(`/user/article/${id}`);
   };
 
+  const handleProfileSettings = () => {
+    navigate("/user/account");
+  };
 
+  const handleBillingInformation = () => {
+    navigate("/user/account");
+  };
+
+  const handleUpgradeSubscription = () => {
+    navigate("/user/subscriptions");
+  };
 
   return (
     <div className="dashboard-container">
       <div className="dashboard-header">
         <h1>Welcome, {firstName}!</h1>
-        <p>Subscription Level: </p>
+        <p>Subscription Level: {subscriptionLevel}</p>
       </div>
       <div className="dashboard-content">
         <section className="section-dashboard">
@@ -83,9 +108,9 @@ export const Dashboard = () => {
         </section>
         <section className="section-dashboard">
           <h2>Account Management</h2>
-          <button>Profile Settings</button>
-          <button>Billing Information</button>
-          <button>Upgrade Subscription</button>
+          <button onClick={handleProfileSettings}>Profile</button>
+          <button onClick={handleBillingInformation}>Billing</button>
+          <button onClick={handleUpgradeSubscription}>Upgrade</button>
         </section>
         <section className="section-dashboard">
           <h2>Need Help?</h2>

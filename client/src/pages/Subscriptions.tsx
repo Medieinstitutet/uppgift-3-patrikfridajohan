@@ -11,16 +11,14 @@ export const Subscriptions = () => {
     const userId = getUseridfromcookie();
     console.log("UserID from cookie2:",userId);
 
-     if (!loggedIn) {
-       window.location.href = '/login'; 
-       return;
+    if (!loggedIn) {
+      window.location.href = '/login'; 
+      return;
     }
-
-    console.log('User ID:', userId);
     if (!userId) {
-        window.location.href = '/login'; 
-        return;
-      }
+      window.location.href = '/login'; 
+      return;
+    }
 
     // Get all subscriptions
     const fetchPlans = async () => {
