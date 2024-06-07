@@ -152,6 +152,18 @@ export const getActiveSubscription = async (userId: string | undefined): Promise
     }
 };
 
+// Cancel my subscription
+export const cancelSubscription = async (subscriptionId: string): Promise<void> => {
+    try {
+        const userId = getUseridfromcookie();
+        await axios.post(`${API_URL}/cancel-subscription`, { userId, subscriptionId });
+        console.log('Subscription canceled successfully');
+    } catch (error) {
+        console.error('Error canceling subscription:', error);
+        throw error;
+    }
+};
+
 // Get all Articletitles
 // import { getAllarticletitles } from '../services/authService'; to use it on a page
 export const getAllarticletitles = async () => {

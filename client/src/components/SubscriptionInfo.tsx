@@ -43,7 +43,10 @@ export const SubscriptionInfo = (props: ISubscriptionInfo) => {
         <p>Cost: ${subscriptionData.price}/month</p>
         <p>Payment method: Stripe</p>
         <button type="button" className="btn">
-          Change
+          Change plan
+        </button>
+        <button type="button" className="btn">
+          Cancel subscription
         </button>
       </div>
     </div>
