@@ -9,7 +9,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    
+
 }
 
 .register-hero-container {
@@ -40,19 +40,22 @@
 .password-input {
     display: flex;
     align-items: center;
-  }
-  
-  .password-input input {
+    column-gap: 16px;
+}
+
+.password-input input {
     flex: 1;
     width: calc(100% - 80px);
-  }
-  
-  .password-toggle {
-    width: 80px; 
-  }
+}
 
-#login-btn { 
+.password-toggle {
+    width: fit-content
+}
+
+.eye {
+    width: 24px;
+}
+
+.eye img {
     width: 100%;
-    font-size: 1.4em;
-    padding: 10px 20px;
 }

@@ -51,11 +51,15 @@ export const Navbar = () => {
       <a href="/articles">Articles</a>
       <a href="/plans">Plans</a>
       <a href="/about">About</a>
-      <button type="button" className="btn btn-light" id="nav-login">
+      <button type="button" className="btn btn-light" id="nav-login" onClick={handleRedirect}>
         <a href="/login">Login</a>
       </button>
     </>
   );
+
+  const handleRedirect = () => {
+    window.location.href = "/login";
+  }
 
   return (
     <nav>

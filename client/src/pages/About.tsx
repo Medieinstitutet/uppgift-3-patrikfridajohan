@@ -1,17 +1,68 @@
-import "../styles/homePage.css";
+import "../styles/about.css";
 
 export const About = () => {
   return (
     <div className="body">
-      <div className="introduction">
-        <h2 id="intro-header">
-            About us
-        </h2>
-        <p id="intro-header">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eu dui tellus. Donec non massa convallis, pretium elit quis, pellentesque felis. Duis sit amet maximus sem. Nulla consectetur magna non enim efficitur eleifend. Nulla neque tortor, rutrum sed diam in, aliquet ornare felis. Suspendisse massa nulla, gravida pulvinar orci id, vestibulum lobortis dui. Quisque eu iaculis metus. Curabitur cursus nisi sapien, ut consequat ex venenatis in. Curabitur aliquam mi a tellus suscipit, ut ullamcorper ipsum commodo. Mauris sed pulvinar dui. Fusce auctor sem augue, sit amet sollicitudin quam pulvinar sit amet. Morbi eget gravida nisl, at vestibulum risus. Aliquam molestie eget tortor ac condimentum. Pellentesque luctus enim vel ullamcorper fringilla. Praesent sit amet dictum augue, sit amet tristique lacus.</p>  
-        <p id="intro-header">Etiam egestas fermentum purus ut gravida. Donec vel congue arcu, sit amet tincidunt elit. Nulla facilisi. Integer tortor enim, venenatis at vehicula eu, aliquam vel arcu. Nunc ut magna fringilla, congue velit at, pharetra ligula. Sed pulvinar arcu ac lacus tincidunt, sit amet gravida velit faucibus. Phasellus tempor, metus et eleifend gravida, tellus tellus interdum ipsum, eget rutrum lectus massa vel enim. Vivamus quis massa elit. Morbi tortor lorem, interdum vel viverra ornare, dapibus id est. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque hendrerit mollis finibus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aliquam ut euismod nisl. Phasellus et arcu ligula.</p>
-        <p id="intro-header">Etiam scelerisque odio in efficitur iaculis. Maecenas in sapien sed neque vulputate gravida. Quisque tempus mauris in nulla dignissim, vitae convallis elit faucibus. Nullam tempor mattis porta. Quisque bibendum nunc arcu, id aliquet enim eleifend vitae. Aliquam interdum enim a ante maximus ultrices. Fusce felis ante, placerat a nisl mattis, aliquet scelerisque diam. Duis fermentum est odio, eget pharetra leo imperdiet in. Vestibulum eget viverra lacus. Sed vel commodo sapien. Duis maximus vitae augue viverra mollis. Donec id auctor quam, vel pretium enim. Quisque nec risus tempus, eleifend justo nec, tempus sem. Pellentesque ultrices tempus luctus. Proin dictum semper lectus, eget congue massa fringilla ut. In aliquam eleifend laoreet.</p>  
-        <p id="intro-header">Etiam id dictum tellus. Mauris eu pulvinar libero, nec sollicitudin sem. Fusce eleifend odio elit, at pharetra nibh aliquet ullamcorper. Ut tempus eu arcu quis convallis. Nulla nisi augue, facilisis ac est non, sodales tristique magna. Curabitur dictum libero sit amet tincidunt maximus. Proin dapibus tristique nunc, quis convallis urna egestas a. Sed lobortis congue quam, sit amet maximus dolor eleifend viverra. Aliquam ipsum augue, congue nec luctus eget, dignissim non metus. Cras ut ex at nisl vestibulum luctus non sit amet magna. Donec sit amet est neque. Donec vestibulum purus neque, id placerat ex maximus vitae. Nam vestibulum malesuada feugiat. Quisque ac dictum arcu, in eleifend lorem. Nulla vel felis magna.</p>  
-        <p id="intro-header">Donec convallis mattis ipsum, vitae volutpat enim fringilla et. Nunc laoreet eleifend leo, et dapibus est volutpat eu. Maecenas rhoncus magna ut odio consequat, sit amet molestie lorem placerat. Praesent dolor odio, pretium vel enim in, consequat ullamcorper risus. Nam nec consequat mauris, sed ultrices odio. Nam lobortis elit enim, vitae posuere sem egestas sed. Pellentesque dignissim elementum blandit. Proin vulputate sagittis lacus ut porttitor. Donec a nibh orci. Donec at libero in risus venenatis maximus vel vel velit. Nullam eros nibh, ultricies ac nulla at, pretium porttitor libero. Integer libero est, varius eu luctus vel, sollicitudin in sapien. Nam nec urna elementum, lobortis enim vitae, commodo mi. Nam bibendum, erat vitae pretium rutrum, erat tellus dignissim augue, sit amet maximus magna odio vel dolor. Nulla felis nunc, ullamcorper at tincidunt ac, dapibus sit amet tortor. Morbi eu nibh non est mattis efficitur sed non ex.</p>
+      <div className="first-section">
+        <div className="first-section-header">
+          <h2 id="first-section-header">About us</h2>
+          <p className="about-text">
+            SCOPE is your gateway to expertly curated content, delivering
+            high-quality articles on a diverse range of topics every day. Our
+            mission is to provide you with insightful, engaging, and
+            thought-provoking reads, handpicked by our team of experienced
+            editors.
+          </p>
+        </div>
+        <div className="about-text-section">
+          <div className="about-unit">
+            <h4 className="about-small-header">Our vision</h4>
+            <p className="about-text">
+              At SCOPE, we believe in the power of knowledge and the importance
+              of staying informed. We strive to create a platform where readers
+              can explore new ideas, discover fresh perspectives, and stay
+              updated with the latest trends and developments. Our vision is to
+              become the go-to source for readers seeking depth, quality, and
+              variety in their daily reading.
+            </p>
+          </div>
+          <div className="about-unit">
+            <h4 className="about-small-header">Our mission</h4>
+            <p className="about-text">
+              Our mission is to provide our subscribers with a daily dose of
+              well-researched, compelling content. We aim to foster a community
+              of informed individuals who value continuous learning and
+              intellectual growth. By offering a mix of news, analysis, opinion
+              pieces, and feature articles, we cater to a broad spectrum of
+              interests and ensure there's something for everyone.
+            </p>
+          </div>
+          <div className="about-unit">
+            <h4 className="about-small-header">Our team</h4>
+            <p className="about-text">
+              Our dedicated team of writers, editors, and curators are
+              passionate about delivering content that matters. With backgrounds
+              in journalism, academia, and various professional fields, they
+              bring a wealth of knowledge and expertise to ensure every article
+              you read on SCOPE is of the highest quality. Our team works
+              tirelessly to sift through the vast sea of information available
+              today, selecting only the most relevant and insightful pieces for
+              our readers.
+            </p>
+          </div>
+          <div className="about-unit">
+            <h4 className="about-small-header">Editorial standards</h4>
+            <p className="about-text">
+              Quality and integrity are at the core of everything we do at
+              SCOPE. Our editorial standards are designed to ensure accuracy,
+              fairness, and balance in all our content. We are committed to
+              providing well-researched and fact-checked articles that our
+              readers can trust. Our editors meticulously review every piece
+              before publication to maintain the highest standards of
+              journalism.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
