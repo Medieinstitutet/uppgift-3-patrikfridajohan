@@ -1,156 +1,175 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import "../styles/register.css";
-import axios from "axios";
+import { registerUser, checkUserEmail } from "../services/authService";
+
+const capitalizeFirstLetter = (str) => {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
 
 export const Register = () => {
-  const [firstnameInput, setFirstnameInput] = useState("");
-  const [lastnameInput, setLastnameInput] = useState("");
-  const [emailInput, setEmailInput] = useState("");
-  const [passwordInput, setPasswordInput] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const navigate = useNavigate();
+  const [userData, setUserData] = useState({
+    firstname: "",
+    lastname: "",
+    email: "",
+    password: "",
+    confirmPassword: ""
+  });
 
-  const userData = {
-    firstname: firstnameInput,
-    lastname: lastnameInput,
-    email: emailInput,
-    password: passwordInput,
-  };
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [emailExists, setEmailExists] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
+  const [formValid, setFormValid] = useState(false);
 
-  console.log("userData:", userData);
-
-  const register = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    console.log("userData:", userData);
-
-    if (
-      !firstnameInput ||
-      !lastnameInput ||
-      !emailInput ||
-      !passwordInput ||
-      !confirmPassword
-    ) {
-      alert("Please fill in all fields.");
-      return;
-    }
-
-    if (confirmPassword !== passwordInput) {
-      alert("Password and Confirm Password must match.");
-      return;
-    }
-
-    try {
-      const response = await axios.post("/api/auth/register", userData);
-      console.log(response.data);
-
-      if (response) {
-        try {
-          await axios.post("http://localhost:5173/api/auth/login", {
-            emailInput,
-            passwordInput,
-          });
-          window.location.href = "/user/dashboard";
-        } catch (error) {
-          console.error("Registration succeeded, login failed", error);
-        }
+  const handleChange = async (event) => {
+    const { name, value } = event.target;
+    setUserData({ ...userData, [name]: value });
+  
+    if (name === "email") {
+      try {
+        const exists = await checkUserEmail(value);
+        setEmailExists(exists);
+      } catch (error) {
+        console.error("Error checking email:", error);
       }
-    } catch (error) {
-      console.error("Registration failed:", error);
+    }
+  
+    if (name === "password" || name === "confirmPassword") {
+      validatePassword(name === "password" ? value : userData.password, name === "confirmPassword" ? value : userData.confirmPassword);
     }
   };
 
-  return (
-    <>
-      <div className="main">
-        <div className="register-hero-container">
-          <div className="info">
-            <h3>Become a member of SCOPE</h3>
-            <p>Get the best handpicked articles for every occation</p>
-          </div>
-          <div className="reg-form">
-            <form onSubmit={register}>
-              <label>Fristname</label>
+  const validatePassword = (password, confirmPassword) => {
+    console.log("Password:", password);
+    console.log("Confirm Password:", confirmPassword);
+  
+    if (password !== confirmPassword) {
+      setPasswordError("Passwords do not match.");
+      setFormValid(false);
+    } else if (!validatePasswordFormat(password)) {
+      setPasswordError("Password must be 8 characters long and contain at least one number, one uppercase letter, one lowercase letter and one special character.");
+      setFormValid(false);
+    } else {
+      setPasswordError("");
+      setFormValid(true);
+    }
+  };
+  
+  
+
+  const validatePasswordFormat = (password) => {
+    const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>/?]).{8,}$/;
+    return regex.test(password);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();  
+    try {
+      const formattedData = {
+        firstname: capitalizeFirstLetter(userData.firstname),
+        lastname: capitalizeFirstLetter(userData.lastname),
+        email: userData.email,
+        password: userData.password
+      };
+  
+      await registerUser(formattedData);
+      window.alert("Registration successful!");
+      navigate("/login");
+    } catch (error) {
+      console.error("Error during registration:", error);
+    }
+  };
+  
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
+  useEffect(() => {
+    setFormValid(userData.email && !emailExists && !passwordError);
+  }, [userData.email, emailExists, passwordError]);
+  
+return (
+    <div className="main">
+      <div className="register-hero-container">
+        <div className="info">
+          <h3>Become a member of SCOPE</h3>
+          <p>Get the best handpicked articles for every occasion</p>
+        </div>
+        <div className="reg-form">
+          <form onSubmit={handleSubmit}>
+            <label>Firstname</label>
+            <input
+              type="text"
+              name="firstname"
+              value={userData.firstname}
+              onChange={handleChange}
+              required 
+            />
+            <label>Lastname</label>
+            <input
+              type="text"
+              name="lastname"
+              value={userData.lastname}
+              onChange={handleChange}
+              required 
+            />
+            <label>E-mail</label>
+            <input
+              type="email"
+              name="email"
+              value={userData.email}
+              onChange={handleChange}
+              required 
+            />
+            {emailExists && <p>Email already exists.</p>}
+            <label>Password</label>
+            <div className="password-input">
               <input
-                type="text"
-                value={firstnameInput}
-                onChange={(e) => setFirstnameInput(e.target.value)}
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={userData.password}
+                onChange={handleChange}
+                required 
               />
-              <label>Lastname</label>
-              <input
-                type="text"
-                value={lastnameInput}
-                onChange={(e) => setLastnameInput(e.target.value)}
-              />
-              <label>Email</label>
-              <input
-                type="email"
-                value={emailInput}
-                onChange={(e) => setEmailInput(e.target.value)}
-              />
-              <label>Password</label>
-              <input
-                type="password"
-                value={passwordInput}
-                onChange={(e) => setPasswordInput(e.target.value)}
-              />
-              <label>Confirm password</label>
-              <input
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
-              <button type="submit" className="btn" id="login-btn">
-                Sign up
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={togglePasswordVisibility}
+              >
+                {showPassword ? "Hide" : "Show"}
               </button>
-            </form>
-          </div>
+            </div>
+            <label>Confirm password</label>
+            <div className="password-input">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                name="confirmPassword"
+                value={userData.confirmPassword}
+                onChange={handleChange}
+                required 
+              />
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={toggleConfirmPasswordVisibility}
+              >
+                {showConfirmPassword ? "Hide" : "Show"}
+              </button>
+            </div>
+            <p>{passwordError}</p>
+            <button type="submit" className="btn" id="login-btn" disabled={!formValid}>
+              Sign up
+            </button>
+          </form>
         </div>
       </div>
-      <div className="tier-section">
-        <h2>Explore our tiers</h2>
-        <div className="tiers">
-          <div className="tier-unit" id="standard">
-            <h3>SCOPE Standard</h3>
-            <ul>
-              <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit</li>
-              <li>Etiam rhoncus, nulla in dignissim mattis</li>
-              <li>
-                Phasellus dictum lorem nulla, dignissim rhoncus turpis consequat
-                et
-              </li>
-              <li>
-                Praesent vel nisi lacinia mauris convallis ultrices. Suspendisse
-                felis libero, accumsan ut tincidunt in, hendrerit id leo.
-              </li>
-            </ul>
-            <h4 className="price">$2/month</h4>
-          </div>
-          <div className="tier-unit" id="plus">
-            <h3>SCOPE Plus</h3>
-            <ul>
-              <li>Everything SCOPE Standard tier includes</li>
-              <li>Aenean gravida ac neque quis consequat</li>
-              <li>Curabitur ut metus metus</li>
-              <li>
-                Quisque diam dolor, rhoncus sit amet mauris at, lobortis cursus
-                turpis
-              </li>
-            </ul>
-            <h4 className="price">$4/month</h4>
-          </div>
-          <div className="tier-unit" id="exclusive">
-            <h3>SCOPE Exclusive</h3>
-            <ul>
-              <li>Everything SCOPE Plus tier includes</li>
-              <li>Donec non sodales lorem</li>
-              <li>
-                Suspendisse ullamcorper, dui ac hendrerit convallis, velit orci
-                tincidunt arcu, sed pretium mi arcu ac est
-              </li>
-            </ul>
-            <h4 className="price">$7/month</h4>
-          </div>
-        </div>
-      </div>
-    </>
+    </div>
   );
 };

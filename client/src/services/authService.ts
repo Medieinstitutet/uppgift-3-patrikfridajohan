@@ -42,7 +42,7 @@ export const isLoggedIn = (): { loggedIn: boolean; isAdmin: boolean } => {
     return { loggedIn, isAdmin };
 };
 
-// Get all data of the current logged in user
+// Get all data of a user
 // import { getAllUserData } from '../services/authService'; to use it on a page
 export const getAllUserData = async (userId: string): Promise<any> => {
     try {
@@ -55,7 +55,7 @@ export const getAllUserData = async (userId: string): Promise<any> => {
     }
 };
 
-// Get fullname from logged in user
+// Get fullname from user
 // import { getUserFullname } from '../services/authService'; to use it on a page
 export const getUserFullName = async (): Promise<string> => {
     try {
@@ -71,7 +71,7 @@ export const getUserFullName = async (): Promise<string> => {
 };
 
 
-// Get firstname from logged in user
+// Get firstname from user
 // import { getUserFirstName } from '../services/authService'; to use it on a page
 export const getUserFirstName = async (): Promise<string> => {
     try {
@@ -86,6 +86,16 @@ export const getUserFirstName = async (): Promise<string> => {
     }
 };
 
+// Check if a user email exists
+export const checkUserEmail = async (emailToCheck: string): Promise<boolean> => {
+    try {
+        const response = await axios.get(`${API_URL}/checkemail/${emailToCheck}`);
+        return response.data.exists;
+    } catch (error) {
+        console.error("Error checking user email:", error);
+        throw error;
+    }
+};
 
 // Get subscription data by subscription ID
 // import { getSubscriptionData } from '../services/authService'; to use it on a page
@@ -227,6 +237,17 @@ export const createNewsArticle = async (articleData: {
     } catch (error) {
         console.error('Error creating news article:', error);
         throw error;
+    }
+};
+
+// Create user
+export const registerUser = async (userData) => {
+    try {
+        const response = await axios.post(`${API_URL}/auth/register`, userData);
+        return response.data;
+    } catch (error) {
+        console.error("Error registering user:", error);
+        throw error.response.data;
     }
 };
 

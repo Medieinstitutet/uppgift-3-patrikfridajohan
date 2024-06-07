@@ -59,25 +59,16 @@ router.post(
 router.post(
   "/auth/register",
   async (req: Request, res: Response, next: NextFunction) => {
-    const { email, password } = req.body;
+    const { firstname, lastname, email, password } = req.body;
 
     try {
-      // Check if email already exists
-      const [emailRows]: [any[], any] = await pool.query(
-        "SELECT * FROM data_users WHERE email = ?",
-        [email]
-      );
-      if (emailRows.length > 0) {
-        return res.status(400).json({ error: "Email already exists" });
-      }
-
       // Hash the password
       const hashedPassword = await bcrypt.hash(password, 10);
 
       // Insert user into database
       await pool.query(
-        "INSERT INTO data_users (email, password) VALUES (?, ?)",
-        [email, hashedPassword]
+        "INSERT INTO data_users (firstname, lastname, email, password) VALUES (?, ?, ?, ?)",
+        [firstname, lastname, email, hashedPassword]
       );
 
       // Return success message
@@ -128,6 +119,27 @@ router.get("/user/:userId", async (req: Request, res: Response) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+// Check if the email already exists in users
+router.get('/checkemail/:email', async (req: Request, res: Response) => {
+  try {
+    const email = req.params.email;
+    const query = `SELECT COUNT(*) AS count FROM data_users WHERE email = ?`;
+
+    const [results]: [any[], any] = await pool.query(query, [email]);
+
+    if (results.length > 0) {
+      const emailExists = results[0].count > 0;
+      res.json({ exists: emailExists });
+    } else {
+      res.status(404).json({ error: 'User not found' });
+    }
+  } catch (error) {
+    console.error('Error checking email:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 
 // GET /subscription/:subscriptionId - Get subscription data by subscription ID
 router.get("/subscription/:subscriptionId", async (req, res) => {
