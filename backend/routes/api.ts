@@ -189,31 +189,30 @@ router.get("/articletitles", async (req, res) => {
 });
 
 // GET /articles - Get all articles for the logged in user
-router.get("/articles", async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const activesubscriptionid = req.cookies.activesubscriptionid;
-      const [rows]: [any[], any] = await pool.query(
-        "SELECT * FROM data_articles WHERE subscriptionid = ?", [activesubscriptionid]
-      );
-      res.json(rows);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      res.status(500).json({ error: "Internal server error" });
-    }
-  }
-);
+// router.get("/articles", async (req: Request, res: Response, next: NextFunction) => {
+//     try {
+//       const activesubscriptionid = req.cookies.activesubscriptionid;
+//       const [rows]: [any[], any] = await pool.query(
+//         "SELECT * FROM data_articles WHERE subscriptionid = ?", [activesubscriptionid]
+//       );
+//       res.json(rows);
+//     } catch (error) {
+//       console.error("Error fetching data:", error);
+//       res.status(500).json({ error: "Internal server error" });
+//     }
+//   }
+// );
 
-// GET /articles - Get latest articles for the logged in user - NEW
-router.get("/latestarticlesforme/:activesubscriptionid", async (req, res) => {
+// GET /articlesforme - Get all articles for logged in user - NEW
+router.get("/articlesforme/:activesubscriptionid", async (req, res) => {
   try {
     const { activesubscriptionid } = req.params;
-
     const [articleRows]: [any[], any] = await pool.query(
-      "SELECT * FROM data_articles WHERE subscriptionid <= ? ORDER BY added DESC LIMIT 3", [activesubscriptionid]
+      "SELECT * FROM data_articles WHERE subscriptionid <= ? ORDER BY added DESC", [activesubscriptionid]
     );
 
     if (articleRows.length > 0) {
-      // Return latest articles that match the subscription ID and below
+      // Return latest articles that match the subscription ID and below for user
       return res.json(articleRows);
     } else {
       return res.status(404).json({ error: "Articles not found" });
@@ -224,16 +223,35 @@ router.get("/latestarticlesforme/:activesubscriptionid", async (req, res) => {
   }
 });
 
-// GET /articles - Get all articles for admin
+// GET /articles - Get latest articles for the logged in user
+router.get("/latestarticlesforme/:activesubscriptionid", async (req, res) => {
+  try {
+    const { activesubscriptionid } = req.params;
+    const [articleRows]: [any[], any] = await pool.query(
+      "SELECT * FROM data_articles WHERE subscriptionid <= ? ORDER BY added DESC LIMIT 3", [activesubscriptionid]
+    );
+
+    if (articleRows.length > 0) {
+      // Return latest articles that match the subscription ID and below for user
+      return res.json(articleRows);
+    } else {
+      return res.status(404).json({ error: "Articles not found" });
+    }
+  } catch (error) {
+    console.error("Error fetching articles:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// GET /articlesforadmin - Get all articles for admin
 router.get("/articlesforadmin", async (req, res) => {
   try {
-    // Updated query to fetch all articles
     const [articleRows]: [any[], any] = await pool.query(
       "SELECT * FROM data_articles ORDER BY added DESC"
     );
 
     if (articleRows.length > 0) {
-      // Return all articles
+      // Return all articles for admin
       return res.json(articleRows);
     } else {
       return res.status(404).json({ error: "Articles not found" });
