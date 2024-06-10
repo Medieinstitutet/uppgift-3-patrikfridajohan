@@ -1,7 +1,6 @@
 import axios from "axios";
 
 export const Success = () => {
- 
   const handleCheckout = async () => {
     const response = await axios.post(
       "http://localhost:5173/api/stripe/create-checkout-session"
@@ -13,14 +12,11 @@ export const Success = () => {
       console.error("failed to initiate checkout", response.data);
     }
   };
- const handleSub = async() =>{
-     
-        const response = await axios.post(
-          "http://localhost:5173/api/stripe/create-subscription"
-        );
-       
-      };
-  
+  const handleSub = async () => {
+    const response = await axios.post(
+      "http://localhost:5173/api/stripe/create-subscription"
+    );
+  };
 
   return (
     <>
