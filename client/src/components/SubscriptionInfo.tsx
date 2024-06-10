@@ -1,28 +1,24 @@
+import React from "react";
 import "../styles/account.css";
 
-// interface ISubscriptionInfo {
-//   dummyData: {
-//     email: string;
-//     plan: {
-//       name: string;
-//       cost: string;
-//     };
-//     renewal: string;
-//     billing: string;
-//   };
-// }
-
-interface ISubscriptionInfo {
-  subscriptionData: {
-    name: string;
-    price: number;
-    active: boolean;
-    enddate: date;
-  };
+interface SubscriptionData {
+  name: string;
+  price: number;
+  enddate: Date;
 }
 
-export const SubscriptionInfo = (props: ISubscriptionInfo) => {
+interface ISubscriptionInfo {
+  subscriptionData: SubscriptionData | null | undefined;
+}
+
+export const SubscriptionInfo: React.FC<ISubscriptionInfo> = (props) => {
   const { subscriptionData } = props;
+
+  if (!subscriptionData) {
+    return <div>No subscription data available</div>;
+  }
+
+  const { name, price, enddate } = subscriptionData;
 
   return (
     <div className="sub-container">
@@ -30,17 +26,17 @@ export const SubscriptionInfo = (props: ISubscriptionInfo) => {
         <h2>Your subscription info</h2>
         <div className="info-row">
           <p>Current plan:</p>
-          <h4>{subscriptionData.name}</h4>
+          <h4>{name}</h4>
         </div>
         <div className="info-row">
           <p>Next billing date:</p>
-          <h4></h4>
+          <h4>{enddate ? enddate.toLocaleDateString() : "Unknown"}</h4>
         </div>
       </div>
       <div className="billing">
         <h2>Billing Information:</h2>
-        <p>Renewal: Every 7tn day</p>
-        <p>Cost: ${subscriptionData.price}/month</p>
+        <p>Renewal: Every 7th day</p>
+        <p>Cost: ${price}/month</p>
         <p>Payment method: Stripe</p>
         <button type="button" className="btn">
           Change plan

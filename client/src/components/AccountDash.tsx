@@ -12,7 +12,7 @@ interface IAccountDash {
     renewal: string;
     billing: string;
   };
-  setSelection: (selection: string) => void;
+  setSelection: (selection: "dashboard" | "subscription" | "settings" | "support") => void;
 }
 
 export const AccountDash = (props: IAccountDash) => {
@@ -43,7 +43,7 @@ export const AccountDash = (props: IAccountDash) => {
         <div className="current">
           <h3>You are currently a {props.dummyData.plan.name} member.</h3>
           <div className="to-tiers">
-            <p>Curios about the other tiers and their benefits? Take a look!</p>
+            <p>Curious about the other tiers and their benefits? Take a look!</p>
             <Link to="/user/subscriptions" style={{ textDecoration: "none" }}>
               <button type="button" className="btn">
                 Tiers
