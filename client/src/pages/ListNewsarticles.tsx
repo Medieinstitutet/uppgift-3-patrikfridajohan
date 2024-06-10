@@ -3,6 +3,14 @@ import "../styles/listnewsletters.css";
 import { getAllarticlesforadmin } from "../services/authService";
 import { useLocation, Link } from 'react-router-dom';
 
+interface INewsletter {
+  id: string;
+  title: string;
+  shortinfo: string;
+  added: string;
+  longinfo: string;
+}
+
 export const ListNewsarticles = () => {
   const location = useLocation();
   const successMessage = location.state?.successMessage;

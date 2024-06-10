@@ -3,7 +3,14 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAllarticlesforme, isLoggedIn } from "../services/authService";
 
-export const Articlesforme = () => {
+interface Article {
+  id: number;
+  title: string;
+  shortinfo: string;
+  added: string;
+}
+
+export const Articlesforme: React.FC = () => {
   const navigate = useNavigate();
   const [articles, setArticles] = useState<Article[]>([]);
   const { loggedIn } = isLoggedIn();
@@ -25,12 +32,12 @@ export const Articlesforme = () => {
     }
   }, [navigate, loggedIn]);
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
     return date.toLocaleDateString();
   };
 
-  const handleClick = (id: number) => {
+  const handleClick = (id: number): void => {
     navigate(`/user/article/${id}`);
   };
 

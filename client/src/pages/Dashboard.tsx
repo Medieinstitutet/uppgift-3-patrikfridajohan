@@ -1,9 +1,16 @@
 import "../styles/dashboard.css";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUserFirstName, getLatestarticlesforme, getActiveSubscription, getSubscriptionData, isLoggedIn } from "../services/authService";
+import { getUserFirstName, getLatestarticlesforme, getActiveSubscription, getSubscriptionData, getUseridfromcookie, isLoggedIn } from "../services/authService";
 
-export const Dashboard = () => {
+interface Article {
+  id: number;
+  title: string;
+  shortinfo: string;
+  added: string;
+}
+
+export const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const [articles, setArticles] = useState<Article[]>([]);
   const [firstName, setFirstName] = useState<string>('');
@@ -21,11 +28,14 @@ export const Dashboard = () => {
         const firstName = await getUserFirstName();
         setFirstName(firstName);
         
-        const activeSubscriptionId = await getActiveSubscription();
-        console.log("activesubid: ",activeSubscriptionId);
-        if (activeSubscriptionId) {
-          const subscriptionData = await getSubscriptionData(activeSubscriptionId);
-          setSubscriptionLevel(subscriptionData.name);
+        const userId = getUseridfromcookie();
+        if (userId) {
+          const activeSubscriptionId = await getActiveSubscription(userId);
+          console.log("activesubid: ", activeSubscriptionId);
+          if (activeSubscriptionId) {
+            const subscriptionData = await getSubscriptionData(activeSubscriptionId);
+            setSubscriptionLevel(subscriptionData.name);
+          }
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -45,24 +55,24 @@ export const Dashboard = () => {
     fetchArticles();
   }, []);
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
     return date.toLocaleDateString();
   };
 
-  const handleClick = (id: number) => {
+  const handleClick = (id: number): void => {
     navigate(`/user/article/${id}`);
   };
 
-  const handleProfileSettings = () => {
+  const handleProfileSettings = (): void => {
     navigate("/user/account");
   };
 
-  const handleBillingInformation = () => {
+  const handleBillingInformation = (): void => {
     navigate("/user/account");
   };
 
-  const handleUpgradeSubscription = () => {
+  const handleUpgradeSubscription = (): void => {
     navigate("/user/subscriptions");
   };
 

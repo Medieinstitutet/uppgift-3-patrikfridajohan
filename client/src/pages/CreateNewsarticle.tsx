@@ -3,10 +3,12 @@ import { useState, FormEvent } from 'react';
 import { createNewsArticle } from '../services/authService';
 import { useNavigate } from 'react-router-dom';
 
-export const CreateNewsarticle = () => {
+interface CreateNewsarticleProps {}
+
+export const CreateNewsarticle: React.FC<CreateNewsarticleProps> = () => {
     const navigate = useNavigate();
     const [title, setTitle] = useState<string>('');
-    const [subscriptionid, setCategory] = useState<number>('1');
+    const [subscriptionid, setSubscriptionid] = useState<number>(1);
     const [shortInfo, setShortInfo] = useState<string>('');
     const [longInfo, setLongInfo] = useState<string>('');
 
@@ -33,8 +35,8 @@ export const CreateNewsarticle = () => {
                     <input type="text" id="title" placeholder="Enter newsarticle title" value={title} onChange={(e) => setTitle(e.target.value)} required/>
                 </div>
                 <div className="form-group">
-                    <label htmlFor="category">Category</label>
-                    <select id="subscriptionid" value={subscriptionid} onChange={(e) => setCategory(e.target.value)}>
+                    <label htmlFor="subscriptionid">Category</label>
+                    <select id="subscriptionid" value={subscriptionid} onChange={(e) => setSubscriptionid(parseInt(e.target.value))}>
                         <option value="1">Standard</option>
                         <option value="2">Plus</option>
                         <option value="3">Exclusive</option>
