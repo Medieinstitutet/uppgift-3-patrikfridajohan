@@ -1,21 +1,33 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getArticleData } from "../services/authService";
-import { isLoggedIn } from "../services/authService";
+import { getArticleData, isLoggedIn } from "../services/authService";
 import "../styles/article.css";
 
-export const Article = () => {
-  const { id } = useParams();
-  const [articleData, setArticleData] = useState<any>();
+interface Params {
+  [key: string]: string | undefined;
+}
+
+interface ArticleData {
+  id: number;
+  title: string;
+  shortinfo: string;
+  longinfo: string;
+}
+
+export const Article: React.FC = () => {
+  const { id } = useParams<Params>();
+  const [articleData, setArticleData] = useState<ArticleData | null>(null);
   const [allowed, setAllowed] = useState<boolean>(false);
   const { loggedIn } = isLoggedIn();
 
   useEffect(() => {
     const fetchArticle = async () => {
       try {
-        const { articleData, allowed } = await getArticleData(id);
-        setArticleData(articleData);
-        setAllowed(allowed);
+        if (id) {
+          const { articleData, allowed } = await getArticleData(id);
+          setArticleData(articleData);
+          setAllowed(allowed);
+        }
       } catch (error) {
         console.error("Error fetching article data:", error);
       }
