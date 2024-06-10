@@ -35,7 +35,6 @@ export const Subscriptions: React.FC = () => {
     }
     if (!userId) {
       window.location.href = '/login';
->>>>>>> main
       return;
     }
 

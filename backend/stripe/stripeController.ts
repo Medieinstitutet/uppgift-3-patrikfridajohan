@@ -11,7 +11,7 @@ export const webhookHandler = async (
   next: NextFunction
 ) => {
   console.log(req.body);
-  /*  const sig = req.headers["stripe-signature"];
+  const sig = req.headers["stripe-signature"];
   if (!sig) {
     return res.status(400).send("Missing Stripe signature");
   }
@@ -25,7 +25,6 @@ export const webhookHandler = async (
   }
 
   // Handle the event
-<<<<<<< errorHandling-backend
   try {
     switch (event.type) {
       case "customer.subscription.created":
@@ -44,21 +43,6 @@ export const webhookHandler = async (
     console.error(`Error handling event: ${error.message}`);
     return res.status(500).send(`Error handling event: ${error.message}`);
   }
-=======
-  switch (event.type) {
-    case "customer.subscription.created":
-      // Logic to handle customer.subscription.created event
-      break;
-    case "customer.subscription.deleted":
-      // Logic to handle customer.subscription.deleted event
-      break;
-    case "customer.subscription.updated":
-      // Logic to handle customer.subscription.updated event
-      break;
-    default:
-      console.log(`Unhandled event type ${event.type}`);
-  } */
->>>>>>> main
 
   // Return a 200 response to acknowledge receipt of the event
   res.json({});
@@ -75,11 +59,7 @@ export const checkoutSession = async (req: Request, res: Response) => {
       mode: "subscription",
       line_items: [
         {
-<<<<<<< errorHandling-backend
           price: priceId, // Lägg till rätt pris-ID för din prenumeration
-=======
-          price: "price_1PQ5SNGtY97KMuDYUzPSaoeq", // Lägg till rätt pris-ID för din prenumeration
->>>>>>> main
           quantity: 1,
         },
       ],
@@ -95,7 +75,6 @@ export const checkoutSession = async (req: Request, res: Response) => {
 };
 
 //Denna kod skapar en prenumeration baserat på ett knapptryck
-<<<<<<< errorHandling-backend
 export const createSubscription = async (
   req: Request,
   res: Response
@@ -211,7 +190,3 @@ export default {
   getPlans,
   getPrice,
 };
-=======
-
-export default { webhookHandler, checkoutSession};
->>>>>>> main

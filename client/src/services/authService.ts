@@ -1,23 +1,18 @@
-<<<<<<< errorHandling-backend
 import { API_URL } from "./apiservice";
-import axios from "axios";
-=======
-import { API_URL } from './apiservice';
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError } from "axios";
 
 interface UserData {
-    id: string;
-    firstname: string;
-    lastname: string;
-    email: string;
-    password: string;
-    added: string;
-    updated: string;
-    activesubscriptionid: number;
-    accessid: number;
-    active: number;
+  id: string;
+  firstname: string;
+  lastname: string;
+  email: string;
+  password: string;
+  added: string;
+  updated: string;
+  activesubscriptionid: number;
+  accessid: number;
+  active: number;
 }
->>>>>>> main
 
 // Get userid from cookie
 // import { getUseridfromcookie } from './authService'; to use it on a page
@@ -67,8 +62,7 @@ export const isLoggedIn = (): { loggedIn: boolean; isAdmin: boolean } => {
 
 // Get all data of a user
 // import { getAllUserData } from '../services/authService'; to use it on a page
-<<<<<<< errorHandling-backend
-export const getAllUserData = async (userId: string): Promise<any> => {
+export const getAllUserData = async (userId: string): Promise<UserData> => {
   try {
     const response = await axios.get(`${API_URL}/user/${userId}`);
     console.log("User data:", response.data);
@@ -77,25 +71,13 @@ export const getAllUserData = async (userId: string): Promise<any> => {
     console.error("Error fetching user data:", error);
     throw error;
   }
-=======
-export const getAllUserData = async (userId: string): Promise<UserData> => {
-    try {
-        const response = await axios.get(`${API_URL}/user/${userId}`);
-        console.log('User data:', response.data);
-        return response.data;
-    } catch (error) {
-        console.error("Error fetching user data:", error);
-        throw error;
-    }
->>>>>>> main
 };
 
 // Get fullname from user
 // import { getUserFullname } from '../services/authService'; to use it on a page
 export const getUserFullName = async (): Promise<string> => {
-<<<<<<< errorHandling-backend
   try {
-    const userId = getUseridfromcookie();
+    const userId = getUseridfromcookie() || "";
     const userData = await getAllUserData(userId);
     const fullName = `${userData.firstname} ${userData.lastname}`;
     console.log(fullName);
@@ -104,26 +86,13 @@ export const getUserFullName = async (): Promise<string> => {
     console.error("Error fetching user data:", error);
     throw error;
   }
-=======
-    try {
-        const userId = getUseridfromcookie() || '';
-        const userData = await getAllUserData(userId);
-        const fullName = `${userData.firstname} ${userData.lastname}`;
-        console.log(fullName);
-        return fullName;
-    } catch (error) {
-        console.error("Error fetching user data:", error);
-        throw error;
-    }
->>>>>>> main
 };
 
 // Get firstname from user
 // import { getUserFirstName } from '../services/authService'; to use it on a page
 export const getUserFirstName = async (): Promise<string> => {
-<<<<<<< errorHandling-backend
   try {
-    const userId = getUseridfromcookie();
+    const userId = getUseridfromcookie() || "";
     const userData = await getAllUserData(userId);
     const firstName = `${userData.firstname}`;
     console.log(firstName);
@@ -132,18 +101,6 @@ export const getUserFirstName = async (): Promise<string> => {
     console.error("Error fetching user data:", error);
     throw error;
   }
-=======
-    try {
-        const userId = getUseridfromcookie() || '';
-        const userData = await getAllUserData(userId);
-        const firstName = `${userData.firstname}`;
-        console.log(firstName);
-        return firstName;
-    } catch (error) {
-        console.error("Error fetching user data:", error);
-        throw error;
-    }
->>>>>>> main
 };
 
 // Check if a user email exists
@@ -187,8 +144,7 @@ export const getSubscriptionData = async (
 
 // Get all subscriptions
 // import { getAllsubscriptions } from '../services/authService'; to use it on a page
-<<<<<<< errorHandling-backend
-export const getAllsubscriptions = async () => {
+export const getAllsubscriptions = async (): Promise<any> => {
   try {
     const response = await axios.get(`${API_URL}/subscriptions`);
     return response.data;
@@ -196,21 +152,10 @@ export const getAllsubscriptions = async () => {
     console.error("Error fetching all plans data:", error);
     throw error;
   }
-=======
-export const getAllsubscriptions = async (): Promise<any> => {
-    try {
-        const response = await axios.get(`${API_URL}/subscriptions`);
-        return response.data;
-    } catch (error) {
-        console.error("Error fetching all plans data:", error);
-        throw error;
-    }
->>>>>>> main
 };
 
 // Get active subscription data of the current logged in user
 // import { getActiveSubscription } from '../services/authService'; to use it on a page
-<<<<<<< errorHandling-backend
 export const getActiveSubscription = async (
   userId: string | undefined
 ): Promise<string | null> => {
@@ -220,30 +165,12 @@ export const getActiveSubscription = async (
     if (userId) {
       userToFetch = userId;
     } else {
-      userToFetch = getUseridfromcookie();
-=======
-export const getActiveSubscription = async (userId: string | undefined): Promise<string | null> => {
-    try {
-        let userToFetch: string;
-        // If userId is provided, use it; otherwise, get userId from cookie
-        if (userId) {
-            userToFetch = userId;
-        } else {
-            userToFetch = getUseridfromcookie() || '';
-        }
-
-        const userData = await getAllUserData(userToFetch);
-        console.log("ActiveSubscription: ", userData.activesubscriptionid);
-        return userData.activesubscriptionid.toString();
-    } catch (error) {
-        console.error("Error fetching active subscription:", error);
-        return null;
->>>>>>> main
+      userToFetch = getUseridfromcookie() || "";
     }
 
     const userData = await getAllUserData(userToFetch);
     console.log("ActiveSubscription: ", userData.activesubscriptionid);
-    return userData.activesubscriptionid || "0";
+    return userData.activesubscriptionid.toString();
   } catch (error) {
     console.error("Error fetching active subscription:", error);
     return null;
@@ -269,8 +196,7 @@ export const cancelSubscription = async (
 
 // Get all Articletitles
 // import { getAllarticletitles } from '../services/authService'; to use it on a page
-<<<<<<< errorHandling-backend
-export const getAllarticletitles = async () => {
+export const getAllarticletitles = async (): Promise<any> => {
   try {
     const response = await axios.get(`${API_URL}/articletitles`);
     return response.data;
@@ -278,43 +204,15 @@ export const getAllarticletitles = async () => {
     console.error("Error fetching all plans data:", error);
     throw error;
   }
-=======
-export const getAllarticletitles = async (): Promise<any> => {
-    try {
-        const response = await axios.get(`${API_URL}/articletitles`);
-        return response.data;
-    } catch (error) {
-        console.error("Error fetching all plans data:", error);
-        throw error;
-    }
->>>>>>> main
 };
 
 // Get all Newsarticles for me
 // import { getAllarticlesforme } from '../services/authService'; to use it on a page
 export const getAllarticlesforme = async (): Promise<any> => {
-<<<<<<< errorHandling-backend
   try {
     const userId = getUseridfromcookie();
     if (!userId) {
       throw new Error("User ID not found in cookie");
-=======
-    try {
-        const userId = getUseridfromcookie();
-        if (!userId) {
-            throw new Error("User ID not found in cookie");
-        }
-        console.log("forme: ",userId);
-        // Get active subscription ID for the user
-        const activeSubscriptionId = await getActiveSubscription(userId);
-
-        // Fetch articles based on the active subscription level
-        const response = await axios.get(`${API_URL}/articlesforme/${activeSubscriptionId}`);
-        return response.data;
-    } catch (error) {
-        console.error("Error fetching subscription data:", error);
-        throw error;
->>>>>>> main
     }
     console.log("forme: ", userId);
     // Get active subscription ID for the user
@@ -334,54 +232,23 @@ export const getAllarticlesforme = async (): Promise<any> => {
 // Get all Newsarticles for admin
 // import { getAllarticlesforadmin } from '../services/authService'; to use it on a page
 export const getAllarticlesforadmin = async (): Promise<any> => {
-<<<<<<< errorHandling-backend
   try {
     // Fetch articles for admin
     const response = await axios.get(`${API_URL}/articlesforadmin`);
-
     return response.data;
   } catch (error) {
     console.error("Error fetching articles for admin:", error);
     throw error;
   }
-=======
-    try {      
-        // Fetch articles for admin
-        const response = await axios.get(`${API_URL}/articlesforadmin`);
-        return response.data;
-    } catch (error) {
-        console.error("Error fetching articles for admin:", error);
-        throw error;
-    }
->>>>>>> main
 };
 
 // Get latest Newsarticles for me
 // import { getLatestarticlesforme } from '../services/authService'; to use it on a page
 export const getLatestarticlesforme = async (): Promise<any> => {
-<<<<<<< errorHandling-backend
   try {
     const userId = getUseridfromcookie();
     if (!userId) {
       throw new Error("User ID not found in cookie");
-=======
-    try {
-        const userId = getUseridfromcookie();
-        if (!userId) {
-            throw new Error("User ID not found in cookie");
-        }
-        console.log("forme: ",userId);
-        // Get active subscription ID for the user
-        const activeSubscriptionId = await getActiveSubscription(userId);
-
-        // Fetch articles based on the active subscription level
-        const response = await axios.get(`${API_URL}/latestarticlesforme/${activeSubscriptionId}`);
-
-        return response.data;
-    } catch (error) {
-        console.error("Error fetching subscription data:", error);
-        throw error;
->>>>>>> main
     }
     console.log("forme: ", userId);
     // Get active subscription ID for the user
@@ -401,17 +268,17 @@ export const getLatestarticlesforme = async (): Promise<any> => {
 
 // Get all data of the newsarticle
 // import { getArticleData } from '../services/authService'; to use it on a page
-<<<<<<< errorHandling-backend
 export const getArticleData = async (
   articleId: string
 ): Promise<{ articleData: any; allowed: boolean }> => {
   try {
+    const userId = getUseridfromcookie() ?? "";
     const response = await axios.get(`${API_URL}/article/${articleId}`);
     const articleData = response.data;
 
     // Check if the user's active subscription matches the article's subscription ID
-    const activeSubscriptionId = await getActiveSubscription(
-      getUseridfromcookie()
+    const activeSubscriptionId = parseInt(
+      (await getActiveSubscription(userId)) || "0"
     );
     const allowed = activeSubscriptionId >= articleData.subscriptionid;
 
@@ -421,24 +288,6 @@ export const getArticleData = async (
     console.error("Error fetching article data:", error);
     throw error;
   }
-=======
-export const getArticleData = async (articleId: string): Promise<{ articleData: any, allowed: boolean }> => {
-    try {
-        const userId = getUseridfromcookie() ?? '';
-        const response = await axios.get(`${API_URL}/article/${articleId}`);
-        const articleData = response.data;
-
-        // Check if the user's active subscription matches the article's subscription ID
-        const activeSubscriptionId = parseInt(await getActiveSubscription(userId) || "0");
-        const allowed = activeSubscriptionId >= articleData.subscriptionid;
-
-        console.log('Article data:', articleData);
-        return { articleData, allowed };
-    } catch (error) {
-        console.error("Error fetching article data:", error);
-        throw error;
-    }
->>>>>>> main
 };
 
 // Create newsarticle
@@ -461,21 +310,23 @@ export const createNewsArticle = async (articleData: {
 };
 
 interface UserRegistrationData {
-    email: string;
-    password: string;
-    firstname: string;
-    lastname: string;
+  email: string;
+  password: string;
+  firstname: string;
+  lastname: string;
 }
 
 // Create user
-<<<<<<< errorHandling-backend
-export const registerUser = async (userData) => {
+export const registerUser = async (
+  userData: UserRegistrationData
+): Promise<any> => {
   try {
     const response = await axios.post(`${API_URL}/auth/register`, userData);
     return response.data;
   } catch (error) {
-    console.error("Error registering user:", error);
-    throw error.response.data;
+    const axiosError = error as AxiosError<any>;
+    console.error("Error registering user:", axiosError);
+    throw axiosError.response?.data ?? error;
   }
 };
 
@@ -489,16 +340,6 @@ export const loginUser = async (userData: any) => {
       window.location.href = response.data;
     } else {
       console.log("Error logging in");
-=======
-export const registerUser = async (userData: UserRegistrationData): Promise<any> => {
-    try {
-        const response = await axios.post(`${API_URL}/auth/register`, userData);
-        return response.data;
-    } catch (error) {
-        const axiosError = error as AxiosError<any>;
-        console.error("Error registering user:", axiosError);
-        throw axiosError.response?.data ?? error;
->>>>>>> main
     }
 
     console.log("Login successfull");
@@ -508,10 +349,10 @@ export const registerUser = async (userData: UserRegistrationData): Promise<any>
 };
 
 export const handleCheckout = async (priceId: string) => {
-  console.log('priceId:', priceId)
+  console.log("priceId:", priceId);
   const response = await axios.post(
     "http://localhost:5173/api/stripe/create-checkout-session",
-    {priceId}
+    { priceId }
   );
   if (response.status === 200) {
     const { url } = response.data;
@@ -526,8 +367,6 @@ export const getPlans = async () => {
   const response = await axios.get(`${API_URL}/stripe/plans`);
   return response;
 };
-
-
 
 // export const registerUser = async (userData) => {
 //     try {
