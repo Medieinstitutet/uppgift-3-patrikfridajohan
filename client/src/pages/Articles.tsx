@@ -3,11 +3,17 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAllarticletitles } from "../services/authService";
 
-export const Articles = () => {
+interface Article {
+  id: number;
+  title: string;
+  added: string;
+}
+
+export const Articles: React.FC = () => {
   const navigate = useNavigate();
   const [articles, setArticles] = useState<Article[]>([]);
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
     return date.toLocaleDateString();
   };
@@ -26,7 +32,7 @@ export const Articles = () => {
   }, []);
 
 
-  const handleClick = (id: number) => {
+  const handleClick = (id: number): void => {
     navigate(`/user/article/${id}`);
   };
 
