@@ -34,6 +34,7 @@ export const Subscriptions: React.FC = () => {
     const fetchPlans = async () => {
       try {
         const plansData = await getAllsubscriptions();
+        console.log("Plans Data:", plansData);
         setPlans(plansData);
       } catch (error) {
         console.error('Error fetching plans:', error);
@@ -46,6 +47,7 @@ export const Subscriptions: React.FC = () => {
       if (userId) {
         try {
           const subscription = await getActiveSubscription(userId);
+          console.log("User active subscription:", subscription);
           setActiveSubscriptionId(subscription);
         } catch (error) {
           console.error('Error fetching active subscription:', error);
@@ -71,23 +73,27 @@ export const Subscriptions: React.FC = () => {
       </div>
       <div className="keys">
         <div className="features">
-          {plans.map(plan => (
-            <div className="feature" key={plan.id}>
-              <h4>{plan.name}</h4>
-              <p className="pricing">${plan.price}</p>
-              <p>{plan.info}</p>
-              {activeSubscriptionId === plan.id ? (
-                <button type="button" className="btn btn-outline-success subscribed" disabled>Already Subscribed</button>
-              ) : (
-                <button
-                  className="btn"
-                  onClick={() => handleSubscribe(plan.id)}
-                >
-                  SUBSCRIBE
-                </button>
-              )}
-            </div>
-          ))}
+        {plans.map(plan => (
+          <div className="feature" key={plan.id}>
+            <h4>{plan.name}</h4>
+            <p className="pricing">${plan.price}</p>
+            <p>{plan.info}</p>
+            {console.log("Active Subscription ID:", activeSubscriptionId)}
+            {console.log("Plan ID:", plan.id)}
+            {console.log(typeof activeSubscriptionId)}
+            {console.log(typeof plan.id)}
+            {activeSubscriptionId === plan.id.toString() ? (
+              <button type="button" className="btn btn-outline-success subscribed" disabled>Already Subscribed</button>
+            ) : (
+              <button
+                className="btn"
+                onClick={() => handleSubscribe(plan.id)}
+              >
+                SUBSCRIBE
+              </button>
+            )}
+          </div>
+        ))}
         </div>
       </div>
     </div>
