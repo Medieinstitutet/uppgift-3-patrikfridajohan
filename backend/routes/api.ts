@@ -3,7 +3,6 @@ import bcrypt from "bcrypt";
 import pool from "../mysql";
 const cookieParser = require("cookie-parser");
 import { createSession } from "./authUtils";
-import Cookies from "js-cookie";
 
 const router = express.Router();
 

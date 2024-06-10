@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "../styles/login.css";
-import axios from "axios";
+import { loginUser } from "../services/authService";
 
 export const Login = () => {
   const [emailInput, setEmailInput] = useState("");
@@ -14,24 +14,12 @@ export const Login = () => {
       return;
     }
 
-    try {
-      const response = await axios.post(
-        "http://localhost:5173/api/auth/login",
-        {
-          email: emailInput,
-          password: passwordInput,
-        }
-      );
-      if (response) {
-        window.location.href = response.data;
-      } else {
-        console.log('Error logging in')
-      }
+    const userData = {
+      email: emailInput,
+      password: passwordInput,
+    };
 
-      console.log("Login successfull");
-    } catch (error) {
-      console.error("Login failed:", error);
-    }
+    await loginUser(userData)
   };
 
   return (
