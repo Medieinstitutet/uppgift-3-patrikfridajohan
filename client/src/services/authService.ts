@@ -390,7 +390,7 @@ export const loginUser = async (userData: any) => {
   }
 };
 
-export const handleCheckout = async (priceId: string) => {
+/* export const handleCheckout = async (priceId: string) => {
   console.log("priceId:", priceId);
   const response = await axios.post(
     "http://localhost:5173/api/stripe/create-checkout-session",
@@ -408,7 +408,7 @@ export const handleCheckout = async (priceId: string) => {
 export const getPlans = async () => {
   const response = await axios.get(`${API_URL}/stripe/plans`);
   return response;
-};
+}; */
 
 // export const registerUser = async (userData) => {
 //     try {

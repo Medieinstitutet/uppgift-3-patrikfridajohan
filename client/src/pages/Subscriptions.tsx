@@ -33,7 +33,7 @@ export const Subscriptions: React.FC = () => {
     }
 
     // Get all subscriptions
-    const fetchPlans = async () => {
+   /*  const fetchPlans = async () => {
       try {
         const plans = await getPlans();
         setPlans(plans.data);
@@ -43,7 +43,7 @@ export const Subscriptions: React.FC = () => {
         console.error("Error fetching plans:", error);
       }
     };
-    fetchPlans();
+    fetchPlans(); */
 
     // Get active subscriptionID
     const fetchActiveSubscriptionId = async () => {
