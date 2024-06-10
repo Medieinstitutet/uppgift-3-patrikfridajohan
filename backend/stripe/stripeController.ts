@@ -1,5 +1,7 @@
 import express, { Request, Response, NextFunction } from "express";
 import Stripe from "stripe";
+import { updateStatus } from "./utils";
+import pool from "../mysql";
 
 const stripe = new Stripe(process.env.STRIPE_PRIVATE_KEY || "");
 
@@ -10,43 +12,51 @@ export const webhookHandler = async (
   res: Response,
   next: NextFunction
 ) => {
-  console.log(req.body);
-  /*  const sig = req.headers["stripe-signature"];
-  if (!sig) {
-    return res.status(400).send("Missing Stripe signature");
-  }
-
-  let event;
-
-  try {
-    event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
-  } catch (error: any) {
-    return res.status(400).send(`Webhook Error: ${error.message}`);
-  }
-
+  const eventType = req.body.type;
+  const eventData = req.body.data.object;
   // Handle the event
-  switch (event.type) {
-    case "customer.subscription.created":
+  switch (eventType) {
+    /* case "checkout.session.completed":
+      console.log(eventData);
+      break;
+    case "payment_intent.succeeded":
+      console.log(eventData);
+      break;
+    case "invoice.paid":
+      console.log(eventData);
       // Logic to handle customer.subscription.created event
       break;
-    case "customer.subscription.deleted":
-      // Logic to handle customer.subscription.deleted event
-      break;
+    case "invoice.payment.succeeded":
+      console.log(eventData);
+      break; */
     case "customer.subscription.updated":
-      // Logic to handle customer.subscription.updated event
+      console.log(eventData);
+
       break;
     default:
-      console.log(`Unhandled event type ${event.type}`);
-  } */
+      console.log(`Unhandled event type ${req.body.type}`);
+  }
 
   // Return a 200 response to acknowledge receipt of the event
-  res.json({});
+  res.json({ recieved: true });
 };
 
 // Denna funktion skapar en session där man kan betala med sitt kort
 
 export const checkoutSession = async (req: Request, res: Response) => {
-  const subscription = req.body;
+  const { planId, userId } = req.body;
+  console.log("retrieved userid: ", userId);
+
+  let subscriptionPlan: string;
+
+  if (planId === 2) {
+    subscriptionPlan = "price_1PQ5SNGtY97KMuDYUzPSaoeq";
+  } else if (planId === 3) {
+    subscriptionPlan = "price_1PQ5ShGtY97KMuDYUY112zee";
+  } else {
+    res.status(400).json({ error: "Invalid plan ID" });
+    return;
+  }
 
   try {
     const session = await stripe.checkout.sessions.create({
@@ -54,13 +64,31 @@ export const checkoutSession = async (req: Request, res: Response) => {
       mode: "subscription",
       line_items: [
         {
-          price: "price_1PQ5SNGtY97KMuDYUzPSaoeq", // Lägg till rätt pris-ID för din prenumeration
+          price: subscriptionPlan, // Lägg till rätt pris-ID för din prenumeration
           quantity: 1,
         },
       ],
       success_url: "http://localhost:5173/user/dashboard",
       cancel_url: "http://localhost:5173/",
+      metadata: { userId: userId.toString() },
     });
+    console.log(userId);
+
+    const added = new Date();
+    const updated = new Date();
+    const enddate = new Date();
+    enddate.setDate(added.getDate() + 7);
+
+    // Infoga prenumerationen i databasen
+    const queryDataUserSubscription = `INSERT INTO data_users_subscriptions (subscriptionid, uid, added, enddate, active)
+                   VALUES (?, ?, ?, ?, ?)`;
+    const values = [planId, userId, added, enddate, 1];
+
+    const queryUpdateDataUser = `UPDATE data_users SET activesubscriptionid = ?, updated = ? WHERE id = ?`;
+    const updateValues = [planId, updated, userId];
+
+    const [result] = await pool.execute(queryDataUserSubscription, values);
+    const [result2] = await pool.execute(queryUpdateDataUser, updateValues);
 
     res.status(200).json({ url: session.url, sessionId: session.id }); // Returnera sessionens ID till klienten
   } catch (error) {
@@ -69,6 +97,23 @@ export const checkoutSession = async (req: Request, res: Response) => {
   }
 };
 
+export const cancelSubscription = async (req: Request, res: Response) => {
+    try {
+        const { userId, subscriptionId } = req.body;
+  
+        // DO SOMETHING WITH STRIPE HERE =)
+      /*   const subscription = await stripe.subscriptions.cancel(
+          'sub_1MlPf9LkdIwHu7ixB6VIYRyX'
+        ); */
+  
+        res.status(200).json({ message: 'Subscription canceled successfully' });
+    } catch (error) {
+        console.error('Error canceling subscription:', error);
+        res.status(500).json({ error: 'An unexpected error occurred' });
+    }
+  }
+
+
 //Denna kod skapar en prenumeration baserat på ett knapptryck
 
-export default { webhookHandler, checkoutSession};
+export default { webhookHandler, checkoutSession, cancelSubscription};

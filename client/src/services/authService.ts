@@ -265,6 +265,23 @@ export const getArticleData = async (articleId: string): Promise<{ articleData: 
         throw error;
     }
 };
+export const handleCheckout = async (planId: string) => {
+    try {
+      const userId = getUseridfromcookie();
+      const response = await axios.post(
+        `${API_URL}/stripe/create-checkout-session`,
+        { userId, planId }
+      );
+      if (response.data.url) {
+          window.location.href = response.data.url;
+        } else {
+          console.error("No URL returned from create-checkout-session API");
+        }
+    } catch (error) {
+      console.error("failed to initiate checkout", error);
+      throw error;
+    }
+  };
 
 // Create newsarticle
 export const createNewsArticle = async (articleData: {

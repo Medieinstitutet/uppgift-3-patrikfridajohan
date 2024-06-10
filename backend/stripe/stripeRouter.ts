@@ -1,5 +1,5 @@
 import express from "express";
-import { checkoutSession, webhookHandler } from "./stripeController";
+import { cancelSubscription, checkoutSession, webhookHandler } from "./stripeController";
 
 const router = express.Router();
 
@@ -8,6 +8,8 @@ const router = express.Router();
 router.post("/webhook", webhookHandler);
 
 router.post("/create-checkout-session", checkoutSession);
+// Cancel a subscription
+router.post('/cancel-subscription', cancelSubscription);
 
 
 export default router;

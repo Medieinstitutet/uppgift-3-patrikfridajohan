@@ -1,5 +1,6 @@
 import React from "react";
 import "../styles/account.css";
+import { cancelSubscription } from "../services/authService";
 
 interface SubscriptionData {
   name: string;
@@ -12,6 +13,9 @@ interface ISubscriptionInfo {
 }
 
 export const SubscriptionInfo: React.FC<ISubscriptionInfo> = (props) => {
+  const cancelSubscription = () =>{
+    
+  }
   const { subscriptionData } = props;
 
   if (!subscriptionData) {
@@ -41,7 +45,7 @@ export const SubscriptionInfo: React.FC<ISubscriptionInfo> = (props) => {
         <button type="button" className="btn">
           Change plan
         </button>
-        <button type="button" className="btn">
+        <button type="button" className="btn" onClick={cancelSubscription}>
           Cancel subscription
         </button>
       </div>

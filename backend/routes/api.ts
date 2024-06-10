@@ -174,20 +174,6 @@ router.get("/subscriptions", async (req, res) => {
   }
 });
 
-// Cancel a subscription
-router.post('/cancel-subscription', async (req, res) => {
-  try {
-      const { userId, subscriptionId } = req.body;
-
-      // DO SOMETHING WITH STRIPE HERE =)
-
-      res.status(200).json({ message: 'Subscription canceled successfully' });
-  } catch (error) {
-      console.error('Error canceling subscription:', error);
-      res.status(500).json({ error: 'An unexpected error occurred' });
-  }
-});
-
 
 // GET /articletitles - Get all article titles
 router.get("/articletitles", async (req, res) => {

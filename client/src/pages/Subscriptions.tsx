@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getUseridfromcookie, getAllsubscriptions, getActiveSubscription, isLoggedIn } from '../services/authService';
+import { getUseridfromcookie, getAllsubscriptions, getActiveSubscription, isLoggedIn, handleCheckout } from '../services/authService';
 import "../styles/subscriptions.css";
 
 interface Plan {
@@ -58,9 +58,16 @@ export const Subscriptions: React.FC = () => {
     fetchActiveSubscriptionId();
   }, [loggedIn]);
 
-  const handleSubscribe = (planId: string) => {
+  const handleSubscribe = async(planId: string) => {
     console.log('Subscription button clicked for plan ID:', planId);
     // Write code to do magic when selecting plan here
+
+    try {
+      await handleCheckout(planId);
+    } catch (error) {
+      console.error("Subscription failed", error);
+      // You can add further error handling here if needed
+    }
   };
 
   // Render subscription plans
