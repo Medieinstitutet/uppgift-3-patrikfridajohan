@@ -1,16 +1,24 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { useNavigate } from 'react-router-dom';
 import "../styles/register.css";
 import { registerUser, checkUserEmail, loginUser } from "../services/authService";
 import eye from "../assets/visibility_40dp_FILL0_wght400_GRAD0_opsz40.svg"
 
-const capitalizeFirstLetter = (str) => {
+interface UserData {
+  firstname: string;
+  lastname: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
+const capitalizeFirstLetter = (str: string): string => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
-export const Register = () => {
+export const Register: React.FC = () => {
   const navigate = useNavigate();
-  const [userData, setUserData] = useState({
+  const [userData, setUserData] = useState<UserData>({
     firstname: "",
     lastname: "",
     email: "",
@@ -24,7 +32,7 @@ export const Register = () => {
   const [passwordError, setPasswordError] = useState("");
   const [formValid, setFormValid] = useState(false);
 
-  const handleChange = async (event) => {
+  const handleChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setUserData({ ...userData, [name]: value });
   
@@ -42,7 +50,7 @@ export const Register = () => {
     }
   };
 
-  const validatePassword = (password, confirmPassword) => {
+  const validatePassword = (password: string, confirmPassword: string) => {
     console.log("Password:", password);
     console.log("Confirm Password:", confirmPassword);
   
@@ -57,15 +65,13 @@ export const Register = () => {
       setFormValid(true);
     }
   };
-  
-  
 
-  const validatePasswordFormat = (password) => {
-    const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>/?]).{8,}$/;
+  const validatePasswordFormat = (password: string): boolean => {
+    const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\[\]{};':"\\|,.<>\/?]).{8,}$/;
     return regex.test(password);
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();  
     try {
       const formattedData = {
@@ -87,7 +93,6 @@ export const Register = () => {
       console.error("Error during registration:", error);
     }
   };
-  
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -98,10 +103,10 @@ export const Register = () => {
   };
 
   useEffect(() => {
-    setFormValid(userData.email && !emailExists && !passwordError);
+    setFormValid(!!userData.email && !emailExists && !passwordError);
   }, [userData.email, emailExists, passwordError]);
-  
-return (
+
+  return (
     <div className="main">
       <div className="register-hero-container">
         <div className="info">

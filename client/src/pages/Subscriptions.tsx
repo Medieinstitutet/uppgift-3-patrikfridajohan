@@ -10,21 +10,32 @@ import {
 } from "../services/authService";
 import "../styles/subscriptions.css";
 
-export const Subscriptions = () => {
-  const [plans, setPlans] = useState([]);
-  const [activeSubscriptionId, setActiveSubscriptionId] = useState(null);
-  const { loggedIn } = isLoggedIn();
+interface Plan {
+  id: string;
+  name: string;
+  price: number;
+  info: string;
+}
+
+export const Subscriptions: React.FC = () => {
+  const [plans, setPlans] = useState<Plan[]>([]);
+  const [activeSubscriptionId, setActiveSubscriptionId] = useState<string | null>(null);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
+    const { loggedIn } = isLoggedIn();
+    setLoggedIn(loggedIn);
+
     const userId = getUseridfromcookie();
-    console.log("UserID from cookie2:", userId);
+    console.log("UserID from cookie in plan:", userId);
 
     if (!loggedIn) {
-      window.location.href = "/login";
+      window.location.href = '/login';
       return;
     }
     if (!userId) {
-      window.location.href = "/login";
+      window.location.href = '/login';
+>>>>>>> main
       return;
     }
 
@@ -46,21 +57,21 @@ export const Subscriptions = () => {
       if (userId) {
         try {
           const subscription = await getActiveSubscription(userId);
+          console.log("User active subscription:", subscription);
           setActiveSubscriptionId(subscription);
         } catch (error) {
-          console.error("Error fetching active subscription:", error);
+          console.error('Error fetching active subscription:', error);
         }
       }
     };
 
     fetchActiveSubscriptionId();
-  }, []);
+  }, [loggedIn]);
 
   const handleSubscribe = async (priceId: string) => {
     console.log('priceId', priceId);
 
     await handleCheckout(priceId);
-
   };
 
   // Render subscription plans
