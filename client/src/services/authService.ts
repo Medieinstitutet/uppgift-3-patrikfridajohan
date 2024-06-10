@@ -177,6 +177,31 @@ export const getActiveSubscription = async (
   }
 };
 
+// Get active subscriptionid of the current logged in user
+// import { getActiveSubscriptionId } from '../services/authService'; to use it on a page
+export const getActiveSubscriptionId = async (): Promise<string | null> => {
+  try {
+    const response = await axios.get(`${API_URL}/auth/subscriptionid`);
+    return response.data.subscriptionId;
+  } catch (error) {
+    console.error("Error fetching active subscription ID:", error);
+    return null;
+  }
+};
+
+// Function to get active subscription data from Active subscription
+// import { getActiveSubscriptionData } from '../services/authService'; to use it on a page
+export const getActiveSubscriptionData = async (Id: string): Promise<any> => {
+  try {
+    const response = await axios.get(`${API_URL}/activesubscriptiondata/${Id}`);
+    console.log("Active Subscription Data:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching active subscription data:", error);
+    throw error;
+  }
+};
+
 // Cancel my subscription
 export const cancelSubscription = async (
   subscriptionId: string

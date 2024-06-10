@@ -8,9 +8,7 @@ const router = express.Router();
 
 router.use(cookieParser());
 
-// Made example to get started - Johan
-
-// // POST /auth/login - User login
+// POST /auth/login - User login
 router.post(
   "/auth/login",
   async (req: Request, res: Response, next: NextFunction) => {
@@ -54,7 +52,7 @@ router.post(
   }
 );
 
-// // POST /api/auth/register - User registration
+// POST /api/auth/register - User registration
 router.post(
   "/auth/register",
   async (req: Request, res: Response, next: NextFunction) => {
@@ -156,6 +154,49 @@ router.get("/subscription/:subscriptionId", async (req, res) => {
     }
   } catch (error) {
     console.error("Error fetching subscription data:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// GET /subscriptiondata/:Id - Get active subscription data by subscription ID
+router.get("/activesubscriptiondata/:Id", async (req, res) => {
+  try {
+    const { Id } = req.params;
+    const [subscriptionRows]: [any[], any] = await pool.query(
+      "SELECT * FROM data_users_subscriptions WHERE id = ?",
+      [Id]
+    );
+    if (subscriptionRows.length > 0) {
+      const activesubscriptionData = subscriptionRows[0];
+      return res.json(activesubscriptionData);
+    } else {
+      return res.status(404).json({ error: "Subscription not found" });
+    }
+  } catch (error) {
+    console.error("Error fetching subscription data:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+// GET /auth/subscriptionid - Get the logged-in user's subscription ID - NEW
+router.get("/auth/subscriptionid", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { userId } = req.params;
+
+    const [rows]: [any[], any] = await pool.query(
+      "SELECT subscriptionid FROM data_users_subscriptions WHERE uid = ? AND active = 1",
+      [userId]
+    );
+
+    if (rows.length > 0) {
+      const subscriptionId = rows[0].subscriptionid;
+      return res.json({ subscriptionId });
+    } else {
+      return res.status(404).json({ error: "No active subscription found for the user" });
+    }
+  } catch (error) {
+    console.error("Error fetching subscription ID:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
@@ -320,7 +361,6 @@ router.post('/admin/create-news-article', async (req, res) => {
 });
 
 
-
 router.get("/user", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const [rows]: [any[], any] = await pool.query(
@@ -332,45 +372,5 @@ router.get("/user", async (req: Request, res: Response, next: NextFunction) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
-// // POST (Add to DB) /api/data - Protected endpoint
-// router.post('/data', async (req: Request, res: Response, next: NextFunction) => {
-//     const { body } = req;
-//     try {
-//         // Process request body and save data to database
-//         // Example: await pool.query('INSERT INTO example_table (column1, column2) VALUES (?, ?)', [body.column1, body.column2]);
-//         res.json({ message: 'Data saved successfully' });
-//     } catch (error) {
-//         console.error('Error saving data:', error);
-//         res.status(500).json({ error: 'Internal server error' });
-//     }
-// });
-
-// // PUT (Update DB) /api/data/:id - Protected endpoint
-// router.put('/data/:id', async (req: Request, res: Response, next: NextFunction) => {
-//     const { id } = req.params;
-//     const { body } = req;
-//     try {
-//         // Update data with specified id in the database
-//         // Example: await pool.query('UPDATE example_table SET column1 = ?, column2 = ? WHERE id = ?', [body.column1, body.column2, id]);
-//         res.json({ message: `Data with id ${id} updated successfully` });
-//     } catch (error) {
-//         console.error('Error updating data:', error);
-//         res.status(500).json({ error: 'Internal server error' });
-//     }
-// });
-
-// // DELETE (Remove from DB) /api/data/:id - Protected endpoint
-// router.delete('/data/:id', async (req: Request, res: Response, next: NextFunction) => {
-//     const { id } = req.params;
-//     try {
-//         // Delete data with specified id from the database
-//         // Example: await pool.query('DELETE FROM example_table WHERE id = ?', [id]);
-//         res.json({ message: `Data with id ${id} deleted successfully` });
-//     } catch (error) {
-//         console.error('Error deleting data:', error);
-//         res.status(500).json({ error: 'Internal server error' });
-//     }
-// });
 
 export default router;
