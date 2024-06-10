@@ -1,7 +1,7 @@
 import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { useNavigate } from 'react-router-dom';
 import "../styles/register.css";
-import { registerUser, checkUserEmail } from "../services/authService";
+import { registerUser, checkUserEmail, loginUser } from "../services/authService";
 import eye from "../assets/visibility_40dp_FILL0_wght400_GRAD0_opsz40.svg"
 
 interface UserData {
@@ -80,9 +80,14 @@ export const Register: React.FC = () => {
         email: userData.email,
         password: userData.password
       };
+
+      const loginData = {
+        email: userData.email,
+        password: userData.password
+      }
   
       await registerUser(formattedData);
-      window.alert("Registration successful!");
+      await loginUser(loginData)
       navigate("/login");
     } catch (error) {
       console.error("Error during registration:", error);

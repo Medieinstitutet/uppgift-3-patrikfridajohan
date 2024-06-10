@@ -90,11 +90,9 @@
     height: fit-content;
 
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: row-reverse;
     justify-content: space-evenly;
-    row-gap: 32px;
     margin-bottom: 120px;
-
 }
 
 .feature {
