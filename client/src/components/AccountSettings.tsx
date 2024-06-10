@@ -12,7 +12,8 @@ interface IAccountSettings {
   };
 }
 
-export const AccountSettings = (props: IAccountSettings) => {
+export const AccountSettings: React.FC<IAccountSettings> = (props) => {
+  const { dummyData } = props;
 
     // useeffect to get cookie info
     
@@ -26,7 +27,7 @@ export const AccountSettings = (props: IAccountSettings) => {
             <label htmlFor="" className="form-label">Lastname</label>
             <input type="text" className="form-control"/>
             <label htmlFor="" className="form-label">Email</label>
-            <input type="text" className="form-control"/>
+            <input type="text" className="form-control" defaultValue={dummyData.email} />
             <button type="submit" className="btn">Save changes</button>
         </form>
       </div>

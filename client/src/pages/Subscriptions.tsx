@@ -78,10 +78,6 @@ export const Subscriptions: React.FC = () => {
             <h4>{plan.name}</h4>
             <p className="pricing">${plan.price}</p>
             <p>{plan.info}</p>
-            {console.log("Active Subscription ID:", activeSubscriptionId)}
-            {console.log("Plan ID:", plan.id)}
-            {console.log(typeof activeSubscriptionId)}
-            {console.log(typeof plan.id)}
             {activeSubscriptionId === plan.id.toString() ? (
               <button type="button" className="btn btn-outline-success subscribed" disabled>Already Subscribed</button>
             ) : (
