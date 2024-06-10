@@ -1,5 +1,5 @@
 import express from "express";
-import { checkoutSession, createSubscription, webhookHandler } from "./stripeController";
+import { checkoutSession, webhookHandler } from "./stripeController";
 
 const router = express.Router();
 
@@ -8,6 +8,6 @@ const router = express.Router();
 router.post("/webhook", webhookHandler);
 
 router.post("/create-checkout-session", checkoutSession);
-router.post("/create-subscription", createSubscription)
+
 
 export default router;
