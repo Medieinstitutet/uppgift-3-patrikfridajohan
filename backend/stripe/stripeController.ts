@@ -16,9 +16,94 @@ export const webhookHandler = async (
   const eventData = req.body.data.object;
   // Handle the event
   switch (eventType) {
-    /* case "checkout.session.completed":
-      console.log(eventData);
+    case "payment_intent.payment_failed":
+      const paymentIntentId = eventData.id;
+      const customerId = eventData.customer;
+
+      // Retrieve the customer to get user metadata (if stored) or email to find the user
+      try {
+        const customer = await stripe.customers.retrieve(customerId);
+
+        if (!customer.deleted) {
+          const userId: string = customer.metadata.userId; // or const userEmail = customer.email;
+
+          // Update the database to restrict user access
+          const queryRestrictUserAccess = `UPDATE data_users SET activesubscriptionid = 1 WHERE id = ?`;
+          await pool.execute(queryRestrictUserAccess, [userId]);
+
+          console.log(
+            `Restricted access for user ${userId} due to payment failure`
+          );
+        } else {
+          console.error(
+            `Customer ${customerId} is deleted, cannot restrict access`
+          );
+        }
+      } catch (error) {
+        console.error(
+          `Error restricting access for user due to payment failure:`,
+          error
+        );
+      }
+
       break;
+    case "checkout.session.completed":
+      const sessionId = eventData.id;
+      const subId = eventData.subscription;
+
+      if (sessionId && subId) {
+        try {
+          const session = await stripe.checkout.sessions.retrieve(sessionId);
+          const clientReferenceId: any = session.client_reference_id;
+          const [userId, planId] = clientReferenceId.split("-");
+
+          const added = new Date();
+          const updated = new Date();
+          const enddate = new Date();
+          enddate.setDate(added.getDate() + 7);
+
+          // Infoga prenumerationen i databasen
+          const queryDataUserSubscription = `INSERT INTO data_users_subscriptions (subscriptionid, uid, added, enddate, active, stripeSubId)
+                                             VALUES (?, ?, ?, ?, ?, ?)`;
+          const values = [planId, userId, added, enddate, 1, subId];
+
+          const queryUpdateDataUser = `UPDATE data_users SET activesubscriptionid = ?, updated = ?, stripeSubId=? WHERE id = ?`;
+          const updateValues = [planId, updated, subId, userId];
+
+          await pool.execute(queryDataUserSubscription, values);
+          await pool.execute(queryUpdateDataUser, updateValues);
+
+          console.log(`Updated user ${userId} with subscription ${planId}`);
+          console.log(`Created subscription with ID: ${subId}`);
+        } catch (error) {
+          console.error(
+            `Error updating user with subscription ID ${subId}:`,
+            error
+          );
+        }
+      }
+      break;
+    case "customer.subscription.deleted":
+      const subscriptionId = eventData.id;
+
+      try {
+        // Update the database to mark the subscription as inactive
+        const queryUpdateSubscription = `UPDATE data_users_subscriptions SET active = ? WHERE stripeSubId = ?`;
+        await pool.execute(queryUpdateSubscription, [0, subscriptionId]);
+
+        // Optionally, update the user's active subscription ID in the data_users table
+        const queryUpdateUser = `UPDATE data_users SET activesubscriptionid = 1, stripeSubId = ? WHERE stripeSubId = ?`;
+        await pool.execute(queryUpdateUser, [null, subscriptionId]);
+
+        console.log(`Subscription ${subscriptionId} marked as inactive`);
+      } catch (error) {
+        console.error(
+          `Error handling subscription deletion for ${subscriptionId}:`,
+          error
+        );
+      }
+      break;
+    /*
     case "payment_intent.succeeded":
       console.log(eventData);
       break;
@@ -59,61 +144,127 @@ export const checkoutSession = async (req: Request, res: Response) => {
   }
 
   try {
+    const [alreadySubbed]: any = await pool.query(
+      "SELECT activesubscriptionid, stripeSubId FROM data_users WHERE id = ?",
+      [userId]
+    );
+
+    const activeSubscriptionId = alreadySubbed[0]?.activesubscriptionid;
+    const stripeSubId = alreadySubbed[0]?.stripeSubId;
+
+    // Handle upgrade or downgrade
+    //TODO att ändra så att vid uppgradering så skapas ny session och man betalar mellanskillnad
+    if (activeSubscriptionId && stripeSubId) {
+      if (
+        (activeSubscriptionId === 2 && planId === 3) ||
+        (activeSubscriptionId === 3 && planId === 2)
+      ) {
+        const subscription = await stripe.subscriptions.retrieve(stripeSubId);
+
+        await stripe.subscriptions.update(stripeSubId, {
+          cancel_at_period_end: false,
+          proration_behavior: "create_prorations",
+          items: [
+            {
+              id: subscription.items.data[0].id,
+              price: subscriptionPlan,
+            },
+          ],
+        });
+
+        const updated = new Date();
+        const queryUpdateDataUser = `UPDATE data_users SET activesubscriptionid = ?, updated = ? WHERE id = ?`;
+        const updateValues = [planId, updated, userId];
+
+        await pool.execute(queryUpdateDataUser, updateValues);
+
+        res.status(200).json({ message: "Subscription updated successfully" });
+        return;
+      } else {
+        res.status(400).json({ error: "Cannot downgrade to the same plan" });
+        return;
+      }
+    }
+
+    // If the user does not have an active subscription
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "subscription",
       line_items: [
         {
-          price: subscriptionPlan, // Lägg till rätt pris-ID för din prenumeration
+          price: subscriptionPlan,
           quantity: 1,
         },
       ],
       success_url: "http://localhost:5173/user/dashboard",
       cancel_url: "http://localhost:5173/",
-      metadata: { userId: userId.toString() },
+      client_reference_id: `${userId}-${planId}`,
     });
     console.log(userId);
 
-    const added = new Date();
-    const updated = new Date();
-    const enddate = new Date();
-    enddate.setDate(added.getDate() + 7);
-
-    // Infoga prenumerationen i databasen
-    const queryDataUserSubscription = `INSERT INTO data_users_subscriptions (subscriptionid, uid, added, enddate, active)
-                   VALUES (?, ?, ?, ?, ?)`;
-    const values = [planId, userId, added, enddate, 1];
-
-    const queryUpdateDataUser = `UPDATE data_users SET activesubscriptionid = ?, updated = ? WHERE id = ?`;
-    const updateValues = [planId, updated, userId];
-
-    const [result] = await pool.execute(queryDataUserSubscription, values);
-    const [result2] = await pool.execute(queryUpdateDataUser, updateValues);
-
-    res.status(200).json({ url: session.url, sessionId: session.id }); // Returnera sessionens ID till klienten
+    res.status(200).json({ url: session.url, sessionId: session.id });
   } catch (error) {
     console.error("Error creating checkout session:", error);
     res.status(500).json({ error: "Failed to create checkout session" });
   }
 };
+export const register = async (req: Request, res: Response) => {
+  const { email, name, userId } = req.body;
+
+  try {
+    const stripeUser = await stripe.customers.create({
+      email: email,
+      name: name,
+      metadata: { userId:userId },
+    });
+    res.status(201).json({ message: "User registered successfully" });
+  } catch (error) {
+    console.error("Error registering user:", error);
+    res.status(500).json({ error: "Failed to register user" });
+  }
+};
 
 export const cancelSubscription = async (req: Request, res: Response) => {
-    try {
-        const { userId, subscriptionId } = req.body;
-  
-        // DO SOMETHING WITH STRIPE HERE =)
-      /*   const subscription = await stripe.subscriptions.cancel(
-          'sub_1MlPf9LkdIwHu7ixB6VIYRyX'
-        ); */
-  
-        res.status(200).json({ message: 'Subscription canceled successfully' });
-    } catch (error) {
-        console.error('Error canceling subscription:', error);
-        res.status(500).json({ error: 'An unexpected error occurred' });
-    }
-  }
+  try {
+    const { userId } = req.body;
 
+    // Query the database to get the stripeSubId
+    const [rows]: [any[], any] = await pool.query(
+      "SELECT stripeSubId FROM data_users WHERE id = ?",
+      [userId]
+    );
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const stripeSubId = rows[0].stripeSubId;
+
+    if (!stripeSubId) {
+      return res.status(400).json({ error: "No subscription found for user" });
+    }
+
+    // Cancel the subscription with Stripe
+    const subscription = await stripe.subscriptions.update(stripeSubId, {
+      cancel_at_period_end: true,
+    });
+    // Update the database to reflect the cancellation if needed
+    // Example: set activesubscriptionid to null or another appropriate field
+
+    res
+      .status(200)
+      .json({ message: "Subscription canceled successfully", subscription });
+  } catch (error) {
+    console.error("Error canceling subscription:", error);
+    res.status(500).json({ error: "An unexpected error occurred" });
+  }
+};
 
 //Denna kod skapar en prenumeration baserat på ett knapptryck
 
-export default { webhookHandler, checkoutSession, cancelSubscription};
+export default {
+  webhookHandler,
+  checkoutSession,
+  cancelSubscription,
+  register,
+};

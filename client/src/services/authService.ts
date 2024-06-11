@@ -204,13 +204,12 @@ export const getActiveSubscriptionData = async (Id: string): Promise<any> => {
 
 // Cancel my subscription
 export const cancelSubscription = async (
-  subscriptionId: string
 ): Promise<void> => {
   try {
     const userId = getUseridfromcookie();
-    await axios.post(`${API_URL}/cancel-subscription`, {
+    await axios.post(`${API_URL}/stripe/cancel-subscription`, {
       userId,
-      subscriptionId,
+      
     });
     console.log("Subscription canceled successfully");
   } catch (error) {
@@ -357,7 +356,11 @@ interface UserRegistrationData {
   firstname: string;
   lastname: string;
 }
-
+interface StripeRegistrationData {
+    email: string;
+    name: string;
+    
+  }
 // Create user
 export const registerUser = async (
   userData: UserRegistrationData
@@ -371,6 +374,19 @@ export const registerUser = async (
     throw axiosError.response?.data ?? error;
   }
 };
+export const registerStripeUser = async (
+stripeData:StripeRegistrationData,
+userId:string
+):Promise<any> =>{
+    try {
+        const response = await axios.post(`${API_URL}/stripe/register`, {...stripeData, userId});
+        return response.data;
+      } catch (error) {
+        const axiosError = error as AxiosError<any>;
+        console.error("Error registering user:", axiosError);
+        throw axiosError.response?.data ?? error;
+      }
+}
 
 export const loginUser = async (userData: any) => {
   try {

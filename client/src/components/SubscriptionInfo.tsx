@@ -13,9 +13,13 @@ interface ISubscriptionInfo {
 }
 
 export const SubscriptionInfo: React.FC<ISubscriptionInfo> = (props) => {
-  const cancelSubscription = () =>{
-    
-  }
+  const cancelSub = async () => {
+    try {
+      await cancelSubscription();
+    } catch {
+      console.log("error canceling sub");
+    }
+  };
   const { subscriptionData } = props;
 
   if (!subscriptionData) {
@@ -45,7 +49,7 @@ export const SubscriptionInfo: React.FC<ISubscriptionInfo> = (props) => {
         <button type="button" className="btn">
           Change plan
         </button>
-        <button type="button" className="btn" onClick={cancelSubscription}>
+        <button type="button" className="btn" onClick={cancelSub}>
           Cancel subscription
         </button>
       </div>
