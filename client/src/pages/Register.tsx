@@ -1,8 +1,14 @@
 import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import "../styles/register.css";
-import { registerUser, checkUserEmail, loginUser } from "../services/authService";
-import eye from "../assets/visibility_40dp_FILL0_wght400_GRAD0_opsz40.svg"
+import {
+  registerUser,
+  checkUserEmail,
+  loginUser,
+  registerStripeUser,
+  getUseridfromcookie,
+} from "../services/authService";
+import eye from "../assets/visibility_40dp_FILL0_wght400_GRAD0_opsz40.svg";
 
 interface UserData {
   firstname: string;
@@ -23,7 +29,7 @@ export const Register: React.FC = () => {
     lastname: "",
     email: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -35,7 +41,7 @@ export const Register: React.FC = () => {
   const handleChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setUserData({ ...userData, [name]: value });
-  
+
     if (name === "email") {
       try {
         const exists = await checkUserEmail(value);
@@ -44,21 +50,26 @@ export const Register: React.FC = () => {
         console.error("Error checking email:", error);
       }
     }
-  
+
     if (name === "password" || name === "confirmPassword") {
-      validatePassword(name === "password" ? value : userData.password, name === "confirmPassword" ? value : userData.confirmPassword);
+      validatePassword(
+        name === "password" ? value : userData.password,
+        name === "confirmPassword" ? value : userData.confirmPassword
+      );
     }
   };
 
   const validatePassword = (password: string, confirmPassword: string) => {
     console.log("Password:", password);
     console.log("Confirm Password:", confirmPassword);
-  
+
     if (password !== confirmPassword) {
       setPasswordError("Passwords do not match.");
       setFormValid(false);
     } else if (!validatePasswordFormat(password)) {
-      setPasswordError("Password must be 8 characters long and contain at least one number, one uppercase letter, one lowercase letter and one special character.");
+      setPasswordError(
+        "Password must be 8 characters long and contain at least one number, one uppercase letter, one lowercase letter and one special character."
+      );
       setFormValid(false);
     } else {
       setPasswordError("");
@@ -67,28 +78,44 @@ export const Register: React.FC = () => {
   };
 
   const validatePasswordFormat = (password: string): boolean => {
-    const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\[\]{};':"\\|,.<>\/?]).{8,}$/;
+    const regex =
+      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\[\]{};':"\\|,.<>\/?]).{8,}$/;
     return regex.test(password);
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();  
+    event.preventDefault();
     try {
       const formattedData = {
         firstname: capitalizeFirstLetter(userData.firstname),
         lastname: capitalizeFirstLetter(userData.lastname),
         email: userData.email,
-        password: userData.password
+        password: userData.password,
       };
 
       const loginData = {
         email: userData.email,
-        password: userData.password
-      }
+        password: userData.password,
+      };
+      const stripeUser = {
+        email: userData.email,
+        name: `${userData.firstname} ${userData.lastname}`,
+      };
+      
+
+     
+      
+        await registerUser(formattedData);
+        await loginUser(loginData);
+        const userId = getUseridfromcookie();
+        if (userId) {
+        await registerStripeUser(stripeUser, userId.toString());
+          
   
-      await registerUser(formattedData);
-      await loginUser(loginData)
-      navigate("/login");
+        navigate('/login');
+      } else {
+        console.error('No user ID found in cookie');
+      }
     } catch (error) {
       console.error("Error during registration:", error);
     }
@@ -121,7 +148,7 @@ export const Register: React.FC = () => {
               name="firstname"
               value={userData.firstname}
               onChange={handleChange}
-              required 
+              required
             />
             <label>Lastname</label>
             <input
@@ -129,7 +156,7 @@ export const Register: React.FC = () => {
               name="lastname"
               value={userData.lastname}
               onChange={handleChange}
-              required 
+              required
             />
             <label>E-mail</label>
             <input
@@ -137,7 +164,7 @@ export const Register: React.FC = () => {
               name="email"
               value={userData.email}
               onChange={handleChange}
-              required 
+              required
             />
             {emailExists && <p>Email already exists.</p>}
             <label>Password</label>
@@ -147,14 +174,16 @@ export const Register: React.FC = () => {
                 name="password"
                 value={userData.password}
                 onChange={handleChange}
-                required 
+                required
               />
               <button
                 type="button"
                 className="btn password-toggle"
                 onClick={togglePasswordVisibility}
               >
-                {showPassword ? "Hide" : (
+                {showPassword ? (
+                  "Hide"
+                ) : (
                   <div className="eye">
                     <img src={eye} alt="eye" />
                   </div>
@@ -168,14 +197,16 @@ export const Register: React.FC = () => {
                 name="confirmPassword"
                 value={userData.confirmPassword}
                 onChange={handleChange}
-                required 
+                required
               />
               <button
                 type="button"
                 className="btn password-toggle"
                 onClick={toggleConfirmPasswordVisibility}
               >
-                {showConfirmPassword ? "Hide" : (
+                {showConfirmPassword ? (
+                  "Hide"
+                ) : (
                   <div className="eye">
                     <img src={eye} alt="eye" />
                   </div>
@@ -183,7 +214,12 @@ export const Register: React.FC = () => {
               </button>
             </div>
             <p>{passwordError}</p>
-            <button type="submit" className="btn" id="login-btn" disabled={!formValid}>
+            <button
+              type="submit"
+              className="btn"
+              id="login-btn"
+              disabled={!formValid}
+            >
               Sign up
             </button>
           </form>
