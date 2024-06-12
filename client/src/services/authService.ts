@@ -154,34 +154,38 @@ export const getAllsubscriptions = async (): Promise<any> => {
   }
 };
 
-// Get active subscription data of the current logged in user
+// Get active subscription data of the current logged in user -old
 // import { getActiveSubscription } from '../services/authService'; to use it on a page
-export const getActiveSubscription = async (
-  userId: string | undefined
-): Promise<string | null> => {
-  try {
-    let userToFetch: string;
-    // If userId is provided, use it; otherwise, get userId from cookie
-    if (userId) {
-      userToFetch = userId;
-    } else {
-      userToFetch = getUseridfromcookie() || "";
-    }
+// export const getActiveSubscription = async (
+//   userId: string | undefined
+// ): Promise<string | null> => {
+//   try {
+//     let userToFetch: string;
+//     // If userId is provided, use it; otherwise, get userId from cookie
+//     if (userId) {
+//       userToFetch = userId;
+//     } else {
+//       userToFetch = getUseridfromcookie() || "";
+//     }
 
-    const userData = await getAllUserData(userToFetch);
-    console.log("ActiveSubscription: ", userData.activesubscriptionid);
-    return userData.activesubscriptionid.toString();
-  } catch (error) {
-    console.error("Error fetching active subscription:", error);
-    return null;
-  }
-};
+//     const userData = await getAllUserData(userToFetch);
+//     console.log("ActiveSubscription: ", userData.activesubscriptionid);
+//     return userData.activesubscriptionid.toString();
+//   } catch (error) {
+//     console.error("Error fetching active subscription:", error);
+//     return null;
+//   }
+// };
 
 // Get active subscriptionid of the current logged in user
-// import { getActiveSubscriptionId } from '../services/authService'; to use it on a page
-export const getActiveSubscriptionId = async (): Promise<string | null> => {
+// import { getActiveSubscription } from '../services/authService'; to use it on a page
+export const getActiveSubscription = async (userId: string): Promise<string | null> => {
   try {
-    const response = await axios.get(`${API_URL}/auth/subscriptionid`);
+    const response = await axios.get(`${API_URL}/auth/subscriptionid`, {
+      params: {
+        userId: userId
+      }
+    });
     return response.data.subscriptionId;
   } catch (error) {
     console.error("Error fetching active subscription ID:", error);

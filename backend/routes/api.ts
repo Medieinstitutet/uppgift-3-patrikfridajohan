@@ -182,7 +182,7 @@ router.get("/activesubscriptiondata/:Id", async (req, res) => {
 // GET /auth/subscriptionid - Get the logged-in user's subscription ID - NEW
 router.get("/auth/subscriptionid", async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { userId } = req.params;
+    const { userId } = req.query;
 
     const [rows]: [any[], any] = await pool.query(
       "SELECT subscriptionid FROM data_users_subscriptions WHERE uid = ? AND active = 1",
@@ -200,7 +200,6 @@ router.get("/auth/subscriptionid", async (req: Request, res: Response, next: Nex
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
 // GET /subscriptions - Get all subscription plans
 router.get("/subscriptions", async (req, res) => {
   try {
