@@ -45,8 +45,34 @@ export const webhookHandler = async (
           error
         );
       }
+      break;
+
+    case "invoice.payment_failed":
+      console.log(eventType);
+      console.log(eventData);
+
+      const invoiceSubId = eventData.subscription;
+      const hostedInvoiceUrl = eventData.hosted_invoice_url;
+
+      try {
+        const queryUpdateInvoiceUrl = `UPDATE data_users_subscriptions SET stripeInvoiceUrl = ? WHERE stripeSubId = ?`;
+        await pool.execute(queryUpdateInvoiceUrl, [
+          hostedInvoiceUrl,
+          invoiceSubId,
+        ]);
+
+        console.log(
+          `Updated invoice ${invoiceSubId} with hosted URL ${hostedInvoiceUrl}`
+        );
+      } catch (error) {
+        console.error(
+          `Error updating invoice ${invoiceSubId} with hosted URL:`,
+          error
+        );
+      }
 
       break;
+
     case "checkout.session.completed":
       const sessionId = eventData.id;
       const subId = eventData.subscription;
@@ -78,6 +104,7 @@ export const webhookHandler = async (
         }
       }
       break;
+
     case "customer.subscription.deleted":
       const subscriptionId = eventData.id;
 
@@ -106,7 +133,7 @@ export const webhookHandler = async (
       console.log(eventData);
       break; */
     case "customer.subscription.updated":
-     // console.log(eventData);
+      // console.log(eventData);
 
       break;
     default:
@@ -137,51 +164,6 @@ export const checkoutSession = async (req: Request, res: Response) => {
   }
 
   try {
-    const [alreadySubbed]: any = await pool.query(
-      "SELECT activesubscriptionid, stripeSubId FROM data_users WHERE id = ?",
-      [userId]
-    );
-    console.log("Retrieved user subscription data:", alreadySubbed);
-
-    const activeSubscriptionId = alreadySubbed[0]?.activesubscriptionid;
-    const stripeSubId = alreadySubbed[0]?.stripeSubId;
-
-    // Handle upgrade or downgrade
-    //TODO att ändra så att vid uppgradering så skapas ny session och man betalar mellanskillnad
-    if (activeSubscriptionId && stripeSubId) {
-      if (
-        (activeSubscriptionId === 2 && planId === 3) ||
-        (activeSubscriptionId === 3 && planId === 2)
-      ) {
-        const subscription = await stripe.subscriptions.retrieve(stripeSubId);
-        console.log("Retrieved subscription data from Stripe:", subscription);
-
-        await stripe.subscriptions.update(stripeSubId, {
-          cancel_at_period_end: false,
-          proration_behavior: "create_prorations",
-          items: [
-            {
-              id: subscription.items.data[0].id,
-              price: subscriptionPlan,
-            },
-          ],
-        });
-
-        const updated = new Date();
-        const queryUpdateDataUser = `UPDATE data_users SET activesubscriptionid = ?, updated = ? WHERE id = ?`;
-        const updateValues = [planId, updated, userId];
-
-        await pool.execute(queryUpdateDataUser, updateValues);
-        console.log(`Updated user ${userId} with subscription ${planId}`);
-
-        res.status(200).json({ message: "Subscription updated successfully" });
-        return;
-      } else {
-        res.status(400).json({ error: "Cannot downgrade to the same plan" });
-        return;
-      }
-    }
-
     // Sends the customer from website to Stripe to avoid double customer in Stripe
     let customer;
     const existingCustomers = await stripe.customers.list({ email: userEmail });
