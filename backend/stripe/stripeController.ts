@@ -17,7 +17,6 @@ export const webhookHandler = async (
   // Handle the event
   switch (eventType) {
     case "payment_intent.payment_failed":
-      const paymentIntentId = eventData.id;
       const customerId = eventData.customer;
 
       // Retrieve the customer to get user metadata (if stored) or email to find the user
@@ -58,7 +57,6 @@ export const webhookHandler = async (
           const [userId, planId] = clientReferenceId.split("-");
 
           const added = new Date();
-          const updated = new Date();
           const enddate = new Date();
           enddate.setDate(added.getDate() + 7);
 
@@ -67,11 +65,7 @@ export const webhookHandler = async (
                                              VALUES (?, ?, ?, ?, ?, ?)`;
           const values = [planId, userId, added, enddate, 1, subId];
 
-          const queryUpdateDataUser = `UPDATE data_users SET activesubscriptionid = ?, updated = ?, stripeSubId=? WHERE id = ?`;
-          const updateValues = [planId, updated, subId, userId];
-
           await pool.execute(queryDataUserSubscription, values);
-          await pool.execute(queryUpdateDataUser, updateValues);
 
           console.log(`Updated user ${userId} with subscription ${planId}`);
           console.log(`Created subscription with ID: ${subId}`);
@@ -90,10 +84,6 @@ export const webhookHandler = async (
         // Update the database to mark the subscription as inactive
         const queryUpdateSubscription = `UPDATE data_users_subscriptions SET active = ? WHERE stripeSubId = ?`;
         await pool.execute(queryUpdateSubscription, [0, subscriptionId]);
-
-        // Optionally, update the user's active subscription ID in the data_users table
-        const queryUpdateUser = `UPDATE data_users SET activesubscriptionid = 1, stripeSubId = ? WHERE stripeSubId = ?`;
-        await pool.execute(queryUpdateUser, [null, subscriptionId]);
 
         console.log(`Subscription ${subscriptionId} marked as inactive`);
       } catch (error) {
@@ -151,7 +141,6 @@ export const checkoutSession = async (req: Request, res: Response) => {
       [userId]
     );
     console.log("Retrieved user subscription data:", alreadySubbed);
-
 
     const activeSubscriptionId = alreadySubbed[0]?.activesubscriptionid;
     const stripeSubId = alreadySubbed[0]?.stripeSubId;
