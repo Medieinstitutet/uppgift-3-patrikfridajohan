@@ -129,7 +129,7 @@ export const webhookHandler = async (
 // Denna funktion skapar en session där man kan betala med sitt kort
 
 export const checkoutSession = async (req: Request, res: Response) => {
-  const { planId, userId } = req.body;
+  const { planId, userId, userEmail } = req.body;
   console.log("retrieved userid: ", userId);
 
   let subscriptionPlan: string;
@@ -186,10 +186,16 @@ export const checkoutSession = async (req: Request, res: Response) => {
       }
     }
 
+    // Sends the customer from website to Stripe to avoid double customer in Stripe
+    let customer;
+    const existingCustomers = await stripe.customers.list({ email: userEmail });
+    customer = existingCustomers.data[0];
+
     // If the user does not have an active subscription
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "subscription",
+      customer: customer.id,
       line_items: [
         {
           price: subscriptionPlan,
@@ -208,6 +214,7 @@ export const checkoutSession = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Failed to create checkout session" });
   }
 };
+
 export const register = async (req: Request, res: Response) => {
   const { email, name, userId } = req.body;
 
@@ -215,7 +222,7 @@ export const register = async (req: Request, res: Response) => {
     const stripeUser = await stripe.customers.create({
       email: email,
       name: name,
-      metadata: { userId:userId },
+      metadata: { userId: userId },
     });
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {

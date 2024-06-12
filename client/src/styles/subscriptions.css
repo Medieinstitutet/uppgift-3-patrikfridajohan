@@ -90,7 +90,6 @@
     height: fit-content;
 
     display: flex;
-    flex-direction: row-reverse;
     justify-content: space-evenly;
     margin-bottom: 120px;
 }

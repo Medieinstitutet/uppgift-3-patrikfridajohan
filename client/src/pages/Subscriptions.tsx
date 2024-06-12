@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getUseridfromcookie, getAllsubscriptions, getActiveSubscription, isLoggedIn, handleCheckout } from '../services/authService';
+import { getUseridfromcookie, getAllsubscriptions, getActiveSubscription, isLoggedIn, handleCheckout, getAllUserData } from '../services/authService';
 import "../styles/subscriptions.css";
 
 interface Plan {
@@ -63,7 +63,10 @@ export const Subscriptions: React.FC = () => {
     // Write code to do magic when selecting plan here
     
     try {
-      await handleCheckout(planId);
+      const userId = getUseridfromcookie() ?? '';
+      const response = await getAllUserData(userId)
+      const userEmail = response.email
+      await handleCheckout(planId, userEmail);
     } catch (error) {
       console.error("Subscription failed", error);
       // You can add further error handling here if needed

@@ -313,12 +313,12 @@ export const getArticleData = async (
     throw error;
   }
 };
-export const handleCheckout = async (planId: string) => {
+export const handleCheckout = async (planId: string, userEmail: string) => {
     try {
       const userId = getUseridfromcookie();
       const response = await axios.post(
         `${API_URL}/stripe/create-checkout-session`,
-        { userId, planId }
+        { userId, planId, userEmail }
       );
       if (response.data.url) {
           window.location.href = response.data.url;
