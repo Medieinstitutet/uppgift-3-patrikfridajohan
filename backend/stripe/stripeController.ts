@@ -17,6 +17,7 @@ export const webhookHandler = async (
   // Handle the event
   switch (eventType) {
     case "payment_intent.payment_failed":
+      console.log(eventType);
       const customerId = eventData.customer;
 
       // Retrieve the customer to get user metadata (if stored) or email to find the user
@@ -27,7 +28,7 @@ export const webhookHandler = async (
           const userId: string = customer.metadata.userId; // or const userEmail = customer.email;
 
           // Update the database to restrict user access
-          const queryRestrictUserAccess = `UPDATE data_users SET activesubscriptionid = 1 WHERE id = ?`;
+          const queryRestrictUserAccess = `UPDATE data_users_subscriptions SET active = 0 WHERE uid = ?`;
           await pool.execute(queryRestrictUserAccess, [userId]);
 
           console.log(
