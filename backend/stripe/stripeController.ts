@@ -131,6 +131,7 @@ export const webhookHandler = async (
 export const checkoutSession = async (req: Request, res: Response) => {
   const { planId, userId, userEmail } = req.body;
   console.log("retrieved userid: ", userId);
+  console.log("Received request to create checkout session:", req.body);
 
   let subscriptionPlan: string;
 
@@ -139,6 +140,7 @@ export const checkoutSession = async (req: Request, res: Response) => {
   } else if (planId === 3) {
     subscriptionPlan = "price_1PQ5ShGtY97KMuDYUY112zee";
   } else {
+    console.error("Invalid plan ID:", planId);
     res.status(400).json({ error: "Invalid plan ID" });
     return;
   }
@@ -148,6 +150,8 @@ export const checkoutSession = async (req: Request, res: Response) => {
       "SELECT activesubscriptionid, stripeSubId FROM data_users WHERE id = ?",
       [userId]
     );
+    console.log("Retrieved user subscription data:", alreadySubbed);
+
 
     const activeSubscriptionId = alreadySubbed[0]?.activesubscriptionid;
     const stripeSubId = alreadySubbed[0]?.stripeSubId;
@@ -160,6 +164,7 @@ export const checkoutSession = async (req: Request, res: Response) => {
         (activeSubscriptionId === 3 && planId === 2)
       ) {
         const subscription = await stripe.subscriptions.retrieve(stripeSubId);
+        console.log("Retrieved subscription data from Stripe:", subscription);
 
         await stripe.subscriptions.update(stripeSubId, {
           cancel_at_period_end: false,
@@ -177,6 +182,7 @@ export const checkoutSession = async (req: Request, res: Response) => {
         const updateValues = [planId, updated, userId];
 
         await pool.execute(queryUpdateDataUser, updateValues);
+        console.log(`Updated user ${userId} with subscription ${planId}`);
 
         res.status(200).json({ message: "Subscription updated successfully" });
         return;
@@ -189,6 +195,7 @@ export const checkoutSession = async (req: Request, res: Response) => {
     // Sends the customer from website to Stripe to avoid double customer in Stripe
     let customer;
     const existingCustomers = await stripe.customers.list({ email: userEmail });
+    console.log("Existing customers retrieved from Stripe:", existingCustomers);
     customer = existingCustomers.data[0];
 
     // If the user does not have an active subscription
@@ -207,6 +214,7 @@ export const checkoutSession = async (req: Request, res: Response) => {
       client_reference_id: `${userId}-${planId}`,
     });
     console.log(userId);
+    console.log("Created checkout session with Stripe:", session);
 
     res.status(200).json({ url: session.url, sessionId: session.id });
   } catch (error) {
@@ -215,6 +223,7 @@ export const checkoutSession = async (req: Request, res: Response) => {
   }
 };
 
+// Register Stripe Customer
 export const register = async (req: Request, res: Response) => {
   const { email, name, userId } = req.body;
 
@@ -224,6 +233,13 @@ export const register = async (req: Request, res: Response) => {
       name: name,
       metadata: { userId: userId },
     });
+    // Retrieve the Stripe customer ID
+    const stripeCustomerId = stripeUser.id;
+
+    // Update the data_users table with the Stripe customer ID
+    const queryUpdateUser = `UPDATE data_users SET stripecustomerid = ? WHERE id = ?`;
+    await pool.execute(queryUpdateUser, [stripeCustomerId, userId]);
+
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
     console.error("Error registering user:", error);
@@ -231,6 +247,7 @@ export const register = async (req: Request, res: Response) => {
   }
 };
 
+// Cancel subscription
 export const cancelSubscription = async (req: Request, res: Response) => {
   try {
     const { userId } = req.body;
