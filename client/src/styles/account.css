@@ -2,170 +2,63 @@
     color: white;
     background: var(--background-gradient-1);
     background: var(--background-gradient-2);
-    height: fit-content;
+    min-height: 80vh;
     width: 100vw;
     padding: 32px 0px;
 
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
-    row-gap: 32px;
+    align-items: flex-start;
 }
 
 .account-dashboard-section h2 {
     width: 100%;
-    text-align: center;
-    font-size: 2.5rem;
-}
-
-.account-info-section{
-    width: 100%;
-    background-color: var(--light-gray);
-    padding: 32px 0px;
-
-    display: flex;
-    justify-content: space-evenly;
-}
-
-.issue-list,
-.content {
-    color: var(--text-blue);
-    background-color: white;
-    border-radius: 8px;
-}
-
-.issue-list {
-    width: 20vw;
     height: fit-content;
-    padding: 16px 0px;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.name {
+    text-align: center;
     font-size: 2.5rem;
-    text-align: center;
 }
 
-.issue-items {
+.account-info-section {
     width: 90%;
-}
-
-.issue {
-    color: var(--text-blue);
-}
-
-.issue:hover {
-    cursor: pointer;
-}
-
-.list-group-item.issue.active {
-    background-color: var(--coral);
+    max-width: 600px;
+    background-color: white;
+    padding: 32px;
     border-radius: 8px;
-}
-
-.content {
-    width: 75vw;
-    height: 70vh;
-    padding: 32px 0px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
     justify-content: space-evenly;
-    row-gap: 32px;
 }
 
-.genvag {
-    background-color: var(--light-gray);
-    box-shadow: 10px 10px var(--coral);
-
-    height: 150px;
-    width: 40%;
-
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-}
-
-.genvag:hover {
-    cursor: pointer;
-}
-
-.genvag p {
-    font-size: 1.8rem;
-    margin: 0;
-}
-
-.quick {
-    padding: 0px 64px;
-}
-
-.current {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.to-tiers {
+.account-info-container {
+    color: var(--text-blue);
+    width: 100%;
     text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
 }
 
-
-
-
-.sub-container {
-    width: 100%;
-    height: 100%;
-    padding: 0px 64px;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    row-gap: 32px;
+.account-info-container header {
+    margin-bottom: 16px;
 }
 
-.sub-container h2 {
-    text-align: left;
+.account-info-container h3 {
+    margin-bottom: 8px;
+    color: var(--font-color);
+    font-size: 1.8rem;
 }
 
-.sub-container p, .sub-container h4 {
-    margin: 0;
+.account-info-container p {
+    margin: 8px 0;
+    color: var(--font-color);
+    font-size: 1.2rem;
 }
 
-.sub-info {
-    display: flex;
-    flex-direction: column;
-    row-gap: 16px;
+.subscription-details p {
+    margin: 4px 0;
 }
 
-.info-row {
-    display: flex;
-    align-items: center;
-    column-gap: 16px;
-}
-
-.billing {
-    display: flex;
-    flex-direction: column;
-    row-gap: 16px;
-}
-
-
-
-.account-settings-container {
-    height: 100%;
-    width: 100%;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.settings-personal-info {
-    width: 80%;
-}
+.action-sec {
+    margin-top: 24px;
+  }

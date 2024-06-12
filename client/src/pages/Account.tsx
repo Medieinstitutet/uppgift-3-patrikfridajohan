@@ -1,42 +1,48 @@
 import React, { useState, useEffect } from "react";
-import { AccountDash } from "../components/AccountDash";
 import "../styles/account.css";
-import { SubscriptionInfo } from "../components/SubscriptionInfo";
-import { AccountSettings } from "../components/AccountSettings";
-import { getUseridfromcookie, getActiveSubscription, getSubscriptionData } from "../services/authService";
-
-interface DummyData {
-  name: string;
-  email: string;
-  plan: {
-    name: string;
-    cost: string;
-  };
-  renewal: string;
-  billing: string;
-}
+import {
+  getUseridfromcookie,
+  getAllUserData,
+  getActiveSubscriptionData,
+  getSubscriptionData,
+  cancelSubscription,
+} from "../services/authService";
 
 export const Account: React.FC = () => {
-  const [selection, setSelection] = useState<"dashboard" | "subscription" | "settings" | "support">("dashboard");
-  const [subscriptionData, setSubscriptionData] = useState<{ name: string; price: number; active: boolean; enddate: Date; } | null>(null);
-  const [dummyData] = useState<DummyData>({
-    name: "Dummy",
-    email: "dummy@data.com",
-    plan: {
-      name: "plus",
-      cost: "4",
-    },
-    renewal: "2024-06-31",
-    billing: "Stripe",
-  });
+  // const [selection, setSelection] = useState<"dashboard" | "subscription" | "settings" | "support">("dashboard");
+  // const [subscriptionData, setSubscriptionData] = useState<{ name: string; price: number; active: boolean; enddate: Date; } | null>(null);
+
+  const [firstname, setFirstname] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
+  const [tier, setTier] = useState<string>("");
+  const [price, setPrice] = useState<number>(0);
 
   useEffect(() => {
     const fetchSubscriptionData = async () => {
       try {
-        const userId = getUseridfromcookie() ?? '';
-        const activeSubscriptionId = await getActiveSubscription(userId);
-        const data = await getSubscriptionData(activeSubscriptionId || '');
-        setSubscriptionData(data);
+        const userId = getUseridfromcookie() ?? "";
+
+        const userData = await getAllUserData(userId);
+        console.log("userData", userData);
+        setFirstname(userData.firstname);
+        setEmail(userData.email);
+
+        const subData = await getActiveSubscriptionData(userId);
+        console.log("subData", subData);
+        setEndDate(subData.enddate.split("T")[0]);
+
+        if (subData.subscriptionid === 3) {
+          setTier("Exclusive");
+        } else if (subData.subscriptionid === 2) {
+          setTier("Plus");
+        } else {
+          setTier("Standard");
+        }
+
+        const subDataExp = await getSubscriptionData(subData.subscriptionid);
+        console.log("subDataExp", subDataExp);
+        setPrice(subDataExp.price);
       } catch (error) {
         console.error("Error fetching subscription data:", error);
       }
@@ -45,59 +51,36 @@ export const Account: React.FC = () => {
     fetchSubscriptionData();
   }, []);
 
-  let selectedComponent;
-  switch (selection) {
-    case "dashboard":
-      selectedComponent = <AccountDash dummyData={dummyData} setSelection={(selection: "dashboard" | "subscription" | "settings" | "support") => setSelection(selection)} />;
-      break;
-    case "subscription":
-      selectedComponent = <SubscriptionInfo subscriptionData={subscriptionData} />;
-      break;
-    case "settings":
-      selectedComponent = <AccountSettings dummyData={dummyData} />;
-      break;
-    case "support":
-      break;
-    default:
-      selectedComponent = <AccountDash dummyData={dummyData} setSelection={(selection: "dashboard" | "subscription" | "settings" | "support") => setSelection(selection)} />;
-      break;
-  }
+  const cancelSub = async () => {
+    try {
+      await cancelSubscription();
+      window. location. reload();
+    } catch {
+      console.log("error canceling sub");
+    }
+  };
 
   return (
-    <div className="account-dashboard-section">
-      <h2>My profile</h2>
+    <section className="account-dashboard-section">
+      <h2>My Profile</h2>
       <div className="account-info-section">
-        <div className="issue-list">
-          <h3 className="name">{dummyData.name}</h3>
-          <ul className="list-group issue-items list-group-flush">
-            <li
-              className={`list-group-item issue ${selection === "dashboard" ? "active" : ""}`}
-              onClick={() => setSelection("dashboard")}
-            >
-              Dashboard
-            </li>
-            <li
-              className={`list-group-item issue ${selection === "subscription" ? "active" : ""}`}
-              onClick={() => setSelection("subscription")}
-            >
-              Subscription
-            </li>
-            <li
-              className={`list-group-item issue ${selection === "settings" ? "active" : ""}`}
-              onClick={() => setSelection("settings")}
-            >
-              Settings
-            </li>
-            <li
-              className={`list-group-item issue ${selection === "support" ? "active" : ""}`}
-              onClick={() => setSelection("support")}
-            >
-              Support
-            </li>
-          </ul>
+        <div className="account-info-container">
+          <header>
+            <h3>{firstname}</h3>
+            <p>{email}</p>
+          </header>
+          <div className="subscription-details">
+            <p><strong>Current Plan:</strong> {tier}</p>
+            <p><strong>Price:</strong> ${price}/week</p>
+            <p><strong>Subscription Ends:</strong> {endDate}</p>
+          </div>
         </div>
-        <div className="content">{selectedComponent}</div>
+        <div className="action-sec">
+          <button type="button" className="btn" onClick={cancelSub}>
+            Cancel Subscription
+          </button>
+        </div>
       </div>
-    </div>
+    </section>
   );
 };

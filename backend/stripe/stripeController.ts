@@ -226,7 +226,7 @@ export const cancelSubscription = async (req: Request, res: Response) => {
 
     // Query the database to get the stripeSubId
     const [rows]: [any[], any] = await pool.query(
-      "SELECT stripeSubId FROM data_users WHERE uid = ?",
+      "SELECT stripeSubId FROM data_users_subscriptions WHERE uid = ?",
       [userId]
     );
 

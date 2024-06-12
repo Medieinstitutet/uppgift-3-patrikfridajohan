@@ -179,12 +179,14 @@ export const getAllsubscriptions = async (): Promise<any> => {
 
 // Get active subscriptionid of the current logged in user
 // import { getActiveSubscription } from '../services/authService'; to use it on a page
-export const getActiveSubscription = async (userId: string): Promise<string | null> => {
+export const getActiveSubscription = async (
+  userId: string
+): Promise<string | null> => {
   try {
     const response = await axios.get(`${API_URL}/auth/subscriptionid`, {
       params: {
-        userId: userId
-      }
+        userId: userId,
+      },
     });
     return response.data.subscriptionId;
   } catch (error) {
@@ -207,13 +209,11 @@ export const getActiveSubscriptionData = async (Id: string): Promise<any> => {
 };
 
 // Cancel my subscription
-export const cancelSubscription = async (
-): Promise<void> => {
+export const cancelSubscription = async (): Promise<void> => {
   try {
     const userId = getUseridfromcookie();
     await axios.post(`${API_URL}/stripe/cancel-subscription`, {
       userId,
-      
     });
     console.log("Subscription canceled successfully");
   } catch (error) {
@@ -318,22 +318,22 @@ export const getArticleData = async (
   }
 };
 export const handleCheckout = async (planId: string, userEmail: string) => {
-    try {
-      const userId = getUseridfromcookie();
-      const response = await axios.post(
-        `${API_URL}/stripe/create-checkout-session`,
-        { userId, planId, userEmail }
-      );
-      if (response.data.url) {
-          window.location.href = response.data.url;
-        } else {
-          console.error("No URL returned from create-checkout-session API");
-        }
-    } catch (error) {
-      console.error("failed to initiate checkout", error);
-      throw error;
+  try {
+    const userId = getUseridfromcookie();
+    const response = await axios.post(
+      `${API_URL}/stripe/create-checkout-session`,
+      { userId, planId, userEmail }
+    );
+    if (response.data.url) {
+      window.location.href = response.data.url;
+    } else {
+      console.error("No URL returned from create-checkout-session API");
     }
-  };
+  } catch (error) {
+    console.error("failed to initiate checkout", error);
+    throw error;
+  }
+};
 
 // Create newsarticle
 export const createNewsArticle = async (articleData: {
@@ -361,10 +361,9 @@ interface UserRegistrationData {
   lastname: string;
 }
 interface StripeRegistrationData {
-    email: string;
-    name: string;
-    
-  }
+  email: string;
+  name: string;
+}
 // Create user
 export const registerUser = async (
   userData: UserRegistrationData
@@ -378,19 +377,23 @@ export const registerUser = async (
     throw axiosError.response?.data ?? error;
   }
 };
+
 export const registerStripeUser = async (
-stripeData:StripeRegistrationData,
-userId:string
-):Promise<any> =>{
-    try {
-        const response = await axios.post(`${API_URL}/stripe/register`, {...stripeData, userId});
-        return response.data;
-      } catch (error) {
-        const axiosError = error as AxiosError<any>;
-        console.error("Error registering user:", axiosError);
-        throw axiosError.response?.data ?? error;
-      }
-}
+  stripeData: StripeRegistrationData,
+  userId: string
+): Promise<any> => {
+  try {
+    const response = await axios.post(`${API_URL}/stripe/register`, {
+      ...stripeData,
+      userId,
+    });
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<any>;
+    console.error("Error registering user:", axiosError);
+    throw axiosError.response?.data ?? error;
+  }
+};
 
 export const loginUser = async (userData: any) => {
   try {
