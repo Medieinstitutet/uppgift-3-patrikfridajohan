@@ -105,7 +105,7 @@ export const webhookHandler = async (
       console.log(eventData);
       break; */
     case "customer.subscription.updated":
-      console.log(eventData);
+     // console.log(eventData);
 
       break;
     default:
@@ -243,7 +243,7 @@ export const cancelSubscription = async (req: Request, res: Response) => {
 
     // Query the database to get the stripeSubId
     const [rows]: [any[], any] = await pool.query(
-      "SELECT stripeSubId FROM data_users WHERE id = ?",
+      "SELECT stripeSubId FROM data_users WHERE uid = ?",
       [userId]
     );
 
