@@ -32,7 +32,6 @@ async function testMySQLConnection() {
     );
 
     console.log("MySQL connection works!");
-    console.log("Retrieved data:", rows);
   } catch (error) {
     console.error("Error testing MySQL connection:", error);
   }

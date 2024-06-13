@@ -68,10 +68,6 @@ export const Dashboard: React.FC = () => {
     navigate("/user/account");
   };
 
-  const handleBillingInformation = (): void => {
-    navigate("/user/account");
-  };
-
   const handleUpgradeSubscription = (): void => {
     navigate("/user/subscriptions");
   };
@@ -116,16 +112,15 @@ export const Dashboard: React.FC = () => {
             ))
           )}
         </section>
-        <section className="section-dashboard">
+        <section className="section-dashboard-2">
           <h2>Account Management</h2>
-          <button onClick={handleProfileSettings}>Profile</button>
-          <button onClick={handleBillingInformation}>Billing</button>
-          <button onClick={handleUpgradeSubscription}>Upgrade</button>
+          <button className="btn" onClick={handleProfileSettings}>Profile</button>
+          <button className="btn" onClick={handleUpgradeSubscription}>Upgrade</button>
         </section>
-        <section className="section-dashboard">
+        <section className="section-dashboard-2">
           <h2>Need Help?</h2>
-          <button>Help Center</button>
-          <button>Contact Support</button>
+          <button className="btn">Help Center</button>
+          <button className="btn">Contact Support</button>
         </section>
       </div>
     </div>

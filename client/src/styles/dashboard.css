@@ -27,6 +27,7 @@
 }
 
 .dashboard-content {
+  color: var(--text-blue);
   width: 100%;
   max-width: 1200px;
   display: flex;
@@ -40,7 +41,7 @@
   padding: 16px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: 49%;
+  width: 48%;
   min-width: 300px;
   margin-bottom: 40px;
 }
@@ -88,7 +89,7 @@
   padding: 16px;
   margin-bottom: 16px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  color: #333;
+  color: var(--text-blue);
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -107,6 +108,37 @@
 .newsletter-item:active {
   background-color: #90caf9;
   transform: translateY(2px);
+}
+
+.section-dashboard-2  {
+  background: white;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 48%;
+  min-width: 300px;
+  margin-bottom: 40px;
+  text-align: center;
+
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.section-dashboard-2 h2 {
+  font-size: 1.5rem;
+  margin-bottom: 12px;
+  width: 100%;
+}
+
+.section-dashboard-2 button {
+  width: 40%;
+}
+
+.section-dashboard-2 button:hover {
+  color: white;
+  background: #357ab7;
 }
 
 

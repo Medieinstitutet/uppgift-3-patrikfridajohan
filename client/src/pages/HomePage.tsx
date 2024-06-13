@@ -116,14 +116,14 @@ export const HomePage = () => {
             "The personalized recommendations are spot on. It's like having a
             personal curator just for me!"
           </h6>
-          <p>- Patrik B. CEO of Google</p>
+          <p>- Patrik B. Destroyer of Worlds</p>
         </div>
         <div className="quote">
           <h6>
             "The quality of content on SCOPE is unparalleled. I've discovered so
             many new topics and ideas."
           </h6>
-          <p>- Johan N. Coach of Manchester United</p>
+          <p>- Johan N. CEO of Google</p>
         </div>
       </div>
       <div className="why">
