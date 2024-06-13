@@ -63,7 +63,7 @@ export const Articlesforme: React.FC = () => {
           <h2 style={{ marginBottom: "40px" }}>Available Articles for me</h2>
 
           {!subscriptionPaid && (
-            <div className="not-allowed-message">
+            <div className="not-allowed-message mb-5">
               <h2>Payment unsuccessful</h2>
               <p>Your subscription is not paid. Please pay invoice to continue.</p>
               <a className="btn" href={stripeInvoiceUrl} target="_blank" rel="noopener noreferrer">
