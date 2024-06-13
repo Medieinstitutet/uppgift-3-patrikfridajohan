@@ -413,32 +413,3 @@ export const loginUser = async (userData: any) => {
     console.error("Login failed:", error);
   }
 };
-
-/* export const handleCheckout = async (priceId: string) => {
-  console.log("priceId:", priceId);
-  const response = await axios.post(
-    "http://localhost:5173/api/stripe/create-checkout-session",
-    { priceId }
-  );
-  if (response.status === 200) {
-    const { url } = response.data;
-    window.location.href = url;
-  } else {
-    console.error("failed to initiate checkout", response.data);
-  }
-};
-
-// Get all plans
-export const getPlans = async () => {
-  const response = await axios.get(`${API_URL}/stripe/plans`);
-  return response;
-}; */
-
-// export const registerUser = async (userData) => {
-//     try {
-//         const response = await axios.post(`${API_URL}/auth/register`, userData);
-//         return response.data;
-//     } catch (error) {
-//         throw error.response.data;
-//     }
-// };

@@ -69,7 +69,7 @@ export const Subscriptions: React.FC = () => {
       await handleCheckout(planId, userEmail);
     } catch (error) {
       console.error("Subscription failed", error);
-      // You can add further error handling here if needed
+      
     }
   };
 

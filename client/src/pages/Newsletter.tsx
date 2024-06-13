@@ -75,7 +75,7 @@ import { useNavigate, useParams } from "react-router-dom";
       }, [newsletter, navigate]);
     
       if (!newsletter) {
-        return null; // or a loading spinner or a message
+        return null; 
       }
       
    

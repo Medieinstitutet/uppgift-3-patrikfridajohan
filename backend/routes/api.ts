@@ -227,21 +227,6 @@ router.get("/articletitles", async (req, res) => {
   }
 });
 
-// GET /articles - Get all articles for the logged in user
-// router.get("/articles", async (req: Request, res: Response, next: NextFunction) => {
-//     try {
-//       const activesubscriptionid = req.cookies.activesubscriptionid;
-//       const [rows]: [any[], any] = await pool.query(
-//         "SELECT * FROM data_articles WHERE subscriptionid = ?", [activesubscriptionid]
-//       );
-//       res.json(rows);
-//     } catch (error) {
-//       console.error("Error fetching data:", error);
-//       res.status(500).json({ error: "Internal server error" });
-//     }
-//   }
-// );
-
 // GET /articlesforme - Get all articles for logged in user - NEW
 router.get("/articlesforme/:activesubscriptionid", async (req, res) => {
   try {
