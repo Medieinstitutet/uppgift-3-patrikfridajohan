@@ -9,6 +9,8 @@ The application includes an admin section where admin can add new articles and s
 
 This project was developed as part of a student group project at Medieinstitutet in 2024.
 
+In client/public there is a databasemodel.
+
 ## Getting Started
 To run this project, you first need to ensure that you have Node.js installed on your computer. Visit https://nodejs.org/ and follow the installation instructions if you don't already have Node.js installed.
 
