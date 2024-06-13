@@ -121,6 +121,35 @@ export const webhookHandler = async (
         );
       }
       break;
+    case "invoice.paid":
+      const paidCustomerId = eventData.customer;
+      const invoiceSubIdPaid = eventData.subscription;
+
+      try {
+        const customer = await stripe.customers.retrieve(paidCustomerId);
+
+        if (!customer.deleted) {
+          const userId: string = customer.metadata.userId;
+
+          // Update the database to set active to 1 and stripeInvoiceUrl to null
+          const queryUpdateUserAccess = `UPDATE data_users_subscriptions SET active = 1, stripeInvoiceUrl = NULL WHERE stripeSubId = ?`;
+          await pool.execute(queryUpdateUserAccess, [invoiceSubIdPaid]);
+
+          console.log(
+            `Restored access for user ${userId} with subscription ${invoiceSubIdPaid}`
+          );
+        } else {
+          console.error(
+            `Customer ${paidCustomerId} is deleted, cannot restore access`
+          );
+        }
+      } catch (error) {
+        console.error(
+          `Error restoring access for user after invoice payment:`,
+          error
+        );
+      }
+      break;
     /*
     case "payment_intent.succeeded":
       console.log(eventData);
