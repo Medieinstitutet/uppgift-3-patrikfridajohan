@@ -39,7 +39,7 @@ export const Dashboard: React.FC = () => {
             setSubscriptionLevel(subscriptionData.name);
 
             // Check if the subscription is paid
-            const activeSubscriptionData = await getActiveSubscriptionData(activeSubscriptionId);
+            const activeSubscriptionData = await getActiveSubscriptionData();
             setSubscriptionPaid(activeSubscriptionData.payed === 1);
             setStripeInvoiceUrl(activeSubscriptionData.stripeInvoiceUrl);
           }
