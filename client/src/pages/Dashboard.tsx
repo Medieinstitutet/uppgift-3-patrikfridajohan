@@ -42,6 +42,9 @@ export const Dashboard: React.FC = () => {
             const activeSubscriptionData = await getActiveSubscriptionData();
             setSubscriptionPaid(activeSubscriptionData.payed === 1);
             setStripeInvoiceUrl(activeSubscriptionData.stripeInvoiceUrl);
+          } else {
+            // Redirect to subscription page if no active subscription
+            navigate("/user/subscriptions");
           }
         }
       } catch (error) {
