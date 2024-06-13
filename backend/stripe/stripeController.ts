@@ -182,10 +182,13 @@ export const checkoutSession = async (req: Request, res: Response) => {
 
   let subscriptionPlan: string;
 
-  if (planId === 2) {
-    subscriptionPlan = "price_1PQ5SNGtY97KMuDYUzPSaoeq";
-  } else if (planId === 3) {
-    subscriptionPlan = "price_1PQ5ShGtY97KMuDYUY112zee";
+  if (planId === 1) {
+    subscriptionPlan = "price_1PRJUFGtY97KMuDYmolibbB8";
+  } else if (planId === 2) {
+    subscriptionPlan = "price_1PRJUYGtY97KMuDYxpXH0mxM";
+  }
+  else if (planId === 3) {
+    subscriptionPlan = "price_1PRJUuGtY97KMuDYUsWa8eJO";
   } else {
     console.error("Invalid plan ID:", planId);
     res.status(400).json({ error: "Invalid plan ID" });
