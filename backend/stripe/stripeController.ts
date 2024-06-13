@@ -28,7 +28,7 @@ export const webhookHandler = async (
           const userId: string = customer.metadata.userId; // or const userEmail = customer.email;
 
           // Update the database to restrict user access
-          const queryRestrictUserAccess = `UPDATE data_users_subscriptions SET active = 0 WHERE uid = ?`;
+          const queryRestrictUserAccess = `UPDATE data_users_subscriptions SET payed = 0 WHERE uid = ?`;
           await pool.execute(queryRestrictUserAccess, [userId]);
 
           console.log(
@@ -55,7 +55,7 @@ export const webhookHandler = async (
       const hostedInvoiceUrl = eventData.hosted_invoice_url;
 
       try {
-        const queryUpdateInvoiceUrl = `UPDATE data_users_subscriptions SET stripeInvoiceUrl = ? WHERE stripeSubId = ?`;
+        const queryUpdateInvoiceUrl = `UPDATE data_users_subscriptions SET stripeInvoiceUrl = ?, payed = 0 WHERE stripeSubId = ?`;
         await pool.execute(queryUpdateInvoiceUrl, [
           hostedInvoiceUrl,
           invoiceSubId,
@@ -132,7 +132,7 @@ export const webhookHandler = async (
           const userId: string = customer.metadata.userId;
 
           // Update the database to set active to 1 and stripeInvoiceUrl to null
-          const queryUpdateUserAccess = `UPDATE data_users_subscriptions SET active = 1, stripeInvoiceUrl = NULL WHERE stripeSubId = ?`;
+          const queryUpdateUserAccess = `UPDATE data_users_subscriptions SET active = 1, payed = 1, stripeInvoiceUrl = NULL WHERE stripeSubId = ?`;
           await pool.execute(queryUpdateUserAccess, [invoiceSubIdPaid]);
 
           console.log(
