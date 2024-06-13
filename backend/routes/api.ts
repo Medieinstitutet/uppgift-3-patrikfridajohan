@@ -163,7 +163,7 @@ router.get("/activesubscriptiondata/:Id", async (req, res) => {
   try {
     const { Id } = req.params;
     const [subscriptionRows]: [any[], any] = await pool.query(
-      "SELECT * FROM data_users_subscriptions WHERE id = ?",
+      "SELECT * FROM data_users_subscriptions WHERE active = 1 AND uid = ?",
       [Id]
     );
     if (subscriptionRows.length > 0) {

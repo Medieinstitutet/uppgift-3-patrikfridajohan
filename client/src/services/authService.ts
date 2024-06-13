@@ -197,9 +197,10 @@ export const getActiveSubscription = async (
 
 // Function to get active subscription data from Active subscription
 // import { getActiveSubscriptionData } from '../services/authService'; to use it on a page
-export const getActiveSubscriptionData = async (Id: string): Promise<any> => {
+export const getActiveSubscriptionData = async (): Promise<any> => {
   try {
-    const response = await axios.get(`${API_URL}/activesubscriptiondata/${Id}`);
+    const userId = getUseridfromcookie() || ""; 
+    const response = await axios.get(`${API_URL}/activesubscriptiondata/${userId}`);
     console.log("Active Subscription Data:", response.data);
     return response.data;
   } catch (error) {
