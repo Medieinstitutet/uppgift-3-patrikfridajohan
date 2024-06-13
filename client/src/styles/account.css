@@ -61,4 +61,8 @@
 
 .action-sec {
     margin-top: 24px;
-  }
+}
+
+#cancel-btn:hover {
+    color: var(--text-blue);
+}
