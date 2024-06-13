@@ -210,13 +210,14 @@ export const getActiveSubscriptionData = async (): Promise<any> => {
 };
 
 // Cancel my subscription
-export const cancelSubscription = async (): Promise<void> => {
+export const cancelSubscription = async (): Promise<string> => {
   try {
     const userId = getUseridfromcookie();
-    await axios.post(`${API_URL}/stripe/cancel-subscription`, {
+    const response = await axios.post(`${API_URL}/stripe/cancel-subscription`, {
       userId,
     });
     console.log("Subscription canceled successfully");
+    return response.data
   } catch (error) {
     console.error("Error canceling subscription:", error);
     throw error;

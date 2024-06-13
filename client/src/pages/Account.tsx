@@ -16,6 +16,7 @@ export const Account: React.FC = () => {
   const [endDate, setEndDate] = useState<string>("");
   const [tier, setTier] = useState<string>("");
   const [price, setPrice] = useState<number>(0);
+  const [showBtn, setShowBtn] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchSubscriptionData = async () => {
@@ -26,7 +27,7 @@ export const Account: React.FC = () => {
         setFirstname(userData.firstname);
         setEmail(userData.email);
 
-        const subData = await getActiveSubscriptionData(userId);
+        const subData = await getActiveSubscriptionData();
         setEndDate(subData.enddate.split("T")[0]);
 
         if (subData.subscriptionid === 3) {
@@ -49,18 +50,24 @@ export const Account: React.FC = () => {
 
   const cancelSub = async () => {
     try {
-      await cancelSubscription();
-      toast.info("Subscription cancelled successfully! You will have access to your current plan until the next payment is due.", {
-        position: "bottom-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Bounce,
-      });
+      const response = await cancelSubscription();
+      if(response) {
+        setShowBtn(false)
+      }
+      toast.info(
+        "Subscription cancelled successfully! You will have access to your current plan until the next payment is due.",
+        {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        }
+      );
     } catch {
       console.log("error canceling sub");
     }
@@ -99,16 +106,18 @@ export const Account: React.FC = () => {
             </p>
           </div>
         </div>
-        <div className="action-sec">
-          <button
-            type="button"
-            className="btn"
-            id="cancel-btn"
-            onClick={cancelSub}
-          >
-            Cancel Subscription
-          </button>
-        </div>
+        {showBtn && (
+          <div className="action-sec">
+            <button
+              type="button"
+              className="btn"
+              id="cancel-btn"
+              onClick={cancelSub}
+            >
+              Cancel Subscription
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );
